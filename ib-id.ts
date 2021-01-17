@@ -13,10 +13,10 @@ const propDefGetter =  [
     })
 ] as destructPropInfo[];
 const propDefs = xc.getPropDefs(propDefGetter);
-function newC(tag: string, wm: WeakSet<HTMLElement>, map: (x: any) => any, list: any[], idx: number, self: HTMLElement, prevSib: Element){
+function newC(tag: string, wm: WeakSet<HTMLElement>, map: (x: any, idx?: number) => any, list: any[], idx: number, self: HTMLElement, prevSib: Element){
     const newChild = document.createElement(tag);
     wm.add(newChild);
-    Object.assign(newChild, map(list[idx]));
+    Object.assign(newChild, map(list[idx], idx));
     idx++;
     if(prevSib === undefined){
         self.insertAdjacentElement('afterend', newChild);
@@ -33,7 +33,7 @@ const linkNextSiblings = ({list, tag, wm, map, self}: IbId) => {
     while(ns !== null){
         if(wm.has(ns as HTMLElement)){
             if(idx < len){
-                Object.assign(ns, map(list[idx]));
+                Object.assign(ns, map(list[idx], idx));
                 idx++;
             }else{
                 self.appendChild(ns);
@@ -48,7 +48,7 @@ const linkNextSiblings = ({list, tag, wm, map, self}: IbId) => {
                     prevSib = newC(tag, wm, map, list, idx, self, prevSib);
                     idx++;
                 }else{
-                    Object.assign(lastElement, map(list[idx]));
+                    Object.assign(lastElement, map(list[idx], idx));
                     idx++;
                     (prevSib || self).insertAdjacentElement('afterend', lastElement);
                     prevSib = lastElement;
@@ -67,7 +67,7 @@ export class IbId extends HTMLElement implements ReactiveSurface {
     self=this; propActions = propActions; reactor = new xc.Reactor(this);
     wm = new WeakSet<HTMLElement>();
     tag: string;
-    map: (x: any) => any;
+    map: (x: any, idx?: number) => any;
     list: any[];
     connectedCallback(){
         this.style.display = 'none';

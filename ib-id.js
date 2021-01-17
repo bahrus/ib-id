@@ -14,7 +14,7 @@ const propDefs = xc.getPropDefs(propDefGetter);
 function newC(tag, wm, map, list, idx, self, prevSib) {
     const newChild = document.createElement(tag);
     wm.add(newChild);
-    Object.assign(newChild, map(list[idx]));
+    Object.assign(newChild, map(list[idx], idx));
     idx++;
     if (prevSib === undefined) {
         self.insertAdjacentElement('afterend', newChild);
@@ -33,7 +33,7 @@ const linkNextSiblings = ({ list, tag, wm, map, self }) => {
     while (ns !== null) {
         if (wm.has(ns)) {
             if (idx < len) {
-                Object.assign(ns, map(list[idx]));
+                Object.assign(ns, map(list[idx], idx));
                 idx++;
             }
             else {
@@ -51,7 +51,7 @@ const linkNextSiblings = ({ list, tag, wm, map, self }) => {
                     idx++;
                 }
                 else {
-                    Object.assign(lastElement, map(list[idx]));
+                    Object.assign(lastElement, map(list[idx], idx));
                     idx++;
                     (prevSib || self).insertAdjacentElement('afterend', lastElement);
                     prevSib = lastElement;
