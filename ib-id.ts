@@ -31,14 +31,10 @@ const linkNextSiblings = ({list, tag, wm, map, self}: IbId) => {
     let ns = self.nextElementSibling;
     let idx = 0, len = list.length;
     let prevSib: Element = undefined;
-    while(ns !== null){
-        if(wm.has(ns as HTMLElement)){
-            if(idx < len){
-                Object.assign(ns, map(list[idx], idx));
-                idx++;
-            }else{
-                self.appendChild(ns);
-            }
+    while(idx < len){
+        if(ns!== null && wm.has(ns as HTMLElement)){
+            Object.assign(ns, map(list[idx], idx));
+            idx++;
             prevSib = ns;
         }else{
             let hasNoMoreChildren = false;
@@ -57,7 +53,16 @@ const linkNextSiblings = ({list, tag, wm, map, self}: IbId) => {
             }
         }
         if(idx >= len) return;
-        ns = ns.nextElementSibling;
+        if(ns!== null) ns = ns.nextElementSibling;
+    }
+    if(prevSib !== undefined){
+        ns = prevSib.nextElementSibling;
+        while(ns !== null){
+            if(wm.has(ns as HTMLElement)){
+                self.appendChild(ns);
+            }
+            ns = ns.nextElementSibling;
+        }
     }
 }
 const propActions = [

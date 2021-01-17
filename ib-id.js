@@ -31,15 +31,10 @@ const linkNextSiblings = ({ list, tag, wm, map, self }) => {
     let ns = self.nextElementSibling;
     let idx = 0, len = list.length;
     let prevSib = undefined;
-    while (ns !== null) {
-        if (wm.has(ns)) {
-            if (idx < len) {
-                Object.assign(ns, map(list[idx], idx));
-                idx++;
-            }
-            else {
-                self.appendChild(ns);
-            }
+    while (idx < len) {
+        if (ns !== null && wm.has(ns)) {
+            Object.assign(ns, map(list[idx], idx));
+            idx++;
             prevSib = ns;
         }
         else {
@@ -61,7 +56,17 @@ const linkNextSiblings = ({ list, tag, wm, map, self }) => {
         }
         if (idx >= len)
             return;
-        ns = ns.nextElementSibling;
+        if (ns !== null)
+            ns = ns.nextElementSibling;
+    }
+    if (prevSib !== undefined) {
+        ns = prevSib.nextElementSibling;
+        while (ns !== null) {
+            if (wm.has(ns)) {
+                self.appendChild(ns);
+            }
+            ns = ns.nextElementSibling;
+        }
     }
 };
 const propActions = [
