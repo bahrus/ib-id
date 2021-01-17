@@ -1,3 +1,7 @@
+<a href="https://nodei.co/npm/ib-id/"><img src="https://nodei.co/npm/ib-id.png"></a>
+
+<img src="https://badgen.net/bundlephobia/minzip/ib-id">
+
 # ib-id
 
 ib-id is a simple, 1-dimensional list web component.
