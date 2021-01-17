@@ -13,8 +13,9 @@ const propDefGetter =  [
     })
 ] as destructPropInfo[];
 const propDefs = xc.getPropDefs(propDefGetter);
-function newC(tag: string, wm: WeakSet<HTMLElement>, map: (x: any, idx?: number) => any, list: any[], idx: number, self: HTMLElement, prevSib: Element){
+function newC(tag: string, wm: WeakSet<HTMLElement>, map: (x: any, idx?: number) => any, list: any[], idx: number, self: IbId, prevSib: Element){
     const newChild = document.createElement(tag);
+    self.configureNewChild(newChild);
     wm.add(newChild);
     Object.assign(newChild, map(list[idx], idx));
     idx++;
@@ -79,6 +80,7 @@ export class IbId extends HTMLElement implements ReactiveSurface {
     onPropChange(name: string, propDef: PropDef, newVal: any){
         this.reactor.addToQueue(propDef, newVal);
     }
+    configureNewChild(newChild: HTMLElement){}
     
 }
 xc.letThereBeProps(IbId, propDefs, 'onPropChange');

@@ -13,6 +13,7 @@ const propDefGetter = [
 const propDefs = xc.getPropDefs(propDefGetter);
 function newC(tag, wm, map, list, idx, self, prevSib) {
     const newChild = document.createElement(tag);
+    self.configureNewChild(newChild);
     wm.add(newChild);
     Object.assign(newChild, map(list[idx], idx));
     idx++;
@@ -84,6 +85,7 @@ export class IbId extends HTMLElement {
     onPropChange(name, propDef, newVal) {
         this.reactor.addToQueue(propDef, newVal);
     }
+    configureNewChild(newChild) { }
 }
 IbId.is = 'ib-id';
 xc.letThereBeProps(IbId, propDefs, 'onPropChange');
