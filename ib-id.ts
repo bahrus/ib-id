@@ -1,4 +1,5 @@
 import {xc} from 'xtal-element/lib/XtalCore.js';
+import {applyP} from 'trans-render/lib/applyP.js';
 import {destructPropInfo, ReactiveSurface, PropAction, PropDef} from 'xtal-element/types.d.js';
 import {IbIdProps} from './types.d.js';
 
@@ -19,7 +20,7 @@ function newC(tag: string, wm: WeakSet<HTMLElement>, map: (x: any, idx?: number)
     const newChild = document.createElement(tag);
     self.configureNewChild(newChild);
     wm.add(newChild);
-    self.applyItem(newChild, map(list[idx], idx));
+    self.mergeItemIntoNode(newChild, map(list[idx], idx));
     idx++;
     if(prevSib === undefined){
         self.insertAdjacentElement('afterend', newChild);
@@ -35,7 +36,7 @@ const linkNextSiblings = ({list, tag, wm, map, self}: IbId) => {
     let prevSib: Element = undefined;
     while(idx < len){
         if(ns!== null && wm.has(ns as HTMLElement)){
-            self.applyItem(ns as HTMLElement, map(list[idx], idx));
+            self.mergeItemIntoNode(ns as HTMLElement, map(list[idx], idx));
             idx++;
             prevSib = ns;
         }else{
@@ -47,7 +48,7 @@ const linkNextSiblings = ({list, tag, wm, map, self}: IbId) => {
                     prevSib = newC(tag, wm, map, list, idx, self, prevSib);
                     idx++;
                 }else{
-                    self.applyItem(lastElement as HTMLElement, map(list[idx], idx));
+                    self.mergeItemIntoNode(lastElement as HTMLElement, map(list[idx], idx));
                     idx++;
                     (prevSib || self).insertAdjacentElement('afterend', lastElement);
                     prevSib = lastElement;
@@ -90,14 +91,20 @@ export class IbId extends HTMLElement implements ReactiveSurface, IbIdProps {
     onPropChange(name: string, propDef: PropDef, newVal: any){
         this.reactor.addToQueue(propDef, newVal);
     }
+    /**
+     * Apply any custom actions on newly created element.
+     * @param newChild 
+     */
     configureNewChild(newChild: HTMLElement){}
-    applyItem(newChild: HTMLElement, listItem: any){
+
+
+    mergeItemIntoNode(newChild: HTMLElement, listItem: any){
         switch(typeof listItem){
             case 'string':
                 newChild.textContent = listItem;
                 break;
             case 'object':
-                Object.assign(newChild, listItem);
+                applyP(newChild, [listItem]);
                 break;
         }
     }

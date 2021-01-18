@@ -62,19 +62,24 @@ Results in:
 </ul>
 ```
 
+## Overridable methods
+
+1.  mergeItemIntoNode -- Does an Object.assign of the item into the DOM node. 
+2.  configureNewChild -- Perform custom actions when new node created
+
 ## Special Props:  dataset, style [TODO]
 
 ## Ownership
 
-ib-id follows a prime directive -- do not interfere in any way with DOM elements created by other (custom elements).  In particular, in the example above, the header and footer list items are left alone.  ib-id will only modify, or delete, or append to, the two list items it created, as the list object change.
+ib-id follows a prime directive -- do not interfere in any way with DOM elements created by other custom elements or script.  In particular, in the example above, the header and footer list items are left alone.  ib-id will only modify, or delete, or append to, the two list items it created, as the list property changes.
 
 ## tag name
 
 ib-id's choice of which tag name to generate follows the following order of precedence:
 
-1)  If the list item has property:  'localName': 'my-tag-name', that's what is used. [TODO]
-2)  If the ib-id tag has property: 'tag' set explicitly, that is used.
-3)  It uses the tag of the previousElementSibling, and if no such element exists, the parent element.
+1.  If the list item has property:  'localName': 'my-tag-name', that's what is used. [TODO]
+2.  If the ib-id tag has property: 'tag' set explicitly, that is used.
+3.  If neither 1 nor 2 above pan out, it uses the tag of the previousElementSibling, and if no such element exists, the parent element.
 
 ## Complementing SSR [TODO]
 

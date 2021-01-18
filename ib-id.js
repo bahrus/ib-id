@@ -1,4 +1,5 @@
 import { xc } from 'xtal-element/lib/XtalCore.js';
+import { applyP } from 'trans-render/lib/applyP.js';
 const propDefGetter = [
     ({ list, map }) => ({
         type: Object,
@@ -16,7 +17,7 @@ function newC(tag, wm, map, list, idx, self, prevSib) {
     const newChild = document.createElement(tag);
     self.configureNewChild(newChild);
     wm.add(newChild);
-    self.applyItem(newChild, map(list[idx], idx));
+    self.mergeItemIntoNode(newChild, map(list[idx], idx));
     idx++;
     if (prevSib === undefined) {
         self.insertAdjacentElement('afterend', newChild);
@@ -34,7 +35,7 @@ const linkNextSiblings = ({ list, tag, wm, map, self }) => {
     let prevSib = undefined;
     while (idx < len) {
         if (ns !== null && wm.has(ns)) {
-            self.applyItem(ns, map(list[idx], idx));
+            self.mergeItemIntoNode(ns, map(list[idx], idx));
             idx++;
             prevSib = ns;
         }
@@ -48,7 +49,7 @@ const linkNextSiblings = ({ list, tag, wm, map, self }) => {
                     idx++;
                 }
                 else {
-                    self.applyItem(lastElement, map(list[idx], idx));
+                    self.mergeItemIntoNode(lastElement, map(list[idx], idx));
                     idx++;
                     (prevSib || self).insertAdjacentElement('afterend', lastElement);
                     prevSib = lastElement;
@@ -94,14 +95,18 @@ export class IbId extends HTMLElement {
     onPropChange(name, propDef, newVal) {
         this.reactor.addToQueue(propDef, newVal);
     }
+    /**
+     * Apply any custom actions on newly created element.
+     * @param newChild
+     */
     configureNewChild(newChild) { }
-    applyItem(newChild, listItem) {
+    mergeItemIntoNode(newChild, listItem) {
         switch (typeof listItem) {
             case 'string':
                 newChild.textContent = listItem;
                 break;
             case 'object':
-                Object.assign(newChild, listItem);
+                applyP(newChild, [listItem]);
                 break;
         }
     }
