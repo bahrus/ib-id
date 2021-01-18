@@ -72,6 +72,9 @@ const linkNextSiblings = ({ list, tag, wm, map, self }) => {
 const propActions = [
     linkNextSiblings
 ];
+/**
+ * @element ib-id
+ */
 export class IbId extends HTMLElement {
     constructor() {
         super(...arguments);

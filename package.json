@@ -1,16 +1,37 @@
 {
   "name": "ib-id",
   "version": "0.0.5",
-  "description": "",
-  "main": "index.js",
+  "description": "1-dimensional repeater web component",
+  "keywords": [
+    "webcomponents",
+    "webcomponent",
+    "customelements",
+    "customelement",
+    "repeater",
+    "loop"
+  ],
+  "main": "ib-id.js",
+  "module": "ib-id.js",
+  "exports":{
+    ".": "./ib-id.js",
+    "./ib-id.js": "./ib-id.js"
+  },
+  "files": [
+    "ib-id.js",
+    "ib-id.ts",
+    "types.d.ts"
+  ],
+  "types": "./types.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "web-dev-server --node-resolve --app-index demo/dev.html  --watch --open"
+    "start": "web-dev-server --node-resolve --app-index demo/dev.html  --watch --open",
+    "package-check": "package-check"
   },
   "dependencies": {
     "xtal-element": "0.0.330"
   },
   "devDependencies": {
+    "@skypack/package-check": "0.2.2",
     "@web/dev-server": "0.0.21"
   },
   "repository": {

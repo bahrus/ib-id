@@ -1,5 +1,6 @@
 import {xc} from 'xtal-element/lib/XtalCore.js';
 import {destructPropInfo, ReactiveSurface, PropAction, PropDef} from 'xtal-element/types.d.js';
+import {IbIdProps} from './types.d.js';
 
 const propDefGetter =  [
     ({list, map}: IbId) => ({
@@ -68,7 +69,10 @@ const linkNextSiblings = ({list, tag, wm, map, self}: IbId) => {
 const propActions = [
     linkNextSiblings
 ] as PropAction[];
-export class IbId extends HTMLElement implements ReactiveSurface {
+/**
+ * @element ib-id
+ */
+export class IbId extends HTMLElement implements ReactiveSurface, IbIdProps {
     static is = 'ib-id';
     self=this; propActions = propActions; reactor = new xc.Reactor(this);
     wm = new WeakSet<HTMLElement>();
