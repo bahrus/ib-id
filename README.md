@@ -6,7 +6,7 @@
 
 ib-id is a simple, 1-dimensional list web component.
 
-## Sample syntax I [TODO]:
+## Sample syntax I:
 
 ```html
 <ul>
@@ -79,7 +79,8 @@ ib-id's choice of which tag name to generate follows the following order of prec
 2)  If the ib-id tag has property: 'tag' set explicitly, that is used.
 3)  It uses the tag of the previousElementSibling, and if no such element exists, the parent element.
 
-##
+## Complementing SSR [TODO]
+
 
 
 

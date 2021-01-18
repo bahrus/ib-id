@@ -15,7 +15,7 @@ function newC(tag, wm, map, list, idx, self, prevSib) {
     const newChild = document.createElement(tag);
     self.configureNewChild(newChild);
     wm.add(newChild);
-    Object.assign(newChild, map(list[idx], idx));
+    self.applyItem(newChild, map(list[idx], idx));
     idx++;
     if (prevSib === undefined) {
         self.insertAdjacentElement('afterend', newChild);
@@ -33,7 +33,7 @@ const linkNextSiblings = ({ list, tag, wm, map, self }) => {
     let prevSib = undefined;
     while (idx < len) {
         if (ns !== null && wm.has(ns)) {
-            Object.assign(ns, map(list[idx], idx));
+            self.applyItem(ns, map(list[idx], idx));
             idx++;
             prevSib = ns;
         }
@@ -47,7 +47,7 @@ const linkNextSiblings = ({ list, tag, wm, map, self }) => {
                     idx++;
                 }
                 else {
-                    Object.assign(lastElement, map(list[idx], idx));
+                    self.applyItem(lastElement, map(list[idx], idx));
                     idx++;
                     (prevSib || self).insertAdjacentElement('afterend', lastElement);
                     prevSib = lastElement;
@@ -94,6 +94,16 @@ export class IbId extends HTMLElement {
         this.reactor.addToQueue(propDef, newVal);
     }
     configureNewChild(newChild) { }
+    applyItem(newChild, listItem) {
+        switch (typeof listItem) {
+            case 'string':
+                newChild.textContent = listItem;
+                break;
+            case 'object':
+                Object.assign(newChild, listItem);
+                break;
+        }
+    }
 }
 IbId.is = 'ib-id';
 xc.letThereBeProps(IbId, propDefs, 'onPropChange');

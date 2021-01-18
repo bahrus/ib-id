@@ -18,7 +18,7 @@ function newC(tag: string, wm: WeakSet<HTMLElement>, map: (x: any, idx?: number)
     const newChild = document.createElement(tag);
     self.configureNewChild(newChild);
     wm.add(newChild);
-    Object.assign(newChild, map(list[idx], idx));
+    self.applyItem(newChild, map(list[idx], idx));
     idx++;
     if(prevSib === undefined){
         self.insertAdjacentElement('afterend', newChild);
@@ -34,7 +34,7 @@ const linkNextSiblings = ({list, tag, wm, map, self}: IbId) => {
     let prevSib: Element = undefined;
     while(idx < len){
         if(ns!== null && wm.has(ns as HTMLElement)){
-            Object.assign(ns, map(list[idx], idx));
+            self.applyItem(ns as HTMLElement, map(list[idx], idx));
             idx++;
             prevSib = ns;
         }else{
@@ -46,7 +46,7 @@ const linkNextSiblings = ({list, tag, wm, map, self}: IbId) => {
                     prevSib = newC(tag, wm, map, list, idx, self, prevSib);
                     idx++;
                 }else{
-                    Object.assign(lastElement, map(list[idx], idx));
+                    self.applyItem(lastElement as HTMLElement, map(list[idx], idx));
                     idx++;
                     (prevSib || self).insertAdjacentElement('afterend', lastElement);
                     prevSib = lastElement;
@@ -90,6 +90,16 @@ export class IbId extends HTMLElement implements ReactiveSurface, IbIdProps {
         this.reactor.addToQueue(propDef, newVal);
     }
     configureNewChild(newChild: HTMLElement){}
+    applyItem(newChild: HTMLElement, listItem: any){
+        switch(typeof listItem){
+            case 'string':
+                newChild.textContent = listItem;
+                break;
+            case 'object':
+                Object.assign(newChild, listItem);
+                break;
+        }
+    }
     
 }
 xc.letThereBeProps(IbId, propDefs, 'onPropChange');
