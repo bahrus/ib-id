@@ -3,7 +3,8 @@ const propDefGetter = [
     ({ list, map }) => ({
         type: Object,
         dry: true,
-        stopReactionsIfFalsy: true
+        stopReactionsIfFalsy: true,
+        parse: true,
     }),
     ({ tag }) => ({
         type: String,

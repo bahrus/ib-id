@@ -4,19 +4,16 @@
 
 # ib-id
 
-ib-id is a simple, 1-dimensional list web component.
+ib-id is a simple, 1-dimensional list generating web component.
 
 ## Sample syntax I:
 
 ```html
 <ul>
     <li>header</li>
-    <ib-id id=ibid></ib-id>
+    <ib-id list='["hello 1", "hello 2"]' id=ibid></ib-id>
     <li>footer</li>
 </ul>
-<script>
-    ibid.list = ['hello 1', 'hello 2']
-</script>
 <script type=module>
     import 'ib-id/ib-id.js';
 </script>

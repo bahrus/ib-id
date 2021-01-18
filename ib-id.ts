@@ -6,7 +6,8 @@ const propDefGetter =  [
     ({list, map}: IbId) => ({
         type: Object,
         dry: true,
-        stopReactionsIfFalsy: true
+        stopReactionsIfFalsy: true,
+        parse: true,
     }),
     ({tag}: IbId) => ({
         type: String,
