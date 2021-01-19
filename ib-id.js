@@ -6,19 +6,26 @@ const propDefGetter = [
         dry: true,
         stopReactionsIfFalsy: true,
         parse: true,
+        async: true
     }),
     ({ tag }) => ({
         type: String,
         dry: true,
-    })
+        async: true
+    }),
+    ({ initCount }) => ({
+        type: Number,
+        async: true
+    }),
 ];
 const propDefs = xc.getPropDefs(propDefGetter);
 function newC(tag, wm, map, list, idx, self, prevSib) {
-    const newChild = document.createElement(tag);
+    const listItem = list[idx];
+    const domProps = map(listItem, idx);
+    const newChild = document.createElement(domProps.localName || tag);
     self.configureNewChild(newChild);
     wm.add(newChild);
-    self.mergeItemIntoNode(newChild, map(list[idx], idx));
-    idx++;
+    self.assignItemIntoNode(newChild, domProps);
     if (prevSib === undefined) {
         self.insertAdjacentElement('afterend', newChild);
     }
@@ -27,29 +34,57 @@ function newC(tag, wm, map, list, idx, self, prevSib) {
     }
     return newChild;
 }
-const linkNextSiblings = ({ list, tag, wm, map, self }) => {
+const linkNextSiblings = ({ list, tag, wm, map, self, initCount }) => {
+    if (!self.initialized && initCount !== undefined) {
+        let i = 0, ns = self;
+        const nextSiblings = [];
+        while (i < initCount && ns !== null) {
+            i++;
+            ns = ns.nextElementSibling;
+            nextSiblings.push(ns);
+        }
+        if (i === initCount && ns !== null) {
+            self.initialized = true;
+            for (const ns2 of nextSiblings) {
+                wm.add(ns2);
+            }
+        }
+        else {
+            setTimeout(() => linkNextSiblings(self), 50);
+            return;
+        }
+    }
     if (list === undefined || tag === undefined || map === undefined)
         return;
     let ns = self.nextElementSibling;
-    let idx = 0, len = list.length;
+    let idx = 0;
+    const domProps = map(list[idx], idx), len = list.length, dynTag = domProps.localName || tag;
     let prevSib = undefined;
     while (idx < len) {
         if (ns !== null && wm.has(ns)) {
-            self.mergeItemIntoNode(ns, map(list[idx], idx));
-            idx++;
-            prevSib = ns;
+            if (ns.localName !== dynTag) {
+                self.appendChild(ns);
+            }
+            else {
+                self.assignItemIntoNode(ns, map(list[idx], idx));
+                idx++;
+                prevSib = ns;
+            }
         }
         else {
             let hasNoMoreChildren = false;
             while (idx < len) {
-                const lastElement = hasNoMoreChildren ? null : self.lastElementChild;
+                let lastElement = hasNoMoreChildren ? null : self.lastElementChild;
+                if (lastElement !== null && lastElement.localName !== dynTag) {
+                    lastElement = self.querySelector(dynTag);
+                }
                 if (lastElement === null) {
                     hasNoMoreChildren = true;
                     prevSib = newC(tag, wm, map, list, idx, self, prevSib);
                     idx++;
                 }
                 else {
-                    self.mergeItemIntoNode(lastElement, map(list[idx], idx));
+                    self.assignItemIntoNode(lastElement, map(list[idx], idx));
                     idx++;
                     (prevSib || self).insertAdjacentElement('afterend', lastElement);
                     prevSib = lastElement;
@@ -84,6 +119,7 @@ export class IbId extends HTMLElement {
         this.propActions = propActions;
         this.reactor = new xc.Reactor(this);
         this.wm = new WeakSet();
+        this.initialized = false;
     }
     connectedCallback() {
         this.style.display = 'none';
@@ -100,7 +136,7 @@ export class IbId extends HTMLElement {
      * @param newChild
      */
     configureNewChild(newChild) { }
-    mergeItemIntoNode(newChild, listItem) {
+    assignItemIntoNode(newChild, listItem) {
         switch (typeof listItem) {
             case 'string':
                 newChild.textContent = listItem;

@@ -24,7 +24,7 @@
   "types": "./types.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "web-dev-server --node-resolve --app-index demo/dev.html  --watch --open",
+    "start": "web-dev-server --node-resolve --app-index demo/index.html  --watch --open",
     "package-check": "package-check"
   },
   "dependencies": {

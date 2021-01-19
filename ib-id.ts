@@ -9,19 +9,26 @@ const propDefGetter =  [
         dry: true,
         stopReactionsIfFalsy: true,
         parse: true,
+        async: true
     }),
     ({tag}: IbId) => ({
         type: String,
         dry: true,
-    })
+        async: true
+    }),
+    ({initCount}: IbId) => ({
+        type: Number,
+        async: true
+    }),
 ] as destructPropInfo[];
 const propDefs = xc.getPropDefs(propDefGetter);
 function newC(tag: string, wm: WeakSet<HTMLElement>, map: (x: any, idx?: number) => any, list: any[], idx: number, self: IbId, prevSib: Element){
-    const newChild = document.createElement(tag);
+    const listItem = list[idx];
+    const domProps = map(listItem, idx);
+    const newChild = document.createElement(domProps.localName || tag);
     self.configureNewChild(newChild);
     wm.add(newChild);
-    self.mergeItemIntoNode(newChild, map(list[idx], idx));
-    idx++;
+    self.assignItemIntoNode(newChild, domProps);
     if(prevSib === undefined){
         self.insertAdjacentElement('afterend', newChild);
     }else{
@@ -29,26 +36,52 @@ function newC(tag: string, wm: WeakSet<HTMLElement>, map: (x: any, idx?: number)
     }
     return newChild;
 }
-const linkNextSiblings = ({list, tag, wm, map, self}: IbId) => {
+const linkNextSiblings = ({list, tag, wm, map, self, initCount}: IbId) => {
+    if(!self.initialized && initCount !== undefined){
+        let i = 0, ns = self as Element;
+        const nextSiblings: Element[] = [];
+        while(i < initCount && ns !== null){
+            i++;
+            ns = ns.nextElementSibling;
+            nextSiblings.push(ns);
+        }
+        if(i === initCount && ns !== null){
+            self.initialized = true;
+            for(const ns2 of nextSiblings){
+                wm.add(ns2 as HTMLElement);
+            }
+        }else{
+            setTimeout(() => linkNextSiblings(self), 50);
+            return;
+        }
+    }
     if(list === undefined || tag === undefined || map === undefined) return; 
     let ns = self.nextElementSibling;
-    let idx = 0, len = list.length;
+    let idx = 0; 
+    const domProps = map(list[idx], idx), len = list.length, dynTag = domProps.localName || tag;
     let prevSib: Element = undefined;
     while(idx < len){
         if(ns!== null && wm.has(ns as HTMLElement)){
-            self.mergeItemIntoNode(ns as HTMLElement, map(list[idx], idx));
-            idx++;
-            prevSib = ns;
+            if(ns.localName !== dynTag){
+                self.appendChild(ns);
+            }else{
+                self.assignItemIntoNode(ns as HTMLElement, map(list[idx], idx));
+                idx++;
+                prevSib = ns;
+            }
         }else{
             let hasNoMoreChildren = false;
             while(idx < len){
-                const lastElement = hasNoMoreChildren ? null : self.lastElementChild;
+                let lastElement = hasNoMoreChildren ? null : self.lastElementChild;
+                if(lastElement !== null && lastElement.localName !== dynTag){
+                    lastElement = self.querySelector(dynTag);
+                }
                 if(lastElement === null){
                     hasNoMoreChildren = true;
                     prevSib = newC(tag, wm, map, list, idx, self, prevSib);
                     idx++;
                 }else{
-                    self.mergeItemIntoNode(lastElement as HTMLElement, map(list[idx], idx));
+                    self.assignItemIntoNode(lastElement as HTMLElement, map(list[idx], idx));
                     idx++;
                     (prevSib || self).insertAdjacentElement('afterend', lastElement);
                     prevSib = lastElement;
@@ -81,6 +114,8 @@ export class IbId extends HTMLElement implements ReactiveSurface, IbIdProps {
     tag: string;
     map: (x: any, idx?: number) => any;
     list: any[];
+    initCount: number | undefined;
+    initialized = false;
     connectedCallback(){
         this.style.display = 'none';
         xc.hydrate<Partial<IbId>>(this, propDefs, {
@@ -98,7 +133,7 @@ export class IbId extends HTMLElement implements ReactiveSurface, IbIdProps {
     configureNewChild(newChild: HTMLElement){}
 
 
-    mergeItemIntoNode(newChild: HTMLElement, listItem: any){
+    assignItemIntoNode(newChild: HTMLElement, listItem: any){
         switch(typeof listItem){
             case 'string':
                 newChild.textContent = listItem;
