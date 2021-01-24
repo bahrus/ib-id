@@ -1,27 +1,30 @@
 import {xc} from 'xtal-element/lib/XtalCore.js';
 import {applyP} from 'trans-render/lib/applyP.js';
-import {destructPropInfo, ReactiveSurface, PropAction, PropDef} from 'xtal-element/types.d.js';
+import {ReactiveSurface, PropAction, PropDef, PropDefMap} from 'xtal-element/types.d.js';
 import {IbIdProps} from './types.d.js';
 
-const propDefGetter =  [
-    ({list, map}: IbId) => ({
-        type: Object,
-        dry: true,
-        stopReactionsIfFalsy: true,
-        parse: true,
-        async: true
-    }),
-    ({tag}: IbId) => ({
+const objProp = {
+    type: Object,
+    dry: true,
+    stopReactionsIfFalsy: true,
+    parse: true,
+    async: true
+} as PropDef;
+const propDefMap : PropDefMap<IbId> = {
+    list: objProp,
+    map: objProp,
+    tag: {
         type: String,
         dry: true,
-        async: true
-    }),
-    ({initCount}: IbId) => ({
+        async: true,
+    },
+    initCount: {
         type: Number,
         async: true
-    }),
-] as destructPropInfo[];
-const propDefs = xc.getPropDefs(propDefGetter);
+    }
+}
+const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
+
 function newC(tag: string, wm: WeakSet<HTMLElement>, map: (x: any, idx?: number) => any, list: any[], idx: number, self: IbId, prevSib: Element){
     const listItem = list[idx];
     const domProps = map(listItem, idx);
@@ -118,7 +121,7 @@ export class IbId extends HTMLElement implements ReactiveSurface, IbIdProps {
     initialized = false;
     connectedCallback(){
         this.style.display = 'none';
-        xc.hydrate<Partial<IbId>>(this, propDefs, {
+        xc.hydrate<Partial<IbId>>(this, slicedPropDefs, {
             map: x => x,
             tag: (this.previousElementSibling || this.parentElement).localName,
         })
@@ -145,5 +148,5 @@ export class IbId extends HTMLElement implements ReactiveSurface, IbIdProps {
     }
     
 }
-xc.letThereBeProps(IbId, propDefs, 'onPropChange');
+xc.letThereBeProps(IbId, slicedPropDefs.propDefs, 'onPropChange');
 xc.define(IbId);

@@ -1,24 +1,26 @@
 import { xc } from 'xtal-element/lib/XtalCore.js';
 import { applyP } from 'trans-render/lib/applyP.js';
-const propDefGetter = [
-    ({ list, map }) => ({
-        type: Object,
-        dry: true,
-        stopReactionsIfFalsy: true,
-        parse: true,
-        async: true
-    }),
-    ({ tag }) => ({
+const objProp = {
+    type: Object,
+    dry: true,
+    stopReactionsIfFalsy: true,
+    parse: true,
+    async: true
+};
+const propDefMap = {
+    list: objProp,
+    map: objProp,
+    tag: {
         type: String,
         dry: true,
-        async: true
-    }),
-    ({ initCount }) => ({
+        async: true,
+    },
+    initCount: {
         type: Number,
         async: true
-    }),
-];
-const propDefs = xc.getPropDefs(propDefGetter);
+    }
+};
+const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 function newC(tag, wm, map, list, idx, self, prevSib) {
     const listItem = list[idx];
     const domProps = map(listItem, idx);
@@ -123,7 +125,7 @@ export class IbId extends HTMLElement {
     }
     connectedCallback() {
         this.style.display = 'none';
-        xc.hydrate(this, propDefs, {
+        xc.hydrate(this, slicedPropDefs, {
             map: x => x,
             tag: (this.previousElementSibling || this.parentElement).localName,
         });
@@ -148,5 +150,5 @@ export class IbId extends HTMLElement {
     }
 }
 IbId.is = 'ib-id';
-xc.letThereBeProps(IbId, propDefs, 'onPropChange');
+xc.letThereBeProps(IbId, slicedPropDefs.propDefs, 'onPropChange');
 xc.define(IbId);

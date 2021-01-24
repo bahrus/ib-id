@@ -28,11 +28,11 @@
     "package-check": "package-check"
   },
   "dependencies": {
-    "xtal-element": "0.0.330"
+    "xtal-element": "0.0.331"
   },
   "devDependencies": {
     "@skypack/package-check": "0.2.2",
-    "@web/dev-server": "0.0.21"
+    "@web/dev-server": "0.1.5"
   },
   "repository": {
     "type": "git",
