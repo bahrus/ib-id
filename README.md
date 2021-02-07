@@ -126,6 +126,7 @@ For laissez-dom to be effective,
 So, for example, the markup needs to look as follows:
 
 ```html
+<ul>
 <laissez-dom>
     <template>
         <li>hello 1</li>
@@ -141,6 +142,7 @@ So, for example, the markup needs to look as follows:
         ...
     </template>
 </laissez-dom>
+</ul>
 ```
 
 So how can we equip ib-id to generate this content?  A cop-out(?) might be to just say:  Extend laissez-dom, with a component named something like "paged-list", and then pass to ib-id a grouped list of property settings.
