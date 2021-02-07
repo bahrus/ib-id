@@ -111,6 +111,9 @@ We can specify which initial nodes are "owned" by ib-id via the initCount proper
 </ul>
 ```
 
+## Explore using [range](https://github.com/WICG/webcomponents/issues/901#issuecomment-742195795) [TODO]
+
+
 ## * Lazy Loading [Big Time TOODOO]
 
 laissez-dom supports lazy loading blocks of html.  In terms of performance, it seems to exceed what can be obtained by using content-visibility, at least when generating content in the client.  (There are some disadvantages, though, in terms of lack of search, for starters).  The problem is if we want to combine that component with this one, we are in a bit of a quandary.  Take, for example, creating a massive list of li's.
@@ -140,12 +143,20 @@ So, for example, the markup needs to look as follows:
 </laissez-dom>
 ```
 
-So how can we equip ib-id to generate this content?  A cop-out(?) might be to just say:  Extend laissez-dom, with a component named something like "paged-lis", and then pass to ib-id a grouped list of property settings.
+So how can we equip ib-id to generate this content?  A cop-out(?) might be to just say:  Extend laissez-dom, with a component named something like "paged-list", and then pass to ib-id a grouped list of property settings.
 
 However, I think it's a cop-out because:
 
 1.  It imposes a class hierarchy on components for a rather banal technical reason.
-2.  It imposes too much work on the developer.  As it is, unless the developer is working with a native DOM element, the developer is already expected to develop a component (or more) that ib-id will repeat.  Now we are imposing an additional component to be built.
+2.  It imposes too much work on the developer.  As it is, unless the developer is working with a native DOM element, the developer is already expected to develop a component (or more) that ib-id will repeat, which contains markup within each loop iteration.  Now we are imposing an additional component to be built.
+
+Tentative solution:
+
+```html
+<ib-id tag="laissez-dom>template>li" group-by=100></ib-id>
+```
+
+Maybe need another component for this?
 
 
 
