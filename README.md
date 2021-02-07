@@ -4,7 +4,7 @@
 
 # ib-id
 
-ib-id is a simple, 1-dimensional list generating web component.  It generates lists from JSON.  However, the initial list could be server generated HTML.
+ib-id is a simple, 1-dimensional list generating web component*.  It generates lists from JSON.  However, the initial list could be server generated HTML.
 
 ## Sample syntax I:
 
@@ -110,6 +110,41 @@ We can specify which initial nodes are "owned" by ib-id via the initCount proper
     <li>footer</li>
 </ul>
 ```
+
+## * Lazy Loading [Big Time TOODOO]
+
+laissez-dom supports lazy loading blocks of html.  In terms of performance, it seems to exceed what can be obtained by using content-visibility, at least when generating content in the client.  (There are some disadvantages, though, in terms of lack of search, for starters).  The problem is if we want to combine that component with this one, we are in a bit of a quandry.  Taking for the example creating a massive list of li's, for laissez-dom to be effective, 
+
+1.  An estimated height on the laissez-dom component is required (as with content-visibility), 
+2.  Unless the laissez-dom component contains a large (dimension-wise) component that takes up much of the screen, multiple iterations need to go into each component.
+
+So, for example, the markup needs to look as follows:
+
+```html
+<laissez-dom>
+    <template>
+        <li>hello 1</li>
+        <li>hello 2</li>
+        ...
+        <li>hello 99</li>
+    </template>
+</laissez-dom>
+<laissez-dom>
+    <template>
+        <li>hello 100</li>
+        <li>hello 101</li>
+        ...
+    </template>
+</laissez-dom>
+```
+
+So how can we equip ib-id to generate this content?  A cop-out(?) might be to just say:  Extend laissez-dom
+
+However, I think it's a cop-out because:
+
+1.  It imposes a class hierarchy on components for a rather banal technical reason.
+2.  It imposes too much work on the developer.  As it is, unless the developer is working with a native DOM element, the developer is already expected to develop a component (or more) that ib-id will repeat.  Now we are imposes an additional component to be built.
+
 
 
 

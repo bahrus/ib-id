@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <ul>
+        <li>header</li>
+        <ib-id id=ibid></ib-id>
+        <li>footer</li>
+    </ul>
+    <style>
+        li {
+            display:none;
+            content-visibility: hidden;
+            contain-intrinsic-size: 16px; /* Explained in the next section. */
+        }
+    </style>
+    <script type=module>
+        import '../ib-id.js';
+    </script>
+    <script>
+        const list = [];
+        const start1 = performance.now();
+        for(let i = 0; i < 100000; i++){
+            list.push({textContent: 'hello ' + i});
+        }
+        const end1 = performance.now();
+        console.log(end1 - start1);
+        const start2 = performance.now();
+        ibid.list = list;
+        const end2 = performance.now();
+        console.log(end2 - start2);
+    </script>
+</body>
+</html>

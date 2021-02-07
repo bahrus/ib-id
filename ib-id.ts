@@ -112,7 +112,7 @@ const propActions = [
  */
 export class IbId extends HTMLElement implements ReactiveSurface, IbIdProps {
     static is = 'ib-id';
-    self=this; propActions = propActions; reactor = new xc.Reactor(this);
+    self=this; propActions = propActions; reactor = new xc.Rx(this);
     wm = new WeakSet<HTMLElement>();
     tag: string;
     map: (x: any, idx?: number) => any;
