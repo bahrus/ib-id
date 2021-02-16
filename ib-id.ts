@@ -3,42 +3,7 @@ import {applyP} from 'trans-render/lib/applyP.js';
 import {ReactiveSurface, PropAction, PropDef, PropDefMap} from 'xtal-element/types.d.js';
 import {IbIdProps} from './types.d.js';
 
-const objProp = {
-    type: Object,
-    dry: true,
-    stopReactionsIfFalsy: true,
-    parse: true,
-    async: true
-} as PropDef;
-const propDefMap : PropDefMap<IbId> = {
-    list: objProp,
-    map: objProp,
-    tag: {
-        type: String,
-        dry: true,
-        async: true,
-    },
-    initCount: {
-        type: Number,
-        async: true
-    }
-}
-const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 
-function newC(tag: string, wm: WeakSet<HTMLElement>, map: (x: any, idx?: number) => any, list: any[], idx: number, self: IbId, prevSib: Element){
-    const listItem = list[idx];
-    const domProps = map(listItem, idx);
-    const newChild = document.createElement(domProps.localName || tag);
-    self.configureNewChild(newChild);
-    wm.add(newChild);
-    self.assignItemIntoNode(newChild, domProps);
-    if(prevSib === undefined){
-        self.insertAdjacentElement('afterend', newChild);
-    }else{
-        prevSib.insertAdjacentElement('afterend', newChild);
-    }
-    return newChild;
-}
 const linkNextSiblings = ({list, tag, wm, map, self, initCount}: IbId) => {
     if(!self.initialized && initCount !== undefined){
         let i = 0, ns = self as Element;
@@ -115,15 +80,20 @@ export class IbId extends HTMLElement implements ReactiveSurface, IbIdProps {
     self=this; propActions = propActions; reactor = new xc.Rx(this);
     wm = new WeakSet<HTMLElement>();
     tag: string;
+    /**
+     * map allows mapping a general list to props to be set on the UI component.
+     */
     map: (x: any, idx?: number) => any;
+    nodesCompatibleIf: (x: HTMLElement, y: HTMLElement) => boolean;
     list: any[];
     initCount: number | undefined;
     initialized = false;
     connectedCallback(){
         this.style.display = 'none';
         xc.hydrate<Partial<IbId>>(this, slicedPropDefs, {
-            map: x => x,
+            map: identity,
             tag: (this.previousElementSibling || this.parentElement).localName,
+            nodesCompatibleIf: tagsSame,
         })
     }
     onPropChange(name: string, propDef: PropDef, newVal: any){
@@ -148,5 +118,44 @@ export class IbId extends HTMLElement implements ReactiveSurface, IbIdProps {
     }
     
 }
+
+const objProp = {
+    type: Object,
+    dry: true,
+    stopReactionsIfFalsy: true,
+    parse: true,
+    async: true
+} as PropDef;
+const propDefMap : PropDefMap<IbId> = {
+    list: objProp,
+    map: objProp,
+    tag: {
+        type: String,
+        dry: true,
+        async: true,
+    },
+    initCount: {
+        type: Number,
+        async: true
+    }
+}
+const identity = x => x;
+const tagsSame = (x: HTMLElement, y: HTMLElement) => x.localName === y.localName;
+const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 xc.letThereBeProps<IbId>(IbId, slicedPropDefs.propDefs, 'onPropChange');
 xc.define(IbId);
+
+function newC(tag: string, wm: WeakSet<HTMLElement>, map: (x: any, idx?: number) => any, list: any[], idx: number, self: IbId, prevSib: Element){
+    const listItem = list[idx];
+    const domProps = map(listItem, idx);
+    const newChild = document.createElement(domProps.localName || tag);
+    self.configureNewChild(newChild);
+    wm.add(newChild);
+    self.assignItemIntoNode(newChild, domProps);
+    if(prevSib === undefined){
+        self.insertAdjacentElement('afterend', newChild);
+    }else{
+        prevSib.insertAdjacentElement('afterend', newChild);
+    }
+    return newChild;
+}

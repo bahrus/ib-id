@@ -1,41 +1,5 @@
 import { xc } from 'xtal-element/lib/XtalCore.js';
 import { applyP } from 'trans-render/lib/applyP.js';
-const objProp = {
-    type: Object,
-    dry: true,
-    stopReactionsIfFalsy: true,
-    parse: true,
-    async: true
-};
-const propDefMap = {
-    list: objProp,
-    map: objProp,
-    tag: {
-        type: String,
-        dry: true,
-        async: true,
-    },
-    initCount: {
-        type: Number,
-        async: true
-    }
-};
-const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
-function newC(tag, wm, map, list, idx, self, prevSib) {
-    const listItem = list[idx];
-    const domProps = map(listItem, idx);
-    const newChild = document.createElement(domProps.localName || tag);
-    self.configureNewChild(newChild);
-    wm.add(newChild);
-    self.assignItemIntoNode(newChild, domProps);
-    if (prevSib === undefined) {
-        self.insertAdjacentElement('afterend', newChild);
-    }
-    else {
-        prevSib.insertAdjacentElement('afterend', newChild);
-    }
-    return newChild;
-}
 const linkNextSiblings = ({ list, tag, wm, map, self, initCount }) => {
     if (!self.initialized && initCount !== undefined) {
         let i = 0, ns = self;
@@ -126,8 +90,9 @@ export class IbId extends HTMLElement {
     connectedCallback() {
         this.style.display = 'none';
         xc.hydrate(this, slicedPropDefs, {
-            map: x => x,
+            map: identity,
             tag: (this.previousElementSibling || this.parentElement).localName,
+            nodesCompatibleIf: tagsSame,
         });
     }
     onPropChange(name, propDef, newVal) {
@@ -150,5 +115,43 @@ export class IbId extends HTMLElement {
     }
 }
 IbId.is = 'ib-id';
+const objProp = {
+    type: Object,
+    dry: true,
+    stopReactionsIfFalsy: true,
+    parse: true,
+    async: true
+};
+const propDefMap = {
+    list: objProp,
+    map: objProp,
+    tag: {
+        type: String,
+        dry: true,
+        async: true,
+    },
+    initCount: {
+        type: Number,
+        async: true
+    }
+};
+const identity = x => x;
+const tagsSame = (x, y) => x.localName === y.localName;
+const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 xc.letThereBeProps(IbId, slicedPropDefs.propDefs, 'onPropChange');
 xc.define(IbId);
+function newC(tag, wm, map, list, idx, self, prevSib) {
+    const listItem = list[idx];
+    const domProps = map(listItem, idx);
+    const newChild = document.createElement(domProps.localName || tag);
+    self.configureNewChild(newChild);
+    wm.add(newChild);
+    self.assignItemIntoNode(newChild, domProps);
+    if (prevSib === undefined) {
+        self.insertAdjacentElement('afterend', newChild);
+    }
+    else {
+        prevSib.insertAdjacentElement('afterend', newChild);
+    }
+    return newChild;
+}

@@ -6,6 +6,14 @@
 
 ib-id is a simple, 1-dimensional list generating web component*.  It generates lists from JSON.  However, the initial list could be server generated HTML.
 
+ib-id is one of many web components that provide repeat functionality.
+
+What makes ib-id different from the rest:
+
+1.  It has full support for dynamic tag names.
+2.  It can complement server-side (initial) rendering.
+3.  It does **not** provide any support for template binding within each element.  It only provides support for a linear list of (a potpourri of) tags.  This means to use ib-id effectively, you will want a rapid way of encapsulating the markup you want within each tag. 
+
 ## Sample syntax I:
 
 ```html
@@ -105,7 +113,7 @@ We can specify which initial nodes are "owned" by ib-id via the initCount proper
 <ul>
     <li>header</li>
     <ib-id init-count=2></ib-id>
-    <li >hello 1</li>
+    <li>hello 1</li>
     <li>hello 2</li>
     <li>footer</li>
 </ul>
@@ -121,7 +129,7 @@ laissez-dom supports lazy loading blocks of html.  In terms of performance, it s
 For laissez-dom to be effective, 
 
 1.  An estimated height on the laissez-dom component is required (as with content-visibility), 
-2.  Unless the laissez-dom component contains a large (dimension-wise) component that takes up much of the screen, multiple iterations need to go into each component.
+2.  Unless the laissez-dom component contains a large (dimension-wise) component that takes up much of the screen, multiple iterations need to go into each component instance.
 
 So, for example, the markup needs to look as follows:
 
@@ -140,6 +148,7 @@ So, for example, the markup needs to look as follows:
         <li>hello 100</li>
         <li>hello 101</li>
         ...
+        <li>hello 199</li>
     </template>
 </laissez-dom>
 </ul>
@@ -158,7 +167,7 @@ Tentative solution:
 <ib-id tag="laissez-dom>template>li" group-by=100></ib-id>
 ```
 
-Maybe need another component for this?
+Maybe need another component for this?  
 
 
 
