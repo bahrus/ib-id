@@ -148,5 +148,5 @@ export class IbId extends HTMLElement implements ReactiveSurface, IbIdProps {
     }
     
 }
-xc.letThereBeProps(IbId, slicedPropDefs.propDefs, 'onPropChange');
+xc.letThereBeProps<IbId>(IbId, slicedPropDefs.propDefs, 'onPropChange');
 xc.define(IbId);
