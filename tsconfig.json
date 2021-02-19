@@ -7,9 +7,11 @@
 		"newLine": "LF",
 		"watch": true
 	},
+	"files":[
+		"ib-id.ts"
+	],
 	"exclude":[
-		"build",
-		"node_modules"
+		"./node_modules/*"
 	]
 
 }
