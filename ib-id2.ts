@@ -104,29 +104,28 @@ function poolExtras(self: IbIdProps, prevSib: Element){
 function conditionalCreate(self: IbIdProps, item: any, prevSib: Element): Element{
     const {grp1, grp1LU, ownedSiblings} = self;
     const val = grp1(item);
-
+    let newEl: Element;
     //test next few siblings for a match
     let ns = prevSib;
     for(let i = 0; i < 4; i++){
         ns = ns.nextElementSibling as HTMLElement;
         if(ns === null || !ownedSiblings.has(ns)) break;
         if(grp1(ns) === val){
-            applyP(ns, item);
-            prevSib.insertAdjacentElement('afterend', ns);
-            return ns;
+            newEl = ns;
+            break;
         }
     }
     const elementPool = grp1LU[val];
     if(elementPool !== undefined && elementPool.length > 0){
-        const lastMatch = elementPool.pop();
-        applyP(lastMatch, item);
-        prevSib.insertAdjacentElement('afterend', lastMatch);
-        return lastMatch;
+        newEl = elementPool.pop();
+    }
+    if(newEl === undefined){
+        newEl = document.createElement(item.localName || self.tag);
+        ownedSiblings.add(newEl);
     }
     
-    const el = document.createElement(item.localName || self.tag);
-    applyP(el, item);
-    prevSib.insertAdjacentElement('afterend', el);
-    return el;
+    applyP(newEl, item);
+    prevSib.insertAdjacentElement('afterend', newEl);
+    return newEl;
 }
 
