@@ -84,12 +84,43 @@ function markOwnership(self: IbIdProps, initCount: number, wm: WeakSet<HTMLEleme
     }
 }
 
-function index(self: IbIdProps, el: HTMLElement){
-    const {grp1, grp1LU} = self;
-    const val = grp1(el);
-    let matchingElements = grp1LU[val];
-    if(matchingElements === undefined){
-        matchingElements = grp1LU[val] = new Set<HTMLElement>();
+function poolExtras(self: IbIdProps, prevSib: Element){
+    const {grp1, grp1LU, ownedSiblings} = self;
+    let ns = prevSib.nextElementSibling;
+    while(ns !== null && ownedSiblings.has(ns)){
+        self.append(ns);
+        const val = grp1(ns);
+        if(grp1LU[val] === undefined){
+            grp1LU[val] = [];
+        }
+        grp1LU[val].push(ns);
+        ns = ns.nextElementSibling;
+    }
+}
+
+function conditionalCreate(self: IbIdProps, item: any, prevSib: Element){
+    const {grp1, grp1LU, ownedSiblings} = self;
+    const val = grp1(item);
+    //let matchingElements = grp1LU[val];
+    let el: HTMLElement;
+    if(item === undefined){
+
+        
+    }else{
+        //test next few siblings for a match
+        let ns = prevSib;
+        for(let i = 0; i < 4; i++){
+            ns = ns.nextElementSibling as HTMLElement;
+            if(ns === null || !ownedSiblings.has(ns)) break;
+            if(grp1(ns) === val){
+                prevSib.insertAdjacentElement('afterend', ns);
+                return;
+            }
+        }
+        //
+        matchingElements = grp1LU[val];
+        const firstMatch = matchingElements[0];
     }
     matchingElements.add(el);
 }
+

@@ -5,8 +5,9 @@ export interface IbIdProps extends Partial<HTMLElement>{
     list: any[],
     initCount?: number | undefined;
     initialized?: boolean | undefined;
+    ownedSiblings: WeakSet<Element>;
     grp1: (x: any) => string;
-    grp1LU: {[key: string] : Set<HTMLElement>}
+    grp1LU: {[key: string] : Element[]}
 }
 
 declare global {
