@@ -1,7 +1,7 @@
 import {xc} from 'xtal-element/lib/XtalCore.js';
 import {applyP} from 'trans-render/lib/applyP.js';
 import {ReactiveSurface, PropAction, PropDef, PropDefMap} from 'xtal-element/types.d.js';
-import {IbIdProps} from './types.d.js';
+import {IbIdProps} from './types.js';
 
 
 const linkNextSiblings = ({list, tag, wm, map, self, initCount}: IbId) => {

@@ -8,7 +8,7 @@
 		"watch": true
 	},
 	"files":[
-		"ib-id.ts"
+		"i-bid.ts"
 	],
 	"exclude":[
 		"./node_modules/*"

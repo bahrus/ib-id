@@ -10,7 +10,6 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
     self = this;
     propActions = propActions;
     reactor = new xc.Rx(this);
-    wm = new WeakSet<Element>();
     tag: string;
     initialized: boolean | undefined;
     /**
@@ -20,32 +19,34 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
     nodesCompatibleIf: (x: HTMLElement, y: HTMLElement) => boolean;
     list: any[];
     initCount: number | undefined;
-    ownedSiblings: WeakSet<Element> | undefined;
+    ownedSiblings: WeakSet<Element> = new WeakSet<Element>();
     grp1LU: {[key: string] : Element[]} = {};
-    
+    grp1: undefined | ((x: any) => string);
     connectedCallback(){
         this.style.display = 'none';
         xc.hydrate<Partial<IbIdProps>>(this, slicedPropDefs, {
+            initCount: 0,
             map: identity,
             tag: (this.previousElementSibling || this.parentElement).localName,
             grp1: (x: Element) => x.localName,
         });
     }
     onPropChange(name: string, propDef: PropDef, newVal: any){
+        console.log(name, propDef, newVal);
         this.reactor.addToQueue(propDef, newVal);
     }
 }
 const identity = x => x;
 
 const linkInitialized = ({initCount, self}: IBid) => {
-    if(initCount !== undefined){
+    if(initCount !== 0){
         markOwnership(self, initCount);
     }else{
         self.initialized = true;
     }
 }
 
-const onNewList = ({initialized, list, self}: IBid) => {
+const onNewList = ({initialized, grp1, list, self}: IBid) => {
     let ns = self as Element;
     for(const item of list){
         ns = conditionalCreate(self, item, ns);
@@ -58,16 +59,23 @@ const propActions = [
 ] as PropAction[];
 
 
-const objProp = {
+const objProp1 = {
     type: Object,
     dry: true,
     stopReactionsIfFalsy: true,
     parse: true,
     async: true
 } as PropDef;
+const objProp2 = {
+    type: Object,
+    dry: true,
+    stopReactionsIfFalsy: true,
+    async: true,
+}
 const propDefMap : PropDefMap<IBid> = {
-    list: objProp,
-    map: objProp,
+    list: objProp1,
+    map: objProp1,
+    grp1: objProp2,
     tag: {
         type: String,
         dry: true,
@@ -80,6 +88,8 @@ const propDefMap : PropDefMap<IBid> = {
     initialized: {
         type: Boolean,
         stopReactionsIfFalsy: true,
+        dry: true,
+        async: true,
     }
 }
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
@@ -87,7 +97,7 @@ xc.letThereBeProps<IBid>(IBid, slicedPropDefs.propDefs, 'onPropChange');
 xc.define(IBid);
 
 function markOwnership(self: IBid, initCount: number){
-    const {wm} = self;
+    const {ownedSiblings} = self;
     let i = 0, ns = self as Element;
     const nextSiblings: Element[] = [];
     while(i < initCount && ns !== null){
@@ -98,7 +108,7 @@ function markOwnership(self: IBid, initCount: number){
     if(i === initCount && ns !== null){
         self.initialized = true;
         for(const ns2 of nextSiblings){
-            wm.add(ns2 as HTMLElement);
+            ownedSiblings.add(ns2 as HTMLElement);
         }
     }else{
         setTimeout(() => markOwnership(self, initCount), 50);
