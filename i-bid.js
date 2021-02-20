@@ -44,6 +44,7 @@ const onNewList = ({ initialized, grp1, list, self }) => {
             wrappedItem = { localName: self.tag, ...wrappedItem };
         ns = conditionalCreate(self, wrappedItem, ns);
     }
+    poolExtras(self, ns);
 };
 const propActions = [
     linkInitialized,
@@ -109,14 +110,18 @@ function markOwnership(self, initCount) {
 function poolExtras(self, prevSib) {
     const { grp1, grp1LU, ownedSiblings } = self;
     let ns = prevSib.nextElementSibling;
+    const toPool = [];
     while (ns !== null && ownedSiblings.has(ns)) {
-        self.append(ns);
+        toPool.push(ns);
         const val = grp1(ns);
         if (grp1LU[val] === undefined) {
             grp1LU[val] = [];
         }
         grp1LU[val].push(ns);
         ns = ns.nextElementSibling;
+    }
+    for (const el of toPool) {
+        self.append(el);
     }
 }
 function conditionalCreate(self, item, prevSib) {

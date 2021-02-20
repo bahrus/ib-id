@@ -2,28 +2,47 @@
 
 <img src="https://badgen.net/bundlephobia/minzip/ib-id">
 
-# ib-id
+# ibid
 
-ib-id is a simple, 1-dimensional list generating web component*.  It generates lists from JSON.  However, the initial list could be server generated HTML.
+This package contains a suite of web components, depending on the placement of the dash -- i-bid, ib-id[TODO], ibi-d[TODO].
 
-ib-id is one of many web components that provide repeat functionality.
+Each of them provide a simple, 1-dimensional list generating web component*.  They generate lists from JSON.
 
-What makes ib-id different from the rest:
+They each have a property called "list" where an array of properties can be passed in. ibid merges those properties into each instance.
+
+ibid is one of many web component libries that provide repeat functionality.
+
+As of this moment, what makes ibid different from the rest (without having conducted an exhaustive search):
 
 1.  It has full support for dynamic tag names.
 2.  It can complement server-side (initial) rendering.
-3.  It does **not** provide any support for template binding within each element.  It only provides support for a linear list of (a potpourri of) tags.  This means to use ib-id effectively, you will want a rapid way of encapsulating the markup you want within each tag. 
+3.  It does **not** provide any support for template binding within each element.  It only provides support for a linear list of (a potpourri of) tags.  This means to use ibid effectively, you will want a rapid way of encapsulating the markup you want within each tag (and a nice IDE and/or IDE plugin which can easily navigate to the code of a custom element -- [lit-plugin]https://marketplace.visualstudio.com/items?itemName=runem.lit-plugin) does this quite effectively for js-based web components, for example).
+
+The three ibid components also provide support for something called "element pooling."  Alternative names could be element reuse, element recycling.  Other repeating libraries may support the basic concept.  The reason for this package supporting three different components has to do with element pooling strategy.
+
+The idea behind element pooling is this:  Without pooling, suppose the list of objects to bind to changes.  The list could grow, or shrink, and the values that need to display can also change.  What should we do with the elements generated from the previous list?  One approach could be to just delete the old elements, and re-generate the list.  That could be done (another web component could take that approach), but that's not what ibid does.
+
+ibid assumes there's a significant cost to generating a native or naturalized (custom) DOM element -- cloning a template, attaching shadowing DOM, appending the nodes, and that updating an existing element without doing all that can be cheaper than starting from scratch.
+
+In addition, holding on to a DOM element, rather than recreating it from a minimul state of properties, may be quite usesful, if the user interactions with the component (focus, scrolling, expanded sections) doesn't take the trouble to make callbacks into the model the list binds from.
+
+The tricky thing is how to align a new list with elements which have already been created.  That aspect is crucial difference between each component provided within the ibid package.
+
+## i-bid's Pooling Strategy
+
+i-bid's element pooling is based on the tag name -- if the tag name is the same as before, the new props of a list are simply passed in.  If the tag name changes, an effort is made to find an "owned" element matching that tagname to reuse.  If no spares are found, only then is a new element instance created.
+
 
 ## Sample syntax I:
 
 ```html
 <ul>
     <li>header</li>
-    <ib-id list='["hello 1", "hello 2"]' id=ibid></ib-id>
+    <i-bid list='["hello 1", "hello 2"]' id=ibid></i-bid>
     <li>footer</li>
 </ul>
 <script type=module>
-    import 'ib-id/ib-id.js';
+    import 'i-bid/i-bid.js';
 </script>
 ```
 
@@ -32,7 +51,7 @@ Results in:
 ```html
 <ul>
     <li>header</li>
-    <ib-id id=ibid style="display:none"></ib-id>
+    <i-bid id=ibid style="display:none"></i-bid>
     <li>hello 1</li>
     <li>hello 2</li>
     <li>footer</li>
@@ -44,7 +63,7 @@ Results in:
 ```html
 <ul>
     <li>header</li>
-    <ib-id id=ibid></ib-id>
+    <i-bid id=ibid></i-bid>
     <li>footer</li>
 </ul>
 <script>
@@ -63,7 +82,7 @@ Results in:
 ```html
 <ul>
     <li>header</li>
-    <ib-id id=ibid style="display:none"></ib-id>
+    <i-bid id=ibid style="display:none"></i-bid>
     <li>hello 1</li>
     <li>hello 2</li>
     <li>footer</li>
@@ -72,7 +91,7 @@ Results in:
 
 ## Overridable methods
 
-1.  assignItemIntoNode -- Does an Object.assign of the list item into the DOM node (with exceptions for dataset, style). 
+1.  assignItemIntoNode -- Does an Object.assign of the list item into the DOM node (with exceptions for dataset, style, localName). 
 2.  configureNewChild -- Perform custom actions when new node created
 
 ## Special Props:  dataset, style
@@ -81,14 +100,14 @@ If a list item that gets Object.assigned into the DOM node contains dataset and/
 
 ## Ownership
 
-ib-id follows a prime directive -- do not interfere in any way with DOM elements created by other custom elements or script.  In particular, in the example above, the header and footer list items are left alone.  ib-id will only modify, or delete, or append to, the two list items it created, as the list property changes.
+ibid follows a prime directive -- do not interfere in any way with DOM elements created by other custom elements or script.  In particular, in the example above, the header and footer list items are left alone.  ibid will only modify, or delete, or append to, the two list items it created, as the list property changes.
 
 ## tag name
 
-ib-id's choice of which tag name to generate follows the following order of precedence:
+ibid's choice of which tag name to generate follows the following order of precedence:
 
 1.  If the list item has property:  'localName': 'my-tag-name', that's what is used. [TODO:  thorough testing]
-2.  If the ib-id tag has property: 'tag' set explicitly, that is used.
+2.  If the ib-d tag has property: 'tag' set explicitly, that is used.
 3.  If neither 1 nor 2 above pan out, it uses the tag of the previousElementSibling, and if no such element exists, the parent element.
 
 ## Complementing SSR [TODO: testing]

@@ -54,6 +54,7 @@ const onNewList = ({initialized, grp1, list, self}: IBid) => {
         if(wrappedItem.localName === undefined) wrappedItem = {localName: self.tag, ...wrappedItem};
         ns = conditionalCreate(self, wrappedItem, ns);
     }
+    poolExtras(self, ns);
 }
 
 const propActions = [
@@ -122,8 +123,9 @@ function markOwnership(self: IBid, initCount: number){
 function poolExtras(self: IbIdProps, prevSib: Element){
     const {grp1, grp1LU, ownedSiblings} = self;
     let ns = prevSib.nextElementSibling;
+    const toPool: Element[] = [];
     while(ns !== null && ownedSiblings!.has(ns)){
-        self.append!(ns);
+        toPool.push(ns);
         const val = grp1!(ns);
         if(grp1LU[val] === undefined){
             grp1LU[val] = [];
@@ -131,9 +133,10 @@ function poolExtras(self: IbIdProps, prevSib: Element){
         grp1LU[val].push(ns);
         ns = ns.nextElementSibling;
     }
+    for(const el of toPool){
+        self.append!(el);
+    }
 }
-
-
 
 function conditionalCreate(self: IbIdProps, item: any, prevSib: Element): Element{
     const {grp1, grp1LU, ownedSiblings} = self;
