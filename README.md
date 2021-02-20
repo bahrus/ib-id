@@ -180,13 +180,9 @@ However, I think it's a cop-out because:
 1.  It imposes a class hierarchy on components for a rather banal technical reason.
 2.  It imposes too much work on the developer.  As it is, unless the developer is working with a native DOM element, the developer is already expected to develop a component (or more) that ib-id will repeat, which contains markup within each loop iteration.  Now we are imposing an additional component to be built.
 
-Tentative solution:
+[Tentative solution](https://github.com/bahrus/lazy-loop) (WIP)
 
-```html
-<ib-id tag="laissez-dom>template>li" group-by=100></ib-id>
-```
 
-Maybe need another component for this?  
 
 
 
