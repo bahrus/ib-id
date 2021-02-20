@@ -1,17 +1,18 @@
 import { xc, PropAction, ReactiveSurface, PropDef, PropDefMap } from 'xtal-element/lib/XtalCore.js';
-import { IbIdProps } from './types.d.js';
+import { IbIdProps } from './types.js';
 import {applyP} from 'trans-render/lib/applyP.js';
 
 /**
- * @element ib-id
+ * @element i-bid
  */
-export class IbId extends HTMLElement implements ReactiveSurface, IbIdProps {
-    static is = 'ib-id';
+export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
+    static is = 'i-bid';
     self = this;
     propActions = propActions;
     reactor = new xc.Rx(this);
-
+    wm = new WeakSet<Element>();
     tag: string;
+    initialized: boolean | undefined;
     /**
      * map allows mapping a general list to props to be set on the UI component.
      */
@@ -19,13 +20,15 @@ export class IbId extends HTMLElement implements ReactiveSurface, IbIdProps {
     nodesCompatibleIf: (x: HTMLElement, y: HTMLElement) => boolean;
     list: any[];
     initCount: number | undefined;
+    ownedSiblings: WeakSet<Element> | undefined;
+    grp1LU: {[key: string] : Element[]} = {};
     
     connectedCallback(){
         this.style.display = 'none';
-        xc.hydrate<Partial<IbId>>(this, slicedPropDefs, {
+        xc.hydrate<Partial<IbIdProps>>(this, slicedPropDefs, {
             map: identity,
             tag: (this.previousElementSibling || this.parentElement).localName,
-            nodesCompatibleIf: tagsSame,
+            grp1: (x: Element) => x.localName,
         });
     }
     onPropChange(name: string, propDef: PropDef, newVal: any){
@@ -33,12 +36,25 @@ export class IbId extends HTMLElement implements ReactiveSurface, IbIdProps {
     }
 }
 const identity = x => x;
-const tagsSame = (x: HTMLElement, y: HTMLElement) => x.localName === y.localName;
 
+const linkInitialized = ({initCount, self}: IBid) => {
+    if(initCount !== undefined){
+        markOwnership(self, initCount);
+    }else{
+        self.initialized = true;
+    }
+}
 
+const onNewList = ({initialized, list, self}: IBid) => {
+    let ns = self as Element;
+    for(const item of list){
+        ns = conditionalCreate(self, item, ns);
+    }
+}
 
 const propActions = [
-
+    linkInitialized,
+    onNewList
 ] as PropAction[];
 
 
@@ -49,7 +65,7 @@ const objProp = {
     parse: true,
     async: true
 } as PropDef;
-const propDefMap : PropDefMap<IbId> = {
+const propDefMap : PropDefMap<IBid> = {
     list: objProp,
     map: objProp,
     tag: {
@@ -60,13 +76,18 @@ const propDefMap : PropDefMap<IbId> = {
     initCount: {
         type: Number,
         async: true
+    },
+    initialized: {
+        type: Boolean,
+        stopReactionsIfFalsy: true,
     }
 }
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
-xc.letThereBeProps<IbId>(IbId, slicedPropDefs.propDefs, 'onPropChange');
-xc.define(IbId);
+xc.letThereBeProps<IBid>(IBid, slicedPropDefs.propDefs, 'onPropChange');
+xc.define(IBid);
 
-function markOwnership(self: IbIdProps, initCount: number, wm: WeakSet<HTMLElement>){
+function markOwnership(self: IBid, initCount: number){
+    const {wm} = self;
     let i = 0, ns = self as Element;
     const nextSiblings: Element[] = [];
     while(i < initCount && ns !== null){
@@ -80,7 +101,7 @@ function markOwnership(self: IbIdProps, initCount: number, wm: WeakSet<HTMLEleme
             wm.add(ns2 as HTMLElement);
         }
     }else{
-        setTimeout(() => markOwnership(self, initCount, wm), 50);
+        setTimeout(() => markOwnership(self, initCount), 50);
         return;
     }
 }
