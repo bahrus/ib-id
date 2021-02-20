@@ -22,12 +22,11 @@ export class IBid extends HTMLElement {
         });
     }
     onPropChange(name, propDef, newVal) {
-        console.log(name, propDef, newVal);
         this.reactor.addToQueue(propDef, newVal);
     }
 }
 IBid.is = 'i-bid';
-const identity = x => x;
+const identity = (x) => x;
 const stdGrp1 = (x) => x.localName;
 const linkInitialized = ({ initCount, self }) => {
     if (initCount !== 0) {
@@ -93,7 +92,8 @@ function markOwnership(self, initCount) {
     while (i < initCount && ns !== null) {
         i++;
         ns = ns.nextElementSibling;
-        nextSiblings.push(ns);
+        if (ns !== null)
+            nextSiblings.push(ns);
     }
     if (i === initCount && ns !== null) {
         self.initialized = true;

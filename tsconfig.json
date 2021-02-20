@@ -4,6 +4,7 @@
 		"module":"esnext",
 		"sourceMap": false,
 		"experimentalDecorators": true,
+		"strict": true,
 		"newLine": "LF",
 		"watch": true
 	},
