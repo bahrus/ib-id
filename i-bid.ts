@@ -1,6 +1,7 @@
 import { xc, PropAction, ReactiveSurface, PropDef, PropDefMap } from 'xtal-element/lib/XtalCore.js';
 import { IbIdProps } from './types.js';
 import {applyP} from 'trans-render/lib/applyP.js';
+import { PSettings } from '../trans-render/lib/types.js';
 
 /**
  * @element i-bid
@@ -28,7 +29,7 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
             initCount: 0,
             map: identity,
             tag: (this.previousElementSibling || this.parentElement).localName,
-            grp1: (x: Element) => x.localName,
+            grp1: stdGrp1,
         });
     }
     onPropChange(name: string, propDef: PropDef, newVal: any){
@@ -37,6 +38,8 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
     }
 }
 const identity = x => x;
+const stdGrp1 = (x: any) => x.localName;
+    
 
 const linkInitialized = ({initCount, self}: IBid) => {
     if(initCount !== 0){
@@ -49,7 +52,9 @@ const linkInitialized = ({initCount, self}: IBid) => {
 const onNewList = ({initialized, grp1, list, self}: IBid) => {
     let ns = self as Element;
     for(const item of list){
-        ns = conditionalCreate(self, item, ns);
+        let wrappedItem = typeof(item) === 'string' ? {textContent: item} : item;
+        if(wrappedItem.localName === undefined) wrappedItem = {localName: self.tag, ...wrappedItem};
+        ns = conditionalCreate(self, wrappedItem, ns);
     }
 }
 
@@ -151,11 +156,13 @@ function conditionalCreate(self: IbIdProps, item: any, prevSib: Element): Elemen
         newEl = elementPool.pop();
     }
     if(newEl === undefined){
-        newEl = document.createElement(item.localName || self.tag);
+        newEl = document.createElement(item.localName);
         ownedSiblings.add(newEl);
     }
     
-    applyP(newEl, item);
+    applyP(newEl, [item] as PSettings);
+    
+    
     prevSib.insertAdjacentElement('afterend', newEl);
     return newEl;
 }

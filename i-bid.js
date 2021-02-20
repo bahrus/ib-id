@@ -18,7 +18,7 @@ export class IBid extends HTMLElement {
             initCount: 0,
             map: identity,
             tag: (this.previousElementSibling || this.parentElement).localName,
-            grp1: (x) => x.localName,
+            grp1: stdGrp1,
         });
     }
     onPropChange(name, propDef, newVal) {
@@ -28,6 +28,7 @@ export class IBid extends HTMLElement {
 }
 IBid.is = 'i-bid';
 const identity = x => x;
+const stdGrp1 = (x) => x.localName;
 const linkInitialized = ({ initCount, self }) => {
     if (initCount !== 0) {
         markOwnership(self, initCount);
@@ -39,7 +40,10 @@ const linkInitialized = ({ initCount, self }) => {
 const onNewList = ({ initialized, grp1, list, self }) => {
     let ns = self;
     for (const item of list) {
-        ns = conditionalCreate(self, item, ns);
+        let wrappedItem = typeof (item) === 'string' ? { textContent: item } : item;
+        if (wrappedItem.localName === undefined)
+            wrappedItem = { localName: self.tag, ...wrappedItem };
+        ns = conditionalCreate(self, wrappedItem, ns);
     }
 };
 const propActions = [
@@ -135,10 +139,10 @@ function conditionalCreate(self, item, prevSib) {
         newEl = elementPool.pop();
     }
     if (newEl === undefined) {
-        newEl = document.createElement(item.localName || self.tag);
+        newEl = document.createElement(item.localName);
         ownedSiblings.add(newEl);
     }
-    applyP(newEl, item);
+    applyP(newEl, [item]);
     prevSib.insertAdjacentElement('afterend', newEl);
     return newEl;
 }

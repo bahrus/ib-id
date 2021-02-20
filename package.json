@@ -28,7 +28,7 @@
     "package-check": "package-check"
   },
   "dependencies": {
-    "xtal-element": "0.0.347"
+    "xtal-element": "0.0.349"
   },
   "devDependencies": {
     "@skypack/package-check": "0.2.2",
