@@ -58,8 +58,8 @@ const onNewList = ({initialized, grp1, list, self}: IBid) => {
 }
 
 const propActions = [
+    onNewList,
     linkInitialized,
-    onNewList
 ] as PropAction[];
 
 

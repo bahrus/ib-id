@@ -47,8 +47,8 @@ const onNewList = ({ initialized, grp1, list, self }) => {
     poolExtras(self, ns);
 };
 const propActions = [
+    onNewList,
     linkInitialized,
-    onNewList
 ];
 const objProp1 = {
     type: Object,
