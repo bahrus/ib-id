@@ -13,12 +13,12 @@
   "main": "ib-id.js",
   "module": "ib-id.js",
   "exports": {
-    ".": "./ib-id.js",
-    "./ib-id.js": "./ib-id.js"
+    ".": "./i-bid.js",
+    "./i-bid.js": "./i-bid.js"
   },
   "files": [
-    "ib-id.js",
-    "ib-id.ts",
+    "i-bid.js",
+    "i-bid.ts",
     "types.d.ts"
   ],
   "types": "./types.d.ts",
