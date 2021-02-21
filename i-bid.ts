@@ -56,7 +56,8 @@ const linkInitialized = ({initCount, self}: IBid) => {
 const onNewList = ({initialized, grp1, list, map, self}: IBid) => {
     let ns = self as Element;
     for(const [idx, item] of list!.entries()){
-        let wrappedItem = typeof(item) === 'string' ? {textContent: item} : map!(item, idx);
+        const mappedItem = map!(item, idx);
+        let wrappedItem = typeof(mappedItem) === 'string' ? {textContent: item} : {...mappedItem};
         if(wrappedItem.localName === undefined) wrappedItem = {localName: self.tag, ...wrappedItem};
         ns = conditionalCreate(self, wrappedItem, ns);
     }
