@@ -34,6 +34,12 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
     onPropChange(name: string, propDef: PropDef, newVal: any){
         this.reactor.addToQueue(propDef, newVal);
     }
+
+    /**
+     * Apply any custom actions on newly created element.
+     * @param newChild 
+     */
+    configureNewChild(newChild: Element){}
 }
 const identity = (x: any) => x;
 const stdGrp1 = (x: any) => x.localName;
@@ -138,7 +144,7 @@ function poolExtras(self: IbIdProps, prevSib: Element){
     }
 }
 
-function conditionalCreate(self: IbIdProps, item: any, prevSib: Element): Element{
+function conditionalCreate(self: IBid, item: any, prevSib: Element): Element{
     const {grp1, grp1LU, ownedSiblings} = self;
     const val = grp1!(item);
     let newEl: Element | undefined;
@@ -158,6 +164,7 @@ function conditionalCreate(self: IbIdProps, item: any, prevSib: Element): Elemen
     }
     if(newEl === undefined){
         newEl = document.createElement(item.localName);
+        self.configureNewChild(newEl!);
         ownedSiblings!.add(newEl!);
     }
     

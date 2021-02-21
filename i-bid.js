@@ -24,6 +24,11 @@ export class IBid extends HTMLElement {
     onPropChange(name, propDef, newVal) {
         this.reactor.addToQueue(propDef, newVal);
     }
+    /**
+     * Apply any custom actions on newly created element.
+     * @param newChild
+     */
+    configureNewChild(newChild) { }
 }
 IBid.is = 'i-bid';
 const identity = (x) => x;
@@ -145,6 +150,7 @@ function conditionalCreate(self, item, prevSib) {
     }
     if (newEl === undefined) {
         newEl = document.createElement(item.localName);
+        self.configureNewChild(newEl);
         ownedSiblings.add(newEl);
     }
     applyP(newEl, [item]);

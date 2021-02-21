@@ -91,8 +91,8 @@ Results in:
 
 ## Overridable methods
 
-1.  assignItemIntoNode -- Does an Object.assign of the list item into the DOM node (with exceptions for dataset, style, localName). 
-2.  configureNewChild -- Perform custom actions when new node created
+<!--1.  assignItemIntoNode -- Does an Object.assign of the list item into the DOM node (with exceptions for dataset, style, localName). -->
+configureNewChild -- Perform custom actions when new node created
 
 ## Special Props:  dataset, style
 
