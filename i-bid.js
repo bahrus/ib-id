@@ -41,10 +41,10 @@ const linkInitialized = ({ initCount, self }) => {
         self.initialized = true;
     }
 };
-const onNewList = ({ initialized, grp1, list, self }) => {
+const onNewList = ({ initialized, grp1, list, map, self }) => {
     let ns = self;
-    for (const item of list) {
-        let wrappedItem = typeof (item) === 'string' ? { textContent: item } : item;
+    for (const [idx, item] of list.entries()) {
+        let wrappedItem = typeof (item) === 'string' ? { textContent: item } : map(item, idx);
         if (wrappedItem.localName === undefined)
             wrappedItem = { localName: self.tag, ...wrappedItem };
         ns = conditionalCreate(self, wrappedItem, ns);
