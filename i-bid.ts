@@ -27,7 +27,7 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
         xc.hydrate<Partial<IbIdProps>>(this, slicedPropDefs, {
             initCount: 0,
             map: identity,
-            tag: (this.previousElementSibling || this.parentElement!).localName,
+            tag: (this.firstElementChild || this.previousElementSibling || this.parentElement!).localName,
             grp1: stdGrp1,
         });
     }

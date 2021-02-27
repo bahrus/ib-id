@@ -106,9 +106,9 @@ ibid follows a prime directive -- do not interfere in any way with DOM elements 
 
 ibid's choice of which tag name to generate follows the following order of precedence:
 
-1.  If the list item has property:  'localName': 'my-tag-name', that's what is used. [TODO:  thorough testing]
+1.  If the list item has property:  'localName': 'my-tag-name', that's what is used.
 2.  If the ib-d tag has property: 'tag' set explicitly, that is used.
-3.  If neither 1 nor 2 above pan out, it uses the tag of the previousElementSibling, and if no such element exists, the parent element.
+3.  If neither 1 nor 2 above pan out, it uses the tag of the firstChildElement.  If there is no firstChildElement, then the previousElementSibling, and if no such element exists, the parent element.
 
 ## Complementing SSR [TODO: testing]
 

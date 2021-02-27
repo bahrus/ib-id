@@ -17,7 +17,7 @@ export class IBid extends HTMLElement {
         xc.hydrate(this, slicedPropDefs, {
             initCount: 0,
             map: identity,
-            tag: (this.previousElementSibling || this.parentElement).localName,
+            tag: (this.firstElementChild || this.previousElementSibling || this.parentElement).localName,
             grp1: stdGrp1,
         });
     }
