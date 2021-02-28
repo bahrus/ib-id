@@ -10,7 +10,7 @@ Each of them provide a simple, 1-dimensional list generating web component*.  Th
 
 They each have a property called "list" where an array of properties can be passed in. ibid merges those properties into each instance.
 
-ibid is one of many web component libries that provide repeat functionality.
+ibid is one of many web component libraries that provide repeat functionality.
 
 As of this moment, what makes ibid different from the rest (without having conducted an exhaustive search):
 
@@ -24,13 +24,13 @@ The idea behind element pooling is this:  Without pooling, suppose the list of o
 
 ibid assumes there's a significant cost to generating a native or naturalized (custom) DOM element -- cloning a template, attaching shadowing DOM, appending the nodes, and that updating an existing element without doing all that can be cheaper than starting from scratch.
 
-In addition, holding on to a DOM element, rather than recreating it from a minimul state of properties, may be quite usesful, if the user interactions with the component (focus, scrolling, expanded sections) doesn't take the trouble to make callbacks into the model the list binds from.
+In addition, holding on to a DOM element, rather than recreating it from a minimal state of properties, may be quite useful, if the user interactions with the component (focus, scrolling, expanded sections) doesn't take the trouble to make callbacks into the model the list binds from.
 
-The tricky thing is how to align a new list with elements which have already been created.  That aspect is crucial difference between each component provided within the ibid package.
+The tricky thing is how to align a new list with elements which have already been created.  That aspect is the crucial difference between each component [TODO] provided within the ibid package.
 
 ## i-bid's Pooling Strategy
 
-i-bid's element pooling is based on the tag name -- if the tag name is the same as before, the new props of a list are simply passed in.  If the tag name changes, an effort is made to find an "owned" element matching that tagname to reuse.  If no spares are found, only then is a new element instance created.
+i-bid's element pooling is based on the tag name -- if the tag name is the same as before, the new props of a list are simply passed in.  If the tag name changes, an effort is made to find an "owned" element matching that tag name to reuse.  If no spares are found, only then is a new element instance created.
 
 
 ## Sample syntax I:
@@ -38,7 +38,7 @@ i-bid's element pooling is based on the tag name -- if the tag name is the same 
 ```html
 <ul>
     <li>header</li>
-    <i-bid list='["hello 1", "hello 2"]' id=ibid></i-bid>
+    <i-bid list='["hello 1", "hello 2"]'></i-bid>
     <li>footer</li>
 </ul>
 <script type=module>
@@ -51,7 +51,7 @@ Results in:
 ```html
 <ul>
     <li>header</li>
-    <i-bid id=ibid style="display:none"></i-bid>
+    <i-bid list='["hello 1", "hello 2"]' style="display:none"></i-bid>
     <li>hello 1</li>
     <li>hello 2</li>
     <li>footer</li>
@@ -107,7 +107,7 @@ ibid follows a prime directive -- do not interfere in any way with DOM elements 
 ibid's choice of which tag name to generate follows the following order of precedence:
 
 1.  If the list item has property:  'localName': 'my-tag-name', that's what is used.
-2.  If the ib-d tag has property: 'tag' set explicitly, that is used.
+2.  If the ibid tag has property: 'tag' set explicitly, that is used.
 3.  If neither 1 nor 2 above pan out, it uses the tag of the firstChildElement.  If there is no firstChildElement, then the previousElementSibling, and if no such element exists, the parent element. [TODO:  If using firstChildElement, that element should be "reused"]
 
 ## Complementing SSR [TODO: testing]
@@ -117,7 +117,7 @@ Suppose we show some compassion towards the user, and provide as much initial co
 ```html
 <ul>
     <li>header</li>
-    <ib-id></ib-id>
+    <i-bid></i-bid>
     <li>hello 1</li>
     <li>hello 2</li>
     <li>footer</li>
@@ -131,7 +131,7 @@ We can specify which initial nodes are "owned" by ib-id via the initCount proper
 ```html
 <ul>
     <li>header</li>
-    <ib-id init-count=2></ib-id>
+    <i-bid init-count=2></i-bid>
     <li>hello 1</li>
     <li>hello 2</li>
     <li>footer</li>
@@ -143,7 +143,7 @@ We can specify which initial nodes are "owned" by ib-id via the initCount proper
 
 ## * Lazy Loading [Big Time TOODOO]
 
-laissez-dom supports lazy loading blocks of html.  In terms of performance, it seems to exceed what can be obtained by using content-visibility, at least when generating content in the client.  (There are some disadvantages, though, in terms of lack of search, for starters).  The problem is if we want to combine that component with this one, we are in a bit of a quandary.  Take, for example, creating a massive list of li's.
+[laissez-dom](https://github.com/bahrus/laissez-dom) supports lazy-loading blocks of html.  In terms of performance, it seems to exceed what can be obtained by using content-visibility, at least when generating repeating content in the client.  (There are some disadvantages, though, in terms of lack of search, for starters).  The problem is if we want to combine that component with this one, we are in a bit of a quandary.  Take, for example, creating a massive list of li's.
 
 For laissez-dom to be effective, 
 
