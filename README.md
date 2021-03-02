@@ -89,6 +89,41 @@ Results in:
 </ul>
 ```
 
+## Sample syntax III:
+
+If no header / footer:
+
+```html
+<ul>
+    <i-bid list='["hello 1", "hello 2"]'>
+        <li>put</li>
+    </i-bid>
+</ul>
+<script type=module>
+    import 'i-bid/i-bid.js';
+</script>
+```
+
+Results in:
+
+```html
+<ul>
+    <i-bid list='["hello 1", "hello 2"]' style="display:none"></i-bid>
+    <li>hello 1</li>
+    <li>hello 2</li>
+</ul>
+<script type=module>
+    import 'i-bid/i-bid.js';
+</script>
+```
+
+Why include that sample li inside i-bid?
+
+1)  If it were a custom element, the IDE would likely let you jump to the definition behind the custom element.
+2)  A little more readable, perhaps?
+3)  "put" or any other text inside the element to repeat is optional.  Some IDE's might give a better preview look if including some sample text.
+4)  The li inside the ibid tag will be used for the first element, so very little waste is incurred in supporting the niceties above.
+
 ## Overridable methods
 
 <!--1.  assignItemIntoNode -- Does an Object.assign of the list item into the DOM node (with exceptions for dataset, style, localName). -->
@@ -108,7 +143,7 @@ ibid's choice of which tag name to generate follows the following order of prece
 
 1.  If the list item has property:  'localName': 'my-tag-name', that's what is used.
 2.  If the ibid tag has property: 'tag' set explicitly, that is used.
-3.  If neither 1 nor 2 above pan out, it uses the tag of the firstChildElement.  If there is no firstChildElement, then the previousElementSibling, and if no such element exists, the parent element. [TODO:  If using firstChildElement, that element should be "reused"]
+3.  If neither 1 nor 2 above pan out, it uses the tag of the firstChildElement.  If there is no firstChildElement, then the previousElementSibling, and if no such element exists, the parent element. If using firstChildElement, that element will be "reused".
 
 ## Complementing SSR [TODO: testing]
 

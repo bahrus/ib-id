@@ -146,7 +146,10 @@ function conditionalCreate(self, item, prevSib) {
         }
     }
     const elementPool = grp1LU[val];
-    if (elementPool !== undefined && elementPool.length > 0) {
+    if (elementPool === undefined) {
+        grp1LU[val] = Array.from(self.children);
+    }
+    else if (elementPool.length > 0) {
         newEl = elementPool.pop();
     }
     if (newEl === undefined) {
