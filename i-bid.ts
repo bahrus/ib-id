@@ -60,7 +60,7 @@ const onNewList = ({initialized, grp1, list, map, self}: IBid) => {
         const mappedItem = map!(item, idx);
         let wrappedItem = typeof(mappedItem) === 'string' ? {textContent: item} :
             Array.isArray(mappedItem) ? [...mappedItem] : {...mappedItem};
-        if(wrappedItem.localName === undefined) wrappedItem = {localName: self.tag, ...wrappedItem};
+        if(!Array.isArray(wrappedItem) && wrappedItem.localName === undefined) wrappedItem = {localName: self.tag, ...wrappedItem};
         ns = conditionalCreate(self, wrappedItem, ns);
     }
     poolExtras(self, ns);

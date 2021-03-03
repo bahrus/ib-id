@@ -48,7 +48,7 @@ const onNewList = ({ initialized, grp1, list, map, self }) => {
         const mappedItem = map(item, idx);
         let wrappedItem = typeof (mappedItem) === 'string' ? { textContent: item } :
             Array.isArray(mappedItem) ? [...mappedItem] : { ...mappedItem };
-        if (wrappedItem.localName === undefined)
+        if (!Array.isArray(wrappedItem) && wrappedItem.localName === undefined)
             wrappedItem = { localName: self.tag, ...wrappedItem };
         ns = conditionalCreate(self, wrappedItem, ns);
     }
