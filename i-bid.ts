@@ -1,7 +1,8 @@
 import { xc, PropAction, ReactiveSurface, PropDef, PropDefMap } from 'xtal-element/lib/XtalCore.js';
 import { IbIdProps } from './types.js';
 import { applyP } from 'trans-render/lib/applyP.js';
-import { PSettings } from 'trans-render/lib/types.js';
+import { applyPEA } from 'trans-render/lib/applyPEA.js';
+import { PSettings, PEASettings } from 'trans-render/lib/types.js';
 
 /**
  * @element i-bid
@@ -170,10 +171,12 @@ function conditionalCreate(self: IBid, item: any, prevSib: Element): Element{
         self.configureNewChild(newEl!);
         ownedSiblings!.add(newEl!);
     }
-    
-    applyP(newEl!, [item] as PSettings);
-    
-    
+    if(Array.isArray(item)){
+        applyPEA(self, newEl! as HTMLElement, item as PEASettings);
+    }else{
+        applyP(newEl!, [item] as PSettings);
+    }
+
     prevSib.insertAdjacentElement('afterend', newEl!);
     return newEl!;
 }

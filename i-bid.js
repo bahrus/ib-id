@@ -1,5 +1,6 @@
 import { xc } from 'xtal-element/lib/XtalCore.js';
 import { applyP } from 'trans-render/lib/applyP.js';
+import { applyPEA } from 'trans-render/lib/applyPEA.js';
 /**
  * @element i-bid
  */
@@ -157,7 +158,12 @@ function conditionalCreate(self, item, prevSib) {
         self.configureNewChild(newEl);
         ownedSiblings.add(newEl);
     }
-    applyP(newEl, [item]);
+    if (Array.isArray(item)) {
+        applyPEA(self, newEl, item);
+    }
+    else {
+        applyP(newEl, [item]);
+    }
     prevSib.insertAdjacentElement('afterend', newEl);
     return newEl;
 }
