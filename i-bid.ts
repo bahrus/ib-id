@@ -43,7 +43,12 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
     configureNewChild(newChild: Element){}
 }
 const identity = (x: any) => x;
-const stdGrp1 = (x: any) => x.localName;
+const stdGrp1 = (x: any) => {
+    if(Array.isArray(x)){
+        return x[0].localName;
+    }
+    return x.localName;
+}
     
 
 const linkInitialized = ({initCount, self}: IBid) => {
@@ -171,12 +176,12 @@ function conditionalCreate(self: IBid, item: any, prevSib: Element): Element{
     }
     const elementPool = grp1LU[val];
     if(elementPool === undefined){
-        grp1LU[val] = Array.from(self.children);
+        grp1LU[val] = Array.from(self.children).filter(x => x.localName === val);
     }else if(elementPool.length > 0){
         newEl = elementPool.pop();
     }
     if(newEl === undefined){
-        newEl = document.createElement(item.localName);
+        newEl = document.createElement(self.grp1!(item));
         self.configureNewChild(newEl!);
         ownedSiblings!.add(newEl!);
     }

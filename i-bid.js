@@ -33,7 +33,12 @@ export class IBid extends HTMLElement {
 }
 IBid.is = 'i-bid';
 const identity = (x) => x;
-const stdGrp1 = (x) => x.localName;
+const stdGrp1 = (x) => {
+    if (Array.isArray(x)) {
+        return x[0].localName;
+    }
+    return x.localName;
+};
 const linkInitialized = ({ initCount, self }) => {
     if (initCount !== 0) {
         markOwnership(self, initCount);
@@ -158,13 +163,13 @@ function conditionalCreate(self, item, prevSib) {
     }
     const elementPool = grp1LU[val];
     if (elementPool === undefined) {
-        grp1LU[val] = Array.from(self.children);
+        grp1LU[val] = Array.from(self.children).filter(x => x.localName === val);
     }
     else if (elementPool.length > 0) {
         newEl = elementPool.pop();
     }
     if (newEl === undefined) {
-        newEl = document.createElement(item.localName);
+        newEl = document.createElement(self.grp1(item));
         self.configureNewChild(newEl);
         ownedSiblings.add(newEl);
     }
