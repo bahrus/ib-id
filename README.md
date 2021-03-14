@@ -176,7 +176,7 @@ We can specify which initial nodes are "owned" by ib-id via the initCount proper
 ## Explore using [range](https://github.com/WICG/webcomponents/issues/901#issuecomment-742195795) [TODO]
 
 
-## * Lazy Loading [Big Time TOODOO]
+## * Lazy Loading [Big Time TOODOO I]
 
 [laissez-dom](https://github.com/bahrus/laissez-dom) supports lazy-loading blocks of html.  In terms of performance, it seems to exceed what can be obtained by using content-visibility, at least when generating repeating content in the client.  (There are some disadvantages, though, in terms of lack of search, for starters).  The problem is if we want to combine that component with this one, we are in a bit of a quandary.  Take, for example, creating a massive list of li's.
 
@@ -216,6 +216,14 @@ However, I think it's a cop-out because:
 2.  It imposes too much work on the developer.  As it is, unless the developer is working with a native DOM element, the developer is already expected to develop a component (or more) that ib-id will repeat, which contains markup within each loop iteration.  Now we are imposing an additional component to be built.
 
 [Tentative solution](https://github.com/bahrus/lazy-loop) (WIP)
+
+## What if I want to repeat some web components that require non-shadow light children?
+
+Okay, yeah, maybe this isn't the right component for you to use.
+
+There is, however, an inefficient loophole:  innerHTML is a property which could be passed in as one of the items of your list.  ibid doesn't prevent that, and trusts that the developer will take the necessary steps to guarantee that the value is XSS-safe.
+
+My current thinking is that to allow for light children, the ibid component can be extended (with the cost of a larger footprint) to support binding to the light children.  Each extension could chose a syntax familiar to different houses of syntax (handlebars, moustache, etc).  The current plan is to provide one that uses trans-render, and one (fingers crossed) that uses template instantiation [TODO]. 
 
 
 
