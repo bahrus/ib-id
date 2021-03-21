@@ -48,7 +48,7 @@ const linkInitialized = ({ initCount, self }) => {
         self.initialized = true;
     }
 };
-const onNewList = ({ initialized, grp1, list, map, self }) => {
+export const onNewList = ({ initialized, grp1, list, map, self }) => {
     let ns = self;
     for (const [idx, item] of list.entries()) {
         const mappedItem = map(item, idx);

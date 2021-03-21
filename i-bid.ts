@@ -61,7 +61,7 @@ const linkInitialized = ({initCount, self}: IBid) => {
     }
 }
 
-const onNewList = ({initialized, grp1, list, map, self}: IBid) => {
+export const onNewList = ({initialized, grp1, list, map, self}: IBid) => {
     let ns = self as Element;
     for(const [idx, item] of list!.entries()){
         const mappedItem = map!(item, idx);
