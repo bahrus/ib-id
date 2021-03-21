@@ -86,24 +86,21 @@ const propActions = [
     linkInitialized,
 ] as PropAction[];
 
-
 export const objProp1: PropDef = {
-    type: Object,
-    dry: true,
-    stopReactionsIfFalsy: true,
-    parse: true,
-    async: true
-} as PropDef;
-const objProp2: PropDef = {
     type: Object,
     dry: true,
     stopReactionsIfFalsy: true,
     async: true,
 }
+export const objProp2: PropDef = {
+    ...objProp1,
+    parse: true,
+} as PropDef;
+
 const propDefMap : PropDefMap<IBid> = {
-    list: objProp1,
-    map: objProp1,
-    grp1: objProp2,
+    list: objProp2,
+    map: objProp2,
+    grp1: objProp1,
     tag: {
         type: String,
         dry: true,
@@ -124,7 +121,7 @@ const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 xc.letThereBeProps<IBid>(IBid, slicedPropDefs, 'onPropChange');
 xc.define(IBid);
 
-function markOwnership(self: IBid, initCount: number){
+export function markOwnership(self: IBid, initCount: number){
     const {ownedSiblings} = self;
     let i = 0, ns = self as Element | null;
     const nextSiblings: Element[] = [];

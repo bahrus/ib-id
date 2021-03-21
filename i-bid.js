@@ -77,19 +77,16 @@ export const objProp1 = {
     type: Object,
     dry: true,
     stopReactionsIfFalsy: true,
-    parse: true,
-    async: true
-};
-const objProp2 = {
-    type: Object,
-    dry: true,
-    stopReactionsIfFalsy: true,
     async: true,
 };
+export const objProp2 = {
+    ...objProp1,
+    parse: true,
+};
 const propDefMap = {
-    list: objProp1,
-    map: objProp1,
-    grp1: objProp2,
+    list: objProp2,
+    map: objProp2,
+    grp1: objProp1,
     tag: {
         type: String,
         dry: true,
@@ -109,7 +106,7 @@ const propDefMap = {
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 xc.letThereBeProps(IBid, slicedPropDefs, 'onPropChange');
 xc.define(IBid);
-function markOwnership(self, initCount) {
+export function markOwnership(self, initCount) {
     const { ownedSiblings } = self;
     let i = 0, ns = self;
     const nextSiblings = [];
