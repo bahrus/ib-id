@@ -41,6 +41,8 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
      * @param newChild 
      */
     configureNewChild(newChild: Element){}
+
+    updateLightChildren(element: Element, item: any, idx: number){}
 }
 const identity = (x: any) => x;
 const stdGrp1 = (x: any) => {
@@ -74,7 +76,7 @@ const onNewList = ({initialized, grp1, list, map, self}: IBid) => {
         }else{
             wrappedItem = {localName: self.tag, ...wrappedItem};
         }
-        ns = conditionalCreate(self, wrappedItem, ns);
+        ns = applyItem(self, wrappedItem, idx, ns);
     }
     poolExtras(self, ns);
 }
@@ -85,14 +87,14 @@ const propActions = [
 ] as PropAction[];
 
 
-const objProp1 = {
+export const objProp1: PropDef = {
     type: Object,
     dry: true,
     stopReactionsIfFalsy: true,
     parse: true,
     async: true
 } as PropDef;
-const objProp2 = {
+const objProp2: PropDef = {
     type: Object,
     dry: true,
     stopReactionsIfFalsy: true,
@@ -160,7 +162,7 @@ function poolExtras(self: IbIdProps, prevSib: Element){
     }
 }
 
-function conditionalCreate(self: IBid, item: any, prevSib: Element): Element{
+function applyItem(self: IBid, item: any, idx: number, prevSib: Element): Element{
     const {grp1, grp1LU, ownedSiblings} = self;
     const val = grp1!(item);
     let newEl: Element | undefined;
@@ -190,7 +192,7 @@ function conditionalCreate(self: IBid, item: any, prevSib: Element): Element{
     }else{
         applyP(newEl!, [item] as PSettings);
     }
-
+    self.updateLightChildren(newEl!, item, idx);
     prevSib.insertAdjacentElement('afterend', newEl!);
     return newEl!;
 }

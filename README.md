@@ -223,7 +223,7 @@ Okay, yeah, maybe this isn't the right component for you to use.
 
 There is, however, an inefficient loophole:  innerHTML is a property which could be passed in as one of the items of your list.  ibid doesn't prevent that, and trusts that the developer will take the necessary steps to guarantee that the value is XSS-safe.
 
-My current thinking is that to allow for light children in a safer, more performant, more syntax-friendly way, the ibid component can be extended (with the cost of a larger footprint) to support binding to the light children.  Each extension could chose a syntax familiar to different houses of syntax (handlebars, moustache, etc).  The current plan is to provide one that uses trans-render, and one (fingers crossed) that uses template instantiation [TODO]. 
+My current thinking is that to allow for light children in a safer, more performant, more syntax-friendly way, the ibid component can be extended (with the cost of a larger footprint) to support binding to the light children.  Each extension could choose a syntax familiar to different houses of syntax (handlebars, moustache, etc).  The current plan is to provide one that uses trans-render, and one (fingers crossed) that uses template instantiation [TODO]. 
 
 
 

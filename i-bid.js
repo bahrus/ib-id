@@ -30,6 +30,7 @@ export class IBid extends HTMLElement {
      * @param newChild
      */
     configureNewChild(newChild) { }
+    updateLightChildren(element, item, idx) { }
 }
 IBid.is = 'i-bid';
 const identity = (x) => x;
@@ -64,7 +65,7 @@ const onNewList = ({ initialized, grp1, list, map, self }) => {
         else {
             wrappedItem = { localName: self.tag, ...wrappedItem };
         }
-        ns = conditionalCreate(self, wrappedItem, ns);
+        ns = applyItem(self, wrappedItem, idx, ns);
     }
     poolExtras(self, ns);
 };
@@ -72,7 +73,7 @@ const propActions = [
     onNewList,
     linkInitialized,
 ];
-const objProp1 = {
+export const objProp1 = {
     type: Object,
     dry: true,
     stopReactionsIfFalsy: true,
@@ -146,7 +147,7 @@ function poolExtras(self, prevSib) {
         self.append(el);
     }
 }
-function conditionalCreate(self, item, prevSib) {
+function applyItem(self, item, idx, prevSib) {
     const { grp1, grp1LU, ownedSiblings } = self;
     const val = grp1(item);
     let newEl;
@@ -179,6 +180,7 @@ function conditionalCreate(self, item, prevSib) {
     else {
         applyP(newEl, [item]);
     }
+    self.updateLightChildren(newEl, item, idx);
     prevSib.insertAdjacentElement('afterend', newEl);
     return newEl;
 }
