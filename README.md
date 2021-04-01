@@ -6,7 +6,7 @@
 
 This package contains a suite of web components, depending on the placement of the dash -- i-bid, ib-id[TODO], ibi-d[TODO].
 
-Each of them provide a simple, 1-dimensional list generating web component*.  They generate lists from JSON.
+Each of them provide a simple, 1-dimensional list generating web component*.  They generate lists from JSON, but can complement server-side rendering.
 
 They each have a property called "list" where an array of properties can be passed in. ibid merges those properties into each instance.
 
@@ -16,15 +16,17 @@ As of this moment, what makes ibid different from the rest (without having condu
 
 1.  It has full support for dynamic tag names.
 2.  It can complement server-side (initial) rendering.
-3.  It does **not** provide any support for template binding within each element.  It only provides support for a linear list of (a potpourri of) tags.  This means to use ibid effectively, you will want a rapid way of encapsulating the markup you want within each tag (and a nice IDE and/or IDE plugin which can easily navigate to the code of a custom element -- [lit-plugin](https://marketplace.visualstudio.com/items?itemName=runem.lit-plugin) does this quite effectively for js-based web components, for example).
+3.  It does **not** provide any support for template binding of the light children within each element.  It only provides support for a linear list of (a potpourri of) tags.  This means to use ibid effectively, you will want a rapid way of encapsulating the markup you want within each tag (and a nice IDE and/or IDE plugin which can easily navigate to the code of a custom element -- [lit-plugin](https://marketplace.visualstudio.com/items?itemName=runem.lit-plugin) does this quite effectively for js-based web components, for example).
+
+Not that there **is** a web component, [repetir](https://github.com/bahrus/repetir) that extends ibid, with support for template binding of light children.
 
 The three ibid components also provide support for something called "element pooling."  Alternative names could be element reuse, element recycling.  Other repeating libraries may support the basic concept.  The reason for this package supporting three different components has to do with element pooling strategy.
 
 The idea behind element pooling is this:  Without pooling, suppose the list of objects to bind to changes.  The list could grow, or shrink, and the values that need to display can also change.  What should we do with the elements generated from the previous list?  One approach could be to just delete the old elements, and re-generate the list.  That could be done (another web component could take that approach), but that's not what ibid does.
 
-ibid assumes there's a significant cost to generating a native or naturalized (custom) DOM element -- cloning a template, attaching shadowing DOM, appending the nodes, and that updating an existing element without doing all that can be cheaper than starting from scratch.
+ibid assumes there's a significant cost to generating a native or naturalized (custom) DOM element -- cloning a template, attaching shadow DOM, appending the nodes, and that updating an existing element without doing all that can be cheaper than starting from scratch.
 
-In addition, holding on to a DOM element, rather than recreating it from a minimal state of properties, may be quite useful, if the user interactions with the component (focus, scrolling, expanded sections) doesn't take the trouble to make callbacks into the model the list binds from.
+In addition, holding on to a DOM element, rather than recreating it from a minimal state of properties, may be quite useful, if the developer lacks the time to ensure that all user interactions with the component (focus, scrolling, expanded sections) make callbacks into the model the list binds from, in a performant way.
 
 The tricky thing is how to align a new list with elements which have already been created.  That aspect is the crucial difference between each component [TODO] provided within the ibid package.
 
@@ -142,7 +144,7 @@ ibid follows a prime directive -- do not interfere in any way with DOM elements 
 ibid's choice of which tag name to generate follows the following order of precedence:
 
 1.  If the list item has property:  'localName': 'my-tag-name', that's what is used.
-2.  If the ibid tag has property: 'tag' set explicitly, that is used.
+2.  If the ibid tag has property/attribute: 'tag' set explicitly, that is used.
 3.  If neither 1 nor 2 above pan out, it uses the tag of the firstChildElement.  If there is no firstChildElement, then the previousElementSibling, and if no such element exists, the parent element. If using firstChildElement, that element will be "reused".
 
 ## Complementing SSR [TODO: testing]
@@ -223,7 +225,7 @@ Okay, yeah, maybe this isn't the right component for you to use.
 
 There is, however, an inefficient loophole:  innerHTML is a property which could be passed in as one of the items of your list.  ibid doesn't prevent that, and trusts that the developer will take the necessary steps to guarantee that the value is XSS-safe.
 
-My current thinking is that to allow for light children in a safer, more performant, more syntax-friendly way, the ibid component can be extended (with the cost of a larger footprint) to support binding to the light children.  Each extension could choose a syntax familiar to different houses of syntax (handlebars, moustache, etc).  The current plan is to provide one that uses trans-render, and one (fingers crossed) that uses template instantiation [TODO]. 
+A web component that supports binding to light children is provided [here](https://github.com/bahrus/repetir).
 
 
 
