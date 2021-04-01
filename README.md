@@ -227,6 +227,16 @@ There is, however, an inefficient loophole:  innerHTML is a property which could
 
 A web component that supports binding to light children is provided [here](https://github.com/bahrus/repetir).
 
+## ib-id's pooling strategy [TODO]
+
+1.  Developer specifies id and version getters.  Version can be anything, including a date/time stamp.
+    1.  Elements are reused only if tag name and id match.
+    2.  Old elements with no corresponding id from new list are reused if the new list has an item with an id not matching the old list.
+    3.  A new item object is only passed to the element being repeated if the version doesn't match previous version.
+    4.  Order not guaranteed to match order of new list.
+    5.  Separate "list-sorter" component used to sort list.
+2.  Developer can optionally specify "breaking", which means old element matching the tag name and id should be deleted, create a new instance.
+
 
 
 
