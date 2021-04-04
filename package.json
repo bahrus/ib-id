@@ -29,11 +29,11 @@
   },
   "dependencies": {
     "trans-render": "0.0.283",
-    "xtal-element": "0.0.371"
+    "xtal-element": "0.0.375"
   },
   "devDependencies": {
     "@skypack/package-check": "0.2.2",
-    "@web/dev-server": "0.1.7"
+    "@web/dev-server": "0.1.10"
   },
   "repository": {
     "type": "git",
