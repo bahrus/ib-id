@@ -6,12 +6,16 @@ import { applyPEA } from 'trans-render/lib/applyPEA.js';
  */
 export class IBid extends HTMLElement {
     constructor() {
-        super(...arguments);
+        super();
         this.self = this;
         this.propActions = propActions;
         this.reactor = new xc.Rx(this);
         this.ownedSiblings = new WeakSet();
         this.grp1LU = {};
+        const aThis = this;
+        if (aThis.attachInternals !== undefined) {
+            (aThis)._internals = aThis.attachInternals();
+        }
     }
     connectedCallback() {
         this.style.display = 'none';

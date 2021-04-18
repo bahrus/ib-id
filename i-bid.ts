@@ -9,6 +9,13 @@ import { PSettings, PEASettings } from 'trans-render/lib/types.js';
  */
 export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
     static is = 'i-bid';
+    constructor(){
+        super();
+        const aThis = this as any;
+        if(aThis.attachInternals !== undefined){
+            (aThis)._internals = aThis.attachInternals();
+        }
+    }
     self = this;
     propActions = propActions;
     reactor = new xc.Rx(this);
