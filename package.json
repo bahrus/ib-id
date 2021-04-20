@@ -29,17 +29,17 @@
   },
   "dependencies": {
     "trans-render": "0.0.283",
-    "xtal-element": "0.0.380"
+    "xtal-element": "0.0.383"
   },
   "devDependencies": {
     "@skypack/package-check": "0.2.2",
-    "@web/dev-server": "0.1.10"
+    "@web/dev-server": "0.1.14"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bahrus/ib-id.git"
   },
-  "author": "",
+  "author": "anderson.bruce.b@gmail.com",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/bahrus/ib-id/issues"
