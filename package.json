@@ -25,11 +25,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "web-dev-server --node-resolve --app-index demo/index.html  --watch --open",
-    "package-check": "package-check"
+    "package-check": "package-check",
+    "publish": "git commit -m \"...\" && npm version patch && npm publish && git push"
   },
   "dependencies": {
-    "trans-render": "0.0.284",
-    "xtal-element": "0.0.385"
+    "trans-render": "0.0.285",
+    "xtal-element": "0.0.386"
   },
   "devDependencies": {
     "@skypack/package-check": "0.2.2",
