@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@skypack/package-check": "0.2.2",
-    "@web/dev-server": "0.1.16"
+    "@web/dev-server": "0.1.17"
   },
   "repository": {
     "type": "git",

@@ -168,7 +168,7 @@ We can specify which initial nodes are "owned" by ib-id via the initCount proper
 ```html
 <ul>
     <li>header</li>
-    <i-bid init-count=2></i-bid>
+    <i-bid owned-sibling-count=2></i-bid>
     <li>hello 1</li>
     <li>hello 2</li>
     <li>footer</li>

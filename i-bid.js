@@ -20,7 +20,7 @@ export class IBid extends HTMLElement {
     connectedCallback() {
         this.style.display = 'none';
         xc.hydrate(this, slicedPropDefs, {
-            initCount: 0,
+            ownedSiblingCount: 0,
             map: identity,
             tag: (this.firstElementChild || this.previousElementSibling || this.parentElement).localName,
             grp1: stdGrp1,
@@ -44,9 +44,9 @@ const stdGrp1 = (x) => {
     }
     return x.localName;
 };
-const linkInitialized = ({ initCount, self }) => {
-    if (initCount !== 0) {
-        markOwnership(self, initCount);
+const linkInitialized = ({ ownedSiblingCount, self }) => {
+    if (ownedSiblingCount !== 0) {
+        markOwnership(self, ownedSiblingCount);
     }
     else {
         self.initialized = true;
@@ -96,7 +96,7 @@ const propDefMap = {
         dry: true,
         async: true,
     },
-    initCount: {
+    ownedSiblingCount: {
         type: Number,
         async: true
     },
@@ -110,24 +110,24 @@ const propDefMap = {
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 xc.letThereBeProps(IBid, slicedPropDefs, 'onPropChange');
 xc.define(IBid);
-export function markOwnership(self, initCount) {
+export function markOwnership(self, ownedSiblingCount) {
     const { ownedSiblings } = self;
     let i = 0, ns = self;
     const nextSiblings = [];
-    while (i < initCount && ns !== null) {
+    while (i < ownedSiblingCount && ns !== null) {
         i++;
         ns = ns.nextElementSibling;
         if (ns !== null)
             nextSiblings.push(ns);
     }
-    if (i === initCount && ns !== null) {
+    if (i === ownedSiblingCount && ns !== null) {
         self.initialized = true;
         for (const ns2 of nextSiblings) {
             ownedSiblings.add(ns2);
         }
     }
     else {
-        setTimeout(() => markOwnership(self, initCount), 50);
+        setTimeout(() => markOwnership(self, ownedSiblingCount), 50);
         return;
     }
 }

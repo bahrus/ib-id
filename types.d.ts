@@ -3,7 +3,7 @@ export interface IbIdProps extends Partial<HTMLElement>{
     tag?: string | undefined;
     map? : undefined | ((x: any, idx?: number) => any);
     list?: any[],
-    initCount?: number | undefined;
+    ownedSiblingCount?: number | undefined;
     initialized?: boolean | undefined;
     ownedSiblings?: WeakSet<Element>;
     grp1?: (x: any) => string;

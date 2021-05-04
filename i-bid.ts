@@ -1,4 +1,4 @@
-import { xc, PropAction, ReactiveSurface, PropDef, PropDefMap } from 'xtal-element/lib/XtalCore.js';
+import { xc, PropAction, ReactiveSurface, PropDef, PropDefMap, IReactor } from 'xtal-element/lib/XtalCore.js';
 import { IbIdProps } from './types.js';
 import { applyP } from 'trans-render/lib/applyP.js';
 import { applyPEA } from 'trans-render/lib/applyPEA.js';
@@ -18,7 +18,7 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
     }
     self = this;
     propActions = propActions;
-    reactor = new xc.Rx(this);
+    reactor: IReactor = new xc.Rx(this);
     tag: string | undefined;
     initialized: boolean | undefined;
     /**
@@ -26,14 +26,14 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
      */
     map: ((x: any, idx?: number) => any) | undefined;
     list: any[] | undefined;
-    initCount: number | undefined;
+    ownedSiblingCount: number | undefined;
     ownedSiblings: WeakSet<Element> = new WeakSet<Element>();
     grp1LU: {[key: string] : Element[]} = {};
     grp1: undefined | ((x: any) => string);
     connectedCallback(){
         this.style.display = 'none';
         xc.hydrate<Partial<IbIdProps>>(this, slicedPropDefs, {
-            initCount: 0,
+            ownedSiblingCount: 0,
             map: identity,
             tag: (this.firstElementChild || this.previousElementSibling || this.parentElement!).localName,
             grp1: stdGrp1,
@@ -60,9 +60,9 @@ const stdGrp1 = (x: any) => {
 }
     
 
-const linkInitialized = ({initCount, self}: IBid) => {
-    if(initCount !== 0){
-        markOwnership(self, initCount!);
+const linkInitialized = ({ownedSiblingCount, self}: IBid) => {
+    if(ownedSiblingCount !== 0){
+        markOwnership(self, ownedSiblingCount!);
     }else{
         self.initialized = true;
     }
@@ -113,7 +113,7 @@ const propDefMap : PropDefMap<IBid> = {
         dry: true,
         async: true,
     },
-    initCount: {
+    ownedSiblingCount: {
         type: Number,
         async: true
     },
@@ -128,22 +128,22 @@ const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 xc.letThereBeProps<IBid>(IBid, slicedPropDefs, 'onPropChange');
 xc.define(IBid);
 
-export function markOwnership(self: IBid, initCount: number){
+export function markOwnership(self: IBid, ownedSiblingCount: number){
     const {ownedSiblings} = self;
     let i = 0, ns = self as Element | null;
     const nextSiblings: Element[] = [];
-    while(i < initCount && ns !== null){
+    while(i < ownedSiblingCount && ns !== null){
         i++;
         ns = ns.nextElementSibling;
         if(ns!==null) nextSiblings.push(ns);
     }
-    if(i === initCount && ns !== null){
+    if(i === ownedSiblingCount && ns !== null){
         self.initialized = true;
         for(const ns2 of nextSiblings){
             ownedSiblings.add(ns2 as HTMLElement);
         }
     }else{
-        setTimeout(() => markOwnership(self, initCount), 50);
+        setTimeout(() => markOwnership(self, ownedSiblingCount), 50);
         return;
     }
 }
