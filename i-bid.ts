@@ -28,6 +28,7 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
     list: any[] | undefined;
     ownedSiblingCount: number | undefined;
     ownedSiblings: WeakSet<Element> = new WeakSet<Element>();
+    lastOwnedSibling: Element | undefined;
     grp1LU: {[key: string] : Element[]} = {};
     grp1: undefined | ((x: any) => string);
     connectedCallback(){
@@ -39,8 +40,18 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
             grp1: stdGrp1,
         });
     }
+    disconnectedCallback(){
+
+    }
     onPropChange(name: string, propDef: PropDef, newVal: any){
         this.reactor.addToQueue(propDef, newVal);
+    }
+
+    get nextUnownedSibling(){
+        if(this.lastOwnedSibling !== undefined){
+            return this.lastOwnedSibling.nextElementSibling;
+        }
+        return this.nextElementSibling;
     }
 
     /**
@@ -84,6 +95,7 @@ export const onNewList = ({initialized, grp1, list, map, self}: IBid) => {
             wrappedItem = {localName: self.tag, ...wrappedItem};
         }
         ns = applyItem(self, wrappedItem, idx, ns);
+        self.lastOwnedSibling = ns;
     }
     poolExtras(self, ns);
 }

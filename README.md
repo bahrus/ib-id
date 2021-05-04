@@ -131,6 +131,8 @@ Why include that sample li inside i-bid?
 <!--1.  assignItemIntoNode -- Does an Object.assign of the list item into the DOM node (with exceptions for dataset, style, localName). -->
 configureNewChild -- Perform custom actions when new node created
 
+updateLightChildren
+
 ## Special Props:  dataset, style
 
 If a list item that gets Object.assigned into the DOM node contains dataset and/or style sub objects, these also get specially applied to the node.

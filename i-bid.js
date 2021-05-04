@@ -26,8 +26,16 @@ export class IBid extends HTMLElement {
             grp1: stdGrp1,
         });
     }
+    disconnectedCallback() {
+    }
     onPropChange(name, propDef, newVal) {
         this.reactor.addToQueue(propDef, newVal);
+    }
+    get nextUnownedSibling() {
+        if (this.lastOwnedSibling !== undefined) {
+            return this.lastOwnedSibling.nextElementSibling;
+        }
+        return this.nextElementSibling;
     }
     /**
      * Apply any custom actions on newly created element.
@@ -70,6 +78,7 @@ export const onNewList = ({ initialized, grp1, list, map, self }) => {
             wrappedItem = { localName: self.tag, ...wrappedItem };
         }
         ns = applyItem(self, wrappedItem, idx, ns);
+        self.lastOwnedSibling = ns;
     }
     poolExtras(self, ns);
 };
