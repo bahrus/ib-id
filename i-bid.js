@@ -37,6 +37,17 @@ export class IBid extends HTMLElement {
             return range;
         }
     }
+    get extractedContents() {
+        if (this.lastOwnedSibling !== undefined) {
+            const range = document.createRange();
+            range.setStartBefore(this);
+            range.setEndAfter(this.lastOwnedSibling);
+            return range.extractContents();
+        }
+        else {
+            return this;
+        }
+    }
     onPropChange(name, propDef, newVal) {
         this.reactor.addToQueue(propDef, newVal);
     }

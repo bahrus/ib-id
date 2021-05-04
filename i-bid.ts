@@ -51,6 +51,16 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
             return range;
         }  
     }
+    get extractedContents(){
+        if(this.lastOwnedSibling !== undefined){
+            const range = document.createRange();
+            range.setStartBefore(this);
+            range.setEndAfter(this.lastOwnedSibling);
+            return range.extractContents();
+        }else{
+            return this;
+        }
+    }
     onPropChange(name: string, propDef: PropDef, newVal: any){
         this.reactor.addToQueue(propDef, newVal);
     }
