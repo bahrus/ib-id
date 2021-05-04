@@ -27,6 +27,15 @@ export class IBid extends HTMLElement {
         });
     }
     disconnectedCallback() {
+        this.ownedRange?.deleteContents();
+    }
+    get ownedRange() {
+        if (this.lastOwnedSibling !== undefined) {
+            const range = document.createRange();
+            range.setStartBefore(this.nextElementSibling);
+            range.setEndAfter(this.lastOwnedSibling);
+            return range;
+        }
     }
     onPropChange(name, propDef, newVal) {
         this.reactor.addToQueue(propDef, newVal);
@@ -125,8 +134,8 @@ export function markOwnership(self, ownedSiblingCount) {
     const nextSiblings = [];
     while (i < ownedSiblingCount && ns !== null) {
         i++;
-        ns = ns.nextElementSibling;
-        if (ns !== null)
+        ns = ns.nextUnownedSibling || ns.nextElementSibling;
+        if (ns)
             nextSiblings.push(ns);
     }
     if (i === ownedSiblingCount && ns !== null) {

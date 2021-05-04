@@ -41,7 +41,15 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
         });
     }
     disconnectedCallback(){
-
+        this.ownedRange?.deleteContents();
+    }
+    get ownedRange(){
+        if(this.lastOwnedSibling !== undefined){
+            const range = document.createRange();
+            range.setStartBefore(this.nextElementSibling!);
+            range.setEndAfter(this.lastOwnedSibling);
+            return range;
+        }  
     }
     onPropChange(name: string, propDef: PropDef, newVal: any){
         this.reactor.addToQueue(propDef, newVal);
@@ -146,8 +154,8 @@ export function markOwnership(self: IBid, ownedSiblingCount: number){
     const nextSiblings: Element[] = [];
     while(i < ownedSiblingCount && ns !== null){
         i++;
-        ns = ns.nextElementSibling;
-        if(ns!==null) nextSiblings.push(ns);
+        ns = (<any>ns).nextUnownedSibling || ns.nextElementSibling;
+        if(ns) nextSiblings.push(ns);
     }
     if(i === ownedSiblingCount && ns !== null){
         self.initialized = true;
