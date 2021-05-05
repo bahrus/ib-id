@@ -41,7 +41,7 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
         });
     }
     disconnectedCallback(){
-        this.ownedRange?.deleteContents();
+        if(!this._doNotCleanUp) this.ownedRange?.deleteContents();
     }
     get ownedRange(){
         if(this.lastOwnedSibling !== undefined){
@@ -51,15 +51,13 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
             return range;
         }  
     }
-    get extractedContents(){
-        if(this.lastOwnedSibling !== undefined){
-            const range = document.createRange();
-            range.setStartBefore(this);
-            range.setEndAfter(this.lastOwnedSibling);
-            return range.extractContents();
-        }else{
-            return this;
-        }
+    _doNotCleanUp = false;
+    extractContents(){
+        this._doNotCleanUp = true;
+        const range = document.createRange();
+        range.setStartBefore(this);
+        range.setEndAfter(this.lastOwnedSibling ?? this);
+        return range.extractContents();
     }
     onPropChange(name: string, propDef: PropDef, newVal: any){
         this.reactor.addToQueue(propDef, newVal);

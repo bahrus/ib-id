@@ -12,6 +12,7 @@ export class IBid extends HTMLElement {
         this.reactor = new xc.Rx(this);
         this.ownedSiblings = new WeakSet();
         this.grp1LU = {};
+        this._doNotCleanUp = false;
         const aThis = this;
         if (aThis.attachInternals !== undefined) {
             (aThis)._internals = aThis.attachInternals();
@@ -27,7 +28,8 @@ export class IBid extends HTMLElement {
         });
     }
     disconnectedCallback() {
-        this.ownedRange?.deleteContents();
+        if (!this._doNotCleanUp)
+            this.ownedRange?.deleteContents();
     }
     get ownedRange() {
         if (this.lastOwnedSibling !== undefined) {
@@ -37,16 +39,12 @@ export class IBid extends HTMLElement {
             return range;
         }
     }
-    get extractedContents() {
-        if (this.lastOwnedSibling !== undefined) {
-            const range = document.createRange();
-            range.setStartBefore(this);
-            range.setEndAfter(this.lastOwnedSibling);
-            return range.extractContents();
-        }
-        else {
-            return this;
-        }
+    extractContents() {
+        this._doNotCleanUp = true;
+        const range = document.createRange();
+        range.setStartBefore(this);
+        range.setEndAfter(this.lastOwnedSibling ?? this);
+        return range.extractContents();
     }
     onPropChange(name, propDef, newVal) {
         this.reactor.addToQueue(propDef, newVal);
