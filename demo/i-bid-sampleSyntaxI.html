@@ -11,6 +11,14 @@
         <i-bid list='["hello 1", "hello 2"]'></i-bid>
         <li>footer</li>
     </ul>
+    <script type=importmap>
+        {
+            "imports": {
+                "xtal-element/": "../node_modules/xtal-element/",
+                "trans-render/": "../node_modules/trans-render/"
+            }
+        }
+    </script>
     <script type=module>
         import '../i-bid.js';
     </script>

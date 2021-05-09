@@ -33,7 +33,7 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
     grp1: undefined | ((x: any) => string);
     connectedCallback(){
         this.style.display = 'none';
-        xc.hydrate<Partial<IbIdProps>>(this, slicedPropDefs, {
+        xc.mergeProps<Partial<IbIdProps>>(this, slicedPropDefs, {
             ownedSiblingCount: 0,
             map: identity,
             tag: (this.firstElementChild || this.previousElementSibling || this.parentElement!).localName,

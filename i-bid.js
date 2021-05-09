@@ -20,7 +20,7 @@ export class IBid extends HTMLElement {
     }
     connectedCallback() {
         this.style.display = 'none';
-        xc.hydrate(this, slicedPropDefs, {
+        xc.mergeProps(this, slicedPropDefs, {
             ownedSiblingCount: 0,
             map: identity,
             tag: (this.firstElementChild || this.previousElementSibling || this.parentElement).localName,
