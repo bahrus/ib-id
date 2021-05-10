@@ -200,7 +200,6 @@ function applyItem(self, item, idx, prevSib) {
     if (newEl === undefined) {
         newEl = document.createElement(self.grp1(item));
         self.configureNewChild(newEl);
-        ownedSiblings.add(newEl);
     }
     if (Array.isArray(item)) {
         applyPEA(self, newEl, item);
@@ -208,6 +207,8 @@ function applyItem(self, item, idx, prevSib) {
     else {
         applyP(newEl, [item]);
     }
+    if (!ownedSiblings.has(newEl))
+        ownedSiblings.add(newEl);
     self.updateLightChildren(newEl, item, idx);
     prevSib.insertAdjacentElement('afterend', newEl);
     return newEl;

@@ -217,13 +217,14 @@ function applyItem(self: IBid, item: any, idx: number, prevSib: Element): Elemen
     if(newEl === undefined){
         newEl = document.createElement(self.grp1!(item));
         self.configureNewChild(newEl!);
-        ownedSiblings!.add(newEl!);
+        
     }
     if(Array.isArray(item)){
         applyPEA(self, newEl! as HTMLElement, item as PEASettings);
     }else{
         applyP(newEl!, [item] as PSettings);
     }
+    if(!ownedSiblings!.has(newEl)) ownedSiblings!.add(newEl!);
     self.updateLightChildren(newEl!, item, idx);
     prevSib.insertAdjacentElement('afterend', newEl!);
     return newEl!;
