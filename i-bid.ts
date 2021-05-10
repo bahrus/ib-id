@@ -225,7 +225,6 @@ const propDefMap : PropDefMap<IBid> = {
         type: Boolean,
         stopReactionsIfFalsy: true,
         dry: true,
-        async: false,
     }
 }
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);

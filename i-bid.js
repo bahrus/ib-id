@@ -207,7 +207,6 @@ const propDefMap = {
         type: Boolean,
         stopReactionsIfFalsy: true,
         dry: true,
-        async: false,
     }
 };
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
