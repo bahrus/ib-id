@@ -26,7 +26,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "node node_modules/xtal-test/serve.js",
     "package-check": "package-check",
-    "publish": "git commit -m \"...\" && git push && npm version patch && npm publish && git push"
+    "pub": "git commit -m \"...\" && git push && npm version patch && npm publish && git push"
   },
   "dependencies": {
     "trans-render": "0.0.286",

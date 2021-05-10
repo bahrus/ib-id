@@ -29,6 +29,8 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
     ownedSiblingCount: number | undefined;
     ownedSiblings: WeakSet<Element> = new WeakSet<Element>();
     lastOwnedSibling: Element | undefined;
+    _lastList: any[] | undefined;
+    _lastMap: any;
     grp1LU: {[key: string] : Element[]} = {};
     grp1: undefined | ((x: any) => string);
     connectedCallback(){
@@ -96,6 +98,7 @@ const linkInitialized = ({ownedSiblingCount, self}: IBid) => {
 }
 
 export const onNewList = ({initialized, grp1, list, map, self}: IBid) => {
+    if(list === self._lastList && map === self._lastMap) return;
     let ns = self as Element;
     for(const [idx, item] of list!.entries()){
         const mappedItem = map!(item, idx);
