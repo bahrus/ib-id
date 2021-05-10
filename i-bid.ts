@@ -100,7 +100,7 @@ const linkInitialized = ({ownedSiblingCount, self}: IBid) => {
 export const onNewList = ({initialized, grp1, list, map, self}: IBid) => {
     if(list === self._lastList && map === self._lastMap) return;
     self._lastMap = map;
-    self._lastList = map;
+    self._lastList = list;
     let ns = self as Element;
     for(const [idx, item] of list!.entries()){
         const mappedItem = map!(item, idx);
