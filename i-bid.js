@@ -104,39 +104,6 @@ const propActions = [
     onNewList,
     linkInitialized,
 ];
-export const objProp1 = {
-    type: Object,
-    dry: true,
-    stopReactionsIfFalsy: true,
-    async: true,
-};
-export const objProp2 = {
-    ...objProp1,
-    parse: true,
-};
-const propDefMap = {
-    list: objProp2,
-    map: objProp2,
-    grp1: objProp1,
-    tag: {
-        type: String,
-        dry: true,
-        async: true,
-    },
-    ownedSiblingCount: {
-        type: Number,
-        async: true
-    },
-    initialized: {
-        type: Boolean,
-        stopReactionsIfFalsy: true,
-        dry: true,
-        async: true,
-    }
-};
-const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
-xc.letThereBeProps(IBid, slicedPropDefs, 'onPropChange');
-xc.define(IBid);
 export function markOwnership(self, ownedSiblingCount) {
     const { ownedSiblings } = self;
     let i = 0, ns = self;
@@ -213,3 +180,36 @@ function applyItem(self, item, idx, prevSib) {
     prevSib.insertAdjacentElement('afterend', newEl);
     return newEl;
 }
+export const objProp1 = {
+    type: Object,
+    dry: true,
+    stopReactionsIfFalsy: true,
+    async: true,
+};
+export const objProp2 = {
+    ...objProp1,
+    parse: true,
+};
+const propDefMap = {
+    list: objProp2,
+    map: objProp2,
+    grp1: objProp1,
+    tag: {
+        type: String,
+        dry: true,
+        async: true,
+    },
+    ownedSiblingCount: {
+        type: Number,
+        async: true
+    },
+    initialized: {
+        type: Boolean,
+        stopReactionsIfFalsy: true,
+        dry: true,
+        async: false,
+    }
+};
+const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
+xc.letThereBeProps(IBid, slicedPropDefs, 'onPropChange');
+xc.define(IBid);
