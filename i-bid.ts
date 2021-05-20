@@ -3,7 +3,8 @@ import { IbIdProps } from './types.js';
 import { applyP } from 'trans-render/lib/applyP.js';
 import { applyPEA } from 'trans-render/lib/applyPEA.js';
 import { PSettings, PEASettings } from 'trans-render/lib/types.js';
-
+import {applyMixins} from 'xtal-element/lib/applyMixins.js';
+import {GroupedSiblings} from 'xtal-element/lib/GroupedSiblings.js';
 /**
  * @element i-bid
  */
@@ -28,7 +29,7 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
     list: any[] | undefined;
     ownedSiblingCount: number | undefined;
     ownedSiblings: WeakSet<Element> = new WeakSet<Element>();
-    lastOwnedSibling: Element | undefined;
+    //lastOwnedSibling: Element | undefined;
     _lastList: any[] | undefined;
     _lastMap: any;
     grp1LU: {[key: string] : Element[]} = {};
@@ -43,34 +44,15 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
         });
     }
     disconnectedCallback(){
-        if(!this._doNotCleanUp) this.ownedRange?.deleteContents();
+        if(!this._doNotCleanUp) this.groupedRange?.deleteContents();
     }
-    get ownedRange(){
-        if(this.lastOwnedSibling !== undefined){
-            const range = document.createRange();
-            range.setStartBefore(this.nextElementSibling!);
-            range.setEndAfter(this.lastOwnedSibling);
-            return range;
-        }  
-    }
-    _doNotCleanUp = false;
-    extractContents(){
-        this._doNotCleanUp = true;
-        const range = document.createRange();
-        range.setStartBefore(this);
-        range.setEndAfter(this.lastOwnedSibling ?? this);
-        return range.extractContents();
-    }
+
+
     onPropChange(name: string, propDef: PropDef, newVal: any){
         this.reactor.addToQueue(propDef, newVal);
     }
 
-    get nextUnownedSibling(){
-        if(this.lastOwnedSibling !== undefined){
-            return this.lastOwnedSibling.nextElementSibling;
-        }
-        return this.nextElementSibling;
-    }
+
 
     /**
      * Apply any custom actions on newly created element.
@@ -116,7 +98,7 @@ export const onNewList = ({initialized, grp1, list, map, self}: IBid) => {
             wrappedItem = {localName: self.tag, ...wrappedItem};
         }
         ns = applyItem(self, wrappedItem, idx, ns);
-        self.lastOwnedSibling = ns;
+        self.lastGroupedSibling = ns;
     }
     poolExtras(self, ns);
 }
@@ -234,5 +216,8 @@ const propDefMap : PropDefMap<IBid> = {
 }
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 xc.letThereBeProps<IBid>(IBid, slicedPropDefs, 'onPropChange');
+applyMixins(IBid, [GroupedSiblings]);
 xc.define(IBid);
+
+export interface IBid extends GroupedSiblings{}
 

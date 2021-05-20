@@ -1,6 +1,8 @@
 import { xc } from 'xtal-element/lib/XtalCore.js';
 import { applyP } from 'trans-render/lib/applyP.js';
 import { applyPEA } from 'trans-render/lib/applyPEA.js';
+import { applyMixins } from 'xtal-element/lib/applyMixins.js';
+import { GroupedSiblings } from 'xtal-element/lib/GroupedSiblings.js';
 /**
  * @element i-bid
  */
@@ -12,7 +14,6 @@ export class IBid extends HTMLElement {
         this.reactor = new xc.Rx(this);
         this.ownedSiblings = new WeakSet();
         this.grp1LU = {};
-        this._doNotCleanUp = false;
         const aThis = this;
         if (aThis.attachInternals !== undefined) {
             (aThis)._internals = aThis.attachInternals();
@@ -29,31 +30,10 @@ export class IBid extends HTMLElement {
     }
     disconnectedCallback() {
         if (!this._doNotCleanUp)
-            this.ownedRange?.deleteContents();
-    }
-    get ownedRange() {
-        if (this.lastOwnedSibling !== undefined) {
-            const range = document.createRange();
-            range.setStartBefore(this.nextElementSibling);
-            range.setEndAfter(this.lastOwnedSibling);
-            return range;
-        }
-    }
-    extractContents() {
-        this._doNotCleanUp = true;
-        const range = document.createRange();
-        range.setStartBefore(this);
-        range.setEndAfter(this.lastOwnedSibling ?? this);
-        return range.extractContents();
+            this.groupedRange?.deleteContents();
     }
     onPropChange(name, propDef, newVal) {
         this.reactor.addToQueue(propDef, newVal);
-    }
-    get nextUnownedSibling() {
-        if (this.lastOwnedSibling !== undefined) {
-            return this.lastOwnedSibling.nextElementSibling;
-        }
-        return this.nextElementSibling;
     }
     /**
      * Apply any custom actions on newly created element.
@@ -100,7 +80,7 @@ export const onNewList = ({ initialized, grp1, list, map, self }) => {
             wrappedItem = { localName: self.tag, ...wrappedItem };
         }
         ns = applyItem(self, wrappedItem, idx, ns);
-        self.lastOwnedSibling = ns;
+        self.lastGroupedSibling = ns;
     }
     poolExtras(self, ns);
 };
@@ -215,4 +195,5 @@ const propDefMap = {
 };
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 xc.letThereBeProps(IBid, slicedPropDefs, 'onPropChange');
+applyMixins(IBid, [GroupedSiblings]);
 xc.define(IBid);
