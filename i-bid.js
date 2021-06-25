@@ -7,18 +7,31 @@ import { GroupedSiblings } from 'xtal-element/lib/GroupedSiblings.js';
  * @element i-bid
  */
 export class IBid extends HTMLElement {
+    static is = 'i-bid';
     constructor() {
         super();
-        this.self = this;
-        this.propActions = propActions;
-        this.reactor = new xc.Rx(this);
-        this.ownedSiblings = new WeakSet();
-        this.grp1LU = {};
         const aThis = this;
         if (aThis.attachInternals !== undefined) {
             (aThis)._internals = aThis.attachInternals();
         }
     }
+    self = this;
+    propActions = propActions;
+    reactor = new xc.Rx(this);
+    tag;
+    initialized;
+    /**
+     * map allows mapping a general list to props to be set on the UI component.
+     */
+    map;
+    list;
+    ownedSiblingCount;
+    ownedSiblings = new WeakSet();
+    //lastOwnedSibling: Element | undefined;
+    _lastList;
+    _lastMap;
+    grp1LU = {};
+    grp1;
     connectedCallback() {
         this.style.display = 'none';
         xc.mergeProps(this, slicedPropDefs, {
@@ -42,7 +55,6 @@ export class IBid extends HTMLElement {
     configureNewChild(newChild) { }
     updateLightChildren(element, item, idx) { }
 }
-IBid.is = 'i-bid';
 const identity = (x) => x;
 const stdGrp1 = (x) => {
     if (Array.isArray(x)) {
