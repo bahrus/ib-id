@@ -7,31 +7,18 @@ import { GroupedSiblings } from 'xtal-element/lib/GroupedSiblings.js';
  * @element i-bid
  */
 export class IBid extends HTMLElement {
-    static is = 'i-bid';
     constructor() {
         super();
+        this.self = this;
+        this.propActions = propActions;
+        this.reactor = new xc.Rx(this);
+        this.ownedSiblings = new WeakSet();
+        this.grp1LU = {};
         const aThis = this;
         if (aThis.attachInternals !== undefined) {
             (aThis)._internals = aThis.attachInternals();
         }
     }
-    self = this;
-    propActions = propActions;
-    reactor = new xc.Rx(this);
-    tag;
-    initialized;
-    /**
-     * map allows mapping a general list to props to be set on the UI component.
-     */
-    map;
-    list;
-    ownedSiblingCount;
-    ownedSiblings = new WeakSet();
-    //lastOwnedSibling: Element | undefined;
-    _lastList;
-    _lastMap;
-    grp1LU = {};
-    grp1;
     connectedCallback() {
         this.style.display = 'none';
         xc.mergeProps(this, slicedPropDefs, {
@@ -55,6 +42,7 @@ export class IBid extends HTMLElement {
     configureNewChild(newChild) { }
     updateLightChildren(element, item, idx) { }
 }
+IBid.is = 'i-bid';
 const identity = (x) => x;
 const stdGrp1 = (x) => {
     if (Array.isArray(x)) {
@@ -70,12 +58,16 @@ const linkInitialized = ({ ownedSiblingCount, self }) => {
         self.initialized = true;
     }
 };
-export const onNewList = ({ initialized, grp1, list, map, self }) => {
+export const onNewList = ({ initialized, grp1, list, map, self, startingSibling }) => {
     if (list === self._lastList && map === self._lastMap)
         return;
+    if (self.renderTo !== undefined && startingSibling === undefined) {
+        self.setStartingSibling(0);
+        return;
+    }
     self._lastMap = map;
     self._lastList = list;
-    let ns = self;
+    let ns = self.startingSibling;
     for (const [idx, item] of list.entries()) {
         const mappedItem = map(item, idx);
         let wrappedItem = typeof (mappedItem) === 'string' ? { textContent: item } :
@@ -176,6 +168,11 @@ function applyItem(self, item, idx, prevSib) {
     prevSib.insertAdjacentElement('afterend', newEl);
     return newEl;
 }
+export const objProp3 = {
+    type: Object,
+    dry: true,
+    async: true,
+};
 export const objProp1 = {
     type: Object,
     dry: true,
@@ -186,10 +183,17 @@ export const objProp2 = {
     ...objProp1,
     parse: true,
 };
+export const strProp1 = {
+    type: String,
+    dry: true,
+};
 const propDefMap = {
     list: objProp2,
     map: objProp2,
     grp1: objProp1,
+    startingSibling: objProp3,
+    applyToNext: strProp1,
+    renderTo: strProp1,
     tag: {
         type: String,
         dry: true,

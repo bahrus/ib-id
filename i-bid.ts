@@ -79,11 +79,15 @@ const linkInitialized = ({ownedSiblingCount, self}: IBid) => {
     }
 }
 
-export const onNewList = ({initialized, grp1, list, map, self}: IBid) => {
+export const onNewList = ({initialized, grp1, list, map, self, startingSibling}: IBid) => {
     if(list === self._lastList && map === self._lastMap) return;
+    if(self.renderTo !== undefined && startingSibling === undefined) {
+        self.setStartingSibling(0);
+        return;
+    }
     self._lastMap = map;
     self._lastList = list;
-    let ns = self as Element;
+    let ns = self.startingSibling as Element;
     for(const [idx, item] of list!.entries()){
         const mappedItem = map!(item, idx);
         let wrappedItem = typeof(mappedItem) === 'string' ? {textContent: item} :
@@ -184,6 +188,11 @@ function applyItem(self: IBid, item: any, idx: number, prevSib: Element): Elemen
     return newEl!;
 }
 
+export const objProp3: PropDef = {
+    type: Object,
+    dry: true,
+    async: true,
+};
 export const objProp1: PropDef = {
     type: Object,
     dry: true,
@@ -195,10 +204,19 @@ export const objProp2: PropDef = {
     parse: true,
 } as PropDef;
 
+export const strProp1: PropDef = {
+    type: String,
+    dry: true,
+
+};
+
 const propDefMap : PropDefMap<IBid> = {
     list: objProp2,
     map: objProp2,
     grp1: objProp1,
+    startingSibling: objProp3,
+    applyToNext: strProp1,
+    renderTo: strProp1,
     tag: {
         type: String,
         dry: true,
