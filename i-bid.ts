@@ -71,7 +71,7 @@ const stdGrp1 = (x: any) => {
 }
     
 
-const linkInitialized = ({ownedSiblingCount, self}: IBid) => {
+export const linkInitialized = ({ownedSiblingCount, self}: IBid) => {
     if(ownedSiblingCount !== 0){
         markOwnership(self, ownedSiblingCount!);
     }else{

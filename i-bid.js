@@ -50,7 +50,7 @@ const stdGrp1 = (x) => {
     }
     return x.localName;
 };
-const linkInitialized = ({ ownedSiblingCount, self }) => {
+export const linkInitialized = ({ ownedSiblingCount, self }) => {
     if (ownedSiblingCount !== 0) {
         markOwnership(self, ownedSiblingCount);
     }
