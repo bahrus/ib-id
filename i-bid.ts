@@ -81,7 +81,7 @@ const linkInitialized = ({ownedSiblingCount, self}: IBid) => {
 
 export const onNewList = ({initialized, grp1, list, map, self, startingSibling}: IBid) => {
     if(list === self._lastList && map === self._lastMap) return;
-    if(self.renderAfter !== undefined && startingSibling === undefined) {
+    if(startingSibling === undefined) {
         self.setStartingSibling(0);
         return;
     }
