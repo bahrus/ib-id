@@ -10,8 +10,8 @@ export interface IbIdProps extends Partial<HTMLElement>{
     grp1LU: {[key: string] : Element[]};
     lastGroupedSibling: Element | undefined;
     startingSibling: Element | undefined;
-    applyToNext: string | undefined;
-    renderTo: string | undefined;
+    matchClosest: string | undefined;
+    renderAfter: string | undefined;
 }
 
 declare global {

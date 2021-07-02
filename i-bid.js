@@ -61,7 +61,7 @@ const linkInitialized = ({ ownedSiblingCount, self }) => {
 export const onNewList = ({ initialized, grp1, list, map, self, startingSibling }) => {
     if (list === self._lastList && map === self._lastMap)
         return;
-    if (self.renderTo !== undefined && startingSibling === undefined) {
+    if (self.renderAfter !== undefined && startingSibling === undefined) {
         self.setStartingSibling(0);
         return;
     }
@@ -192,8 +192,8 @@ const propDefMap = {
     map: objProp2,
     grp1: objProp1,
     startingSibling: objProp3,
-    applyToNext: strProp1,
-    renderTo: strProp1,
+    matchClosest: strProp1,
+    renderAfter: strProp1,
     tag: {
         type: String,
         dry: true,
