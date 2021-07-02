@@ -27,7 +27,6 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
      */
     map: ((x: any, idx?: number) => any) | undefined;
     list: any[] | undefined;
-    ownedSiblingCount: number | undefined;
     ownedSiblings: WeakSet<Element> = new WeakSet<Element>();
     //lastOwnedSibling: Element | undefined;
     _lastList: any[] | undefined;
@@ -72,7 +71,7 @@ const stdGrp1 = (x: any) => {
     
 
 export const linkInitialized = ({ownedSiblingCount, self}: IBid) => {
-    if(ownedSiblingCount !== 0){
+    if(ownedSiblingCount !== undefined && ownedSiblingCount !== 0){
         markOwnership(self, ownedSiblingCount!);
     }else{
         self.initialized = true;
