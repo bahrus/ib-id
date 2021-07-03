@@ -302,7 +302,7 @@ Okay, yeah, maybe this isn't the right component for you to use.
 
 There is, however, an inefficient loophole:  innerHTML is a property which could be passed in as one of the items of your list.  ibid doesn't prevent that, and trusts that the developer will take the necessary steps to guarantee that the value is XSS-safe.
 
-A web component, that extends this one, ["lib-id"](https://github.com/bahrus/lib-id), that supports binding to light children is provided (WIP).
+Another web component,  ["lib-id"](https://github.com/bahrus/lib-id) does provide support for binding the light children. It extends this one (WIP).
 
 ## ib-id's pooling strategy [TODO]
 
