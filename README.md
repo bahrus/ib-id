@@ -135,7 +135,7 @@ ib-id takes a bit of a cue from [xtal-deco](https://github.com/bahrus/xtal-deco)
 </div>
 ```
 
-The attribute/property render-after/renderAfter tips off i-bid that it should peer into the next element, do a querySelector('[hello]') in this case, and begin its rendering after that element.
+The attribute/property render-after/renderAfter as well as render-at-start-of/renderAtStartOf tips off i-bid that it should peer into the next element, do a querySelector('[hello]') in this case, and begin its rendering after that element.
 
 ### Sample Syntax V:
 
@@ -147,10 +147,52 @@ Just as with xtal-deco, there is a (remote?) possibility that there could be mul
 <div>
     <ul>
         <li hello>header</li>
-        
         <li>footer</li>
     </ul>
 </div>
+```
+
+produces
+
+```html
+<i-bid list='["hello 1", "hello 2"]' match-closest=div render-after=[hello] style="display:none"></i-bid>
+<span>I am here</span>
+<div>
+    <ul>
+        <li hello>header</li>
+        <li>hello 1</li>
+        <li>hello 2</li>
+        <li>footer</li>
+    </ul>
+</div>
+```
+
+### Sample Syntax VI:
+
+```html
+    <i-bid list='["hello 1", "hello 2"]' match-closest=div render-at-start-of=ul>
+        <li></li>
+    </i-bid>
+    <span>I am here</span>
+    <div>
+        <ul>
+            <li>footer</li>
+        </ul>
+    </div>
+```
+
+produces
+
+```html
+    <i-bid list='["hello 1", "hello 2"]' match-closest=div render-at-start-of=ul style="display:none"></i-bid>
+    <span>I am here</span>
+    <div>
+        <ul>
+            <li>hello 1</li>
+            <li>hello 2</li>
+            <li>footer</li>
+        </ul>
+    </div>
 ```
 
 ## Overridable methods
