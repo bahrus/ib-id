@@ -17,7 +17,7 @@ As of this moment, what makes ibid different from the rest (without having condu
 1.  It has full support for dynamic tag names.
 2.  It can complement server-side (initial) rendering.
 3.  It does **not** provide any support for template binding of the light children within each element.  It only provides support for a linear list of (a potpourri of) tags.  This means to use ibid effectively, you will want a rapid way of encapsulating the markup you want within each tag (and a nice IDE and/or IDE plugin which can easily navigate to the code of a custom element -- [lit-plugin](https://marketplace.visualstudio.com/items?itemName=runem.lit-plugin) does this quite effectively for js-based web components, for example).
-4.  It renders its content (near) adjacent to itself, so that it can insert content inside built-in list elements (and potentially table elements).
+4.  It renders its content (near-) adjacent to itself, so that it can insert content inside built-in list elements (and potentially table elements).
 
 Note that there **is** a web component, [lib-id](https://github.com/bahrus/lib-id) that extends ibid, with support for template binding of light children.
 
@@ -160,9 +160,13 @@ configureNewChild -- Perform custom actions when new node created
 
 updateLightChildren
 
-## Special Props:  dataset, style, 
+## Special Props:  dataset, style, attributes, tagName, localName
 
-If a list item that gets Object.assigned into the DOM node contains dataset and/or style sub objects, these also get specially applied to the node.
+If a list item that gets Object.assigned into the DOM node contains read-only properties, these are treated specially.
+
+If the values passed in appear "legitimate", e.g. a NamedNodeMap for "attributes", then these are assigned carefully to the target element.
+
+Otherwise, the properties are renamed with a leading underscore before getting Object.assigned into the DOM node. 
 
 ## Ownership
 
@@ -254,7 +258,7 @@ Okay, yeah, maybe this isn't the right component for you to use.
 
 There is, however, an inefficient loophole:  innerHTML is a property which could be passed in as one of the items of your list.  ibid doesn't prevent that, and trusts that the developer will take the necessary steps to guarantee that the value is XSS-safe.
 
-A web component that supports binding to light children is provided [here](https://github.com/bahrus/repetir).
+A web component that supports binding to light children is provided [here](https://github.com/bahrus/lib-id).
 
 ## ib-id's pooling strategy [TODO]
 
