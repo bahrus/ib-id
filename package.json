@@ -30,12 +30,12 @@
   },
   "dependencies": {
     "trans-render": "0.0.291",
-    "xtal-element": "0.0.408"
+    "xtal-element": "0.0.409"
   },
   "devDependencies": {
     "@skypack/package-check": "0.2.2",
     "xtal-test": "0.0.51",
-    "@custom-elements-manifest/analyzer": "0.3.9"
+    "@custom-elements-manifest/analyzer": "0.4.8"
   },
   "repository": {
     "type": "git",
