@@ -58,6 +58,8 @@ Results in:
 </ul>
 ```
 
+**NB I:** As some browsers will most gently inform you, the resulting syntax (as well as the originating syntax) is not, strictly speaking, valid HTML.  More kosher ways of implementing this start with Sample syntax IV.
+
 ## Sample syntax II:
 
 ```html
