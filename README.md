@@ -17,8 +17,9 @@ As of this moment, what makes ibid different from the rest (without having condu
 1.  It has full support for dynamic tag names.
 2.  It can complement server-side (initial) rendering.
 3.  It does **not** provide any support for template binding of the light children within each element.  It only provides support for a linear list of (a potpourri of) tags.  This means to use ibid effectively, you will want a rapid way of encapsulating the markup you want within each tag (and a nice IDE and/or IDE plugin which can easily navigate to the code of a custom element -- [lit-plugin](https://marketplace.visualstudio.com/items?itemName=runem.lit-plugin) does this quite effectively for js-based web components, for example).
+4.  It renders its content (near) adjacent to itself, so that it can insert content inside built-in list elements (and potentially table elements).
 
-Not that there **is** a web component, [repetir](https://github.com/bahrus/repetir) that extends ibid, with support for template binding of light children.
+Note that there **is** a web component, [lib-id](https://github.com/bahrus/lib-id) that extends ibid, with support for template binding of light children.
 
 The three ibid components also provide support for something called "element pooling."  Alternative names could be element reuse, element recycling.  Other repeating libraries may support the basic concept.  The reason for this package supporting three different components has to do with element pooling strategy.
 
@@ -43,9 +44,6 @@ i-bid's element pooling is based on the tag name -- if the tag name is the same 
     <i-bid list='["hello 1", "hello 2"]'></i-bid>
     <li>footer</li>
 </ul>
-<script type=module>
-    import 'i-bid/i-bid.js';
-</script>
 ```
 
 Results in:
@@ -74,9 +72,6 @@ Results in:
         {textContent: 'hello 2'}
     ]
 </script>
-<script type=module>
-    import 'ib-id/ib-id.js';
-</script>
 ```
 
 Results in:
@@ -101,9 +96,6 @@ If no header / footer:
         <li>put</li>
     </i-bid>
 </ul>
-<script type=module>
-    import 'i-bid/i-bid.js';
-</script>
 ```
 
 Results in:
@@ -126,6 +118,41 @@ Why include that sample li inside i-bid?
 3)  "put" or any other text inside the element to repeat is optional.  Some IDE's might give a better preview look if including some sample text.
 4)  The li inside the ibid tag will be used for the first element, so very little waste is incurred in supporting the niceties above.
 
+## Decorator Functionality
+
+ib-id takes a bit of a cue from [xtal-deco](https://github.com/bahrus/xtal-deco).  By default it creates an adjacent virtual space of sibling elements beneath it.  However, the concept can be extended to work within an existing sibling element:
+
+### Sample Syntax IV:
+
+```html
+<i-bid list='["hello 1", "hello 2"]' render-after=[hello]><li></li></i-bid>
+<div>
+    <ul>
+        <li hello>header</li>
+        
+        <li>footer</li>
+    </ul>
+</div>
+```
+
+The attribute/property render-after/renderAfter tips off i-bid that it should peer into the next element, do a querySelector('[hello]') in this case, and begin its rendering after that element.
+
+### Sample Syntax V:
+
+Just as with xtal-deco, there is a (remote?) possibility that there could be multiple i-bid elements that need to render content inside a (nearly, now) adjacent element.  To specify the closest downstream sibling to peer into, use the match-closest/matchClosest attribute/property:
+
+```html
+<i-bid list='["hello 1", "hello 2"]' match-closest=div render-after=[hello]><li></li></i-bid>
+<span>I am here</span>
+<div>
+    <ul>
+        <li hello>header</li>
+        
+        <li>footer</li>
+    </ul>
+</div>
+```
+
 ## Overridable methods
 
 <!--1.  assignItemIntoNode -- Does an Object.assign of the list item into the DOM node (with exceptions for dataset, style, localName). -->
@@ -133,7 +160,7 @@ configureNewChild -- Perform custom actions when new node created
 
 updateLightChildren
 
-## Special Props:  dataset, style
+## Special Props:  dataset, style, 
 
 If a list item that gets Object.assigned into the DOM node contains dataset and/or style sub objects, these also get specially applied to the node.
 
