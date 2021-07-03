@@ -1,5 +1,7 @@
+import {IBid} from './i-bid.js';
 
-export interface IbIdProps extends Partial<HTMLElement>{
+export interface IBidProps{
+    self: IBid;
     tag?: string | undefined;
     map? : undefined | ((x: any, idx?: number) => any);
     list?: any[],
@@ -16,6 +18,6 @@ export interface IbIdProps extends Partial<HTMLElement>{
 
 declare global {
     interface HTMLElementTagNameMap {
-        "ib-id": IbIdProps,
+        "ib-id": IBidProps,
     }
 }

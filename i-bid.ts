@@ -1,5 +1,5 @@
 import { xc, PropAction, ReactiveSurface, PropDef, PropDefMap, IReactor } from 'xtal-element/lib/XtalCore.js';
-import { IbIdProps } from './types.js';
+import { IBidProps } from './types.js';
 import { applyP } from 'trans-render/lib/applyP.js';
 import { applyPEA } from 'trans-render/lib/applyPEA.js';
 import { PSettings, PEASettings } from 'trans-render/lib/types.js';
@@ -8,7 +8,7 @@ import {GroupedSiblings} from 'xtal-element/lib/GroupedSiblings.js';
 /**
  * @element i-bid
  */
-export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
+export class IBid extends HTMLElement implements ReactiveSurface, IBidProps {
     static is = 'i-bid';
     constructor(){
         super();
@@ -21,7 +21,6 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
     propActions = propActions;
     reactor: IReactor = new xc.Rx(this);
     tag: string | undefined;
-    initialized: boolean | undefined;
     /**
      * map allows mapping a general list to props to be set on the UI component.
      */
@@ -35,7 +34,7 @@ export class IBid extends HTMLElement implements ReactiveSurface, IbIdProps {
     grp1: undefined | ((x: any) => string);
     connectedCallback(){
         this.style.display = 'none';
-        xc.mergeProps<Partial<IbIdProps>>(this, slicedPropDefs, {
+        xc.mergeProps<Partial<IBid>>(this, slicedPropDefs, {
             ownedSiblingCount: 0,
             map: identity,
             tag: (this.firstElementChild || this.previousElementSibling || this.parentElement!).localName,
@@ -133,7 +132,7 @@ export function markOwnership(self: IBid, ownedSiblingCount: number){
     }
 }
 
-function poolExtras(self: IbIdProps, prevSib: Element){
+function poolExtras(self: IBid, prevSib: Element){
     const {grp1, grp1LU, ownedSiblings} = self;
     let ns = prevSib.nextElementSibling;
     const toPool: Element[] = [];
@@ -236,5 +235,7 @@ xc.letThereBeProps<IBid>(IBid, slicedPropDefs, 'onPropChange');
 applyMixins(IBid, [GroupedSiblings]);
 xc.define(IBid);
 
-export interface IBid extends GroupedSiblings{}
+export interface IBid extends GroupedSiblings, IBidProps{}
+
+
 
