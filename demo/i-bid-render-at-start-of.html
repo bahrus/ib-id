@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <i-bid list='["hello 1", "hello 2"]' match-closest=div render-at-start-of=ul><li></li></i-bid>
+    <span>I am here</span>
+    <div>
+        <ul>
+            <li>footer</li>
+        </ul>
+    </div>
+
+    <script type=importmap>
+        {
+            "imports": {
+                "xtal-element/": "../node_modules/xtal-element/",
+                "trans-render/": "../node_modules/trans-render/"
+            }
+        }
+    </script>
+    <script type=module>
+        import '../i-bid.js';
+    </script>
+</body>
+</html>

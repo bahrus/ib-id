@@ -14,10 +14,12 @@ export interface IBidProps{
     grp1?: (x: any) => string;
     grp1LU: {[key: string] : Element[]};
     lastGroupedSibling: Element | undefined;
-    startingSibling: Element | undefined;
+    previousUngroupedSibling: Element | undefined;
+    parentToRenderTo: Element | undefined;
     matchClosest: string | undefined;
     renderAfter: string | undefined;
-
+    renderAtStartOf: string | undefined;
+    //setElementToBeRenderedTo(count: number): void;
 }
 
 declare global {

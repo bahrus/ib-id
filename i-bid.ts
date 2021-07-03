@@ -72,15 +72,21 @@ export const linkInitialized = ({ownedSiblingCount, self}: IBid) => {
     }
 }
 
-export const onNewList = ({initialized, grp1, list, map, self, startingSibling}: IBid) => {
+export const onNewList = ({initialized, grp1, list, map, self, previousUngroupedSibling, parentToRenderTo}: IBid) => {
     if(list === self._lastList && map === self._lastMap) return;
-    if(startingSibling === undefined) {
-        self.setStartingSibling(0);
+    const isRenderedNonContinguously = self.renderAfter !== undefined || self.renderAtStartOf !== undefined;
+    if(isRenderedNonContinguously && previousUngroupedSibling === undefined && parentToRenderTo === undefined){
+        self.setElementToBeRenderedTo(0);
         return;
     }
     self._lastMap = map;
     self._lastList = list;
-    let ns = self.startingSibling as Element;
+    let relation: relation = 'previousSibling';
+    let ns = previousUngroupedSibling || self;
+    if(parentToRenderTo !== undefined){
+        ns = parentToRenderTo;
+        relation = 'parent';
+    }
     for(const [idx, item] of list!.entries()){
         const mappedItem = map!(item, idx);
         let wrappedItem = typeof(mappedItem) === 'string' ? {textContent: item} :
@@ -94,11 +100,14 @@ export const onNewList = ({initialized, grp1, list, map, self, startingSibling}:
         }else{
             wrappedItem = {localName: self.tag, ...wrappedItem};
         }
-        ns = applyItem(self, wrappedItem, idx, ns);
+        ns = applyItem(self, wrappedItem, idx, ns, relation);
+        relation = 'previousSibling';
         self.lastGroupedSibling = ns;
     }
     poolExtras(self, ns);
 }
+
+type relation = 'parent' | 'previousSibling';
 
 const propActions = [
     onNewList,
@@ -145,12 +154,12 @@ function poolExtras(self: IBid, prevSib: Element){
     }
 }
 
-function applyItem(self: IBid, item: any, idx: number, prevSib: Element): Element{
+function applyItem(self: IBid, item: any, idx: number, relativeTo: Element , relation: relation): Element{
     const {grp1, grp1LU, ownedSiblings} = self;
     const val = grp1!(item);
     let newEl: Element | undefined;
     //test next few siblings for a match
-    let ns = prevSib;
+    let ns = relativeTo;
     for(let i = 0; i < 4; i++){
         ns = ns.nextElementSibling as HTMLElement;
         if(ns === null || !ownedSiblings!.has(ns)) break;
@@ -177,7 +186,14 @@ function applyItem(self: IBid, item: any, idx: number, prevSib: Element): Elemen
     }
     if(!ownedSiblings!.has(newEl)) ownedSiblings!.add(newEl!);
     self.updateLightChildren(newEl!, item, idx);
-    prevSib.insertAdjacentElement('afterend', newEl!);
+    switch(relation){
+        case 'previousSibling':
+            relativeTo.insertAdjacentElement('afterend', newEl!);
+            break;
+        case 'parent':
+            relativeTo.prepend(newEl!);
+            break;
+    }
     return newEl!;
 }
 
@@ -207,9 +223,11 @@ const propDefMap : PropDefMap<IBid> = {
     list: objProp2,
     map: objProp2,
     grp1: objProp1,
-    startingSibling: objProp3,
+    previousUngroupedSibling: objProp3,
+    parentToRenderTo: objProp3,
     matchClosest: strProp1,
     renderAfter: strProp1,
+    renderAtStartOf: strProp1,
     tag: {
         type: String,
         dry: true,

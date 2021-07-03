@@ -7,18 +7,23 @@ import { GroupedSiblings } from 'xtal-element/lib/GroupedSiblings.js';
  * @element i-bid
  */
 export class IBid extends HTMLElement {
+    static is = 'i-bid';
     constructor() {
         super();
-        this.self = this;
-        this.propActions = propActions;
-        this.reactor = new xc.Rx(this);
-        this.ownedSiblings = new WeakSet();
-        this.grp1LU = {};
         const aThis = this;
         if (aThis.attachInternals !== undefined) {
             (aThis)._internals = aThis.attachInternals();
         }
     }
+    self = this;
+    propActions = propActions;
+    reactor = new xc.Rx(this);
+    tag;
+    ownedSiblings = new WeakSet();
+    _lastList;
+    _lastMap;
+    grp1LU = {};
+    grp1;
     connectedCallback() {
         this.style.display = 'none';
         xc.mergeProps(this, slicedPropDefs, {
@@ -42,7 +47,6 @@ export class IBid extends HTMLElement {
     configureNewChild(newChild) { }
     updateLightChildren(element, item, idx) { }
 }
-IBid.is = 'i-bid';
 const identity = (x) => x;
 const stdGrp1 = (x) => {
     if (Array.isArray(x)) {
@@ -58,16 +62,22 @@ export const linkInitialized = ({ ownedSiblingCount, self }) => {
         self.initialized = true;
     }
 };
-export const onNewList = ({ initialized, grp1, list, map, self, startingSibling }) => {
+export const onNewList = ({ initialized, grp1, list, map, self, previousUngroupedSibling, parentToRenderTo }) => {
     if (list === self._lastList && map === self._lastMap)
         return;
-    if (startingSibling === undefined) {
-        self.setStartingSibling(0);
+    const isRenderedNonContinguously = self.renderAfter !== undefined || self.renderAtStartOf !== undefined;
+    if (isRenderedNonContinguously && previousUngroupedSibling === undefined && parentToRenderTo === undefined) {
+        self.setElementToBeRenderedTo(0);
         return;
     }
     self._lastMap = map;
     self._lastList = list;
-    let ns = self.startingSibling;
+    let relation = 'previousSibling';
+    let ns = previousUngroupedSibling || self;
+    if (parentToRenderTo !== undefined) {
+        ns = parentToRenderTo;
+        relation = 'parent';
+    }
     for (const [idx, item] of list.entries()) {
         const mappedItem = map(item, idx);
         let wrappedItem = typeof (mappedItem) === 'string' ? { textContent: item } :
@@ -83,7 +93,8 @@ export const onNewList = ({ initialized, grp1, list, map, self, startingSibling 
         else {
             wrappedItem = { localName: self.tag, ...wrappedItem };
         }
-        ns = applyItem(self, wrappedItem, idx, ns);
+        ns = applyItem(self, wrappedItem, idx, ns, relation);
+        relation = 'previousSibling';
         self.lastGroupedSibling = ns;
     }
     poolExtras(self, ns);
@@ -130,12 +141,12 @@ function poolExtras(self, prevSib) {
         self.append(el);
     }
 }
-function applyItem(self, item, idx, prevSib) {
+function applyItem(self, item, idx, relativeTo, relation) {
     const { grp1, grp1LU, ownedSiblings } = self;
     const val = grp1(item);
     let newEl;
     //test next few siblings for a match
-    let ns = prevSib;
+    let ns = relativeTo;
     for (let i = 0; i < 4; i++) {
         ns = ns.nextElementSibling;
         if (ns === null || !ownedSiblings.has(ns))
@@ -165,7 +176,14 @@ function applyItem(self, item, idx, prevSib) {
     if (!ownedSiblings.has(newEl))
         ownedSiblings.add(newEl);
     self.updateLightChildren(newEl, item, idx);
-    prevSib.insertAdjacentElement('afterend', newEl);
+    switch (relation) {
+        case 'previousSibling':
+            relativeTo.insertAdjacentElement('afterend', newEl);
+            break;
+        case 'parent':
+            relativeTo.prepend(newEl);
+            break;
+    }
     return newEl;
 }
 export const objProp3 = {
@@ -191,9 +209,11 @@ const propDefMap = {
     list: objProp2,
     map: objProp2,
     grp1: objProp1,
-    startingSibling: objProp3,
+    previousUngroupedSibling: objProp3,
+    parentToRenderTo: objProp3,
     matchClosest: strProp1,
     renderAfter: strProp1,
+    renderAtStartOf: strProp1,
     tag: {
         type: String,
         dry: true,
