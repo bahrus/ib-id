@@ -1,0 +1,460 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "i-bid.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "IBid",
+          "members": [
+            {
+              "kind": "method",
+              "name": "onPropChange",
+              "parameters": [
+                {
+                  "name": "name"
+                },
+                {
+                  "name": "propDef"
+                },
+                {
+                  "name": "newVal"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "configureNewChild",
+              "parameters": [
+                {
+                  "name": "newChild"
+                }
+              ],
+              "description": "Apply any custom actions on newly created element."
+            },
+            {
+              "kind": "method",
+              "name": "updateLightChildren",
+              "parameters": [
+                {
+                  "name": "element"
+                },
+                {
+                  "name": "item"
+                },
+                {
+                  "name": "idx"
+                }
+              ]
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "i-bid",
+          "customElement": true
+        },
+        {
+          "kind": "function",
+          "name": "linkInitialized",
+          "parameters": [
+            {
+              "name": "{ ownedSiblingCount, self }"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "onNewList",
+          "parameters": [
+            {
+              "name": "{ initialized, grp1, list, map, self, startingSibling }"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "markOwnership",
+          "parameters": [
+            {
+              "name": "self"
+            },
+            {
+              "name": "ownedSiblingCount"
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "objProp3"
+        },
+        {
+          "kind": "variable",
+          "name": "objProp1"
+        },
+        {
+          "kind": "variable",
+          "name": "objProp2"
+        },
+        {
+          "kind": "variable",
+          "name": "strProp1"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "IBid",
+          "declaration": {
+            "name": "IBid",
+            "module": "i-bid.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "linkInitialized",
+          "declaration": {
+            "name": "linkInitialized",
+            "module": "i-bid.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "onNewList",
+          "declaration": {
+            "name": "onNewList",
+            "module": "i-bid.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "markOwnership",
+          "declaration": {
+            "name": "markOwnership",
+            "module": "i-bid.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "objProp3",
+          "declaration": {
+            "name": "objProp3",
+            "module": "i-bid.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "objProp1",
+          "declaration": {
+            "name": "objProp1",
+            "module": "i-bid.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "objProp2",
+          "declaration": {
+            "name": "objProp2",
+            "module": "i-bid.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "strProp1",
+          "declaration": {
+            "name": "strProp1",
+            "module": "i-bid.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "i-bid.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "IBid",
+          "members": [
+            {
+              "kind": "field",
+              "name": "is",
+              "static": true,
+              "default": "'i-bid'"
+            },
+            {
+              "kind": "field",
+              "name": "self"
+            },
+            {
+              "kind": "field",
+              "name": "propActions"
+            },
+            {
+              "kind": "field",
+              "name": "reactor",
+              "type": {
+                "text": "IReactor"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "tag",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "ownedSiblings",
+              "type": {
+                "text": "WeakSet<Element>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_lastList",
+              "type": {
+                "text": "any[] | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_lastMap",
+              "type": {
+                "text": "any"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "grp1LU",
+              "type": {
+                "text": "{[key: string] : Element[]}"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "grp1",
+              "type": {
+                "text": "undefined | ((x: any) => string)"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "onPropChange",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "propDef",
+                  "type": {
+                    "text": "PropDef"
+                  }
+                },
+                {
+                  "name": "newVal",
+                  "type": {
+                    "text": "any"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "configureNewChild",
+              "parameters": [
+                {
+                  "name": "newChild",
+                  "type": {
+                    "text": "Element"
+                  }
+                }
+              ],
+              "description": "Apply any custom actions on newly created element."
+            },
+            {
+              "kind": "method",
+              "name": "updateLightChildren",
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "Element"
+                  }
+                },
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "any"
+                  }
+                },
+                {
+                  "name": "idx",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "i-bid",
+          "customElement": true
+        },
+        {
+          "kind": "function",
+          "name": "linkInitialized",
+          "parameters": [
+            {
+              "name": "{ownedSiblingCount, self}",
+              "type": {
+                "text": "IBid"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "onNewList",
+          "parameters": [
+            {
+              "name": "{initialized, grp1, list, map, self, startingSibling}",
+              "type": {
+                "text": "IBid"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "markOwnership",
+          "parameters": [
+            {
+              "name": "self",
+              "type": {
+                "text": "IBid"
+              }
+            },
+            {
+              "name": "ownedSiblingCount",
+              "type": {
+                "text": "number"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "objProp3",
+          "type": {
+            "text": "PropDef"
+          }
+        },
+        {
+          "kind": "variable",
+          "name": "objProp1",
+          "type": {
+            "text": "PropDef"
+          }
+        },
+        {
+          "kind": "variable",
+          "name": "objProp2",
+          "type": {
+            "text": "PropDef"
+          }
+        },
+        {
+          "kind": "variable",
+          "name": "strProp1",
+          "type": {
+            "text": "PropDef"
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "IBid",
+          "declaration": {
+            "name": "IBid",
+            "module": "i-bid.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "linkInitialized",
+          "declaration": {
+            "name": "linkInitialized",
+            "module": "i-bid.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "onNewList",
+          "declaration": {
+            "name": "onNewList",
+            "module": "i-bid.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "markOwnership",
+          "declaration": {
+            "name": "markOwnership",
+            "module": "i-bid.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "objProp3",
+          "declaration": {
+            "name": "objProp3",
+            "module": "i-bid.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "objProp1",
+          "declaration": {
+            "name": "objProp1",
+            "module": "i-bid.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "objProp2",
+          "declaration": {
+            "name": "objProp2",
+            "module": "i-bid.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "strProp1",
+          "declaration": {
+            "name": "strProp1",
+            "module": "i-bid.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "types.d.ts",
+      "declarations": [],
+      "exports": []
+    }
+  ]
+}

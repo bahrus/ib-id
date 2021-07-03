@@ -21,13 +21,8 @@ export class IBid extends HTMLElement implements ReactiveSurface, IBidProps {
     propActions = propActions;
     reactor: IReactor = new xc.Rx(this);
     tag: string | undefined;
-    /**
-     * map allows mapping a general list to props to be set on the UI component.
-     */
-    map: ((x: any, idx?: number) => any) | undefined;
-    list: any[] | undefined;
+
     ownedSiblings: WeakSet<Element> = new WeakSet<Element>();
-    //lastOwnedSibling: Element | undefined;
     _lastList: any[] | undefined;
     _lastMap: any;
     grp1LU: {[key: string] : Element[]} = {};

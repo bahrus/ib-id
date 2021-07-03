@@ -3,6 +3,9 @@ import {IBid} from './i-bid.js';
 export interface IBidProps{
     self: IBid;
     tag?: string | undefined;
+    /**
+     * map allows mapping a general list to props to be set on the UI component.
+    */
     map? : undefined | ((x: any, idx?: number) => any);
     list?: any[],
     ownedSiblingCount?: number | undefined;
@@ -14,6 +17,7 @@ export interface IBidProps{
     startingSibling: Element | undefined;
     matchClosest: string | undefined;
     renderAfter: string | undefined;
+
 }
 
 declare global {
