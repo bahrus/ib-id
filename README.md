@@ -224,19 +224,21 @@ ibid's choice of which tag name to generate follows the following order of prece
 2.  If the ibid tag has property/attribute: 'tag' set explicitly, that is used.
 3.  If neither 1 nor 2 above pan out, it uses the tag of the firstChildElement.  If there is no firstChildElement, then the previousElementSibling, and if no such element exists, the parent element. If using firstChildElement, that element will be "reused".
 
-## Complementing SSR [TODO: testing]
+## Complementing SSR [TODO: testing] with [deferred hydration](https://www.google.com/search?q=defer-hydration&sxsrf=ALeKk01kYqveQ7d75zjooIa9i2BFZ91C3Q%3A1625344788573&ei=FMvgYKquIuS1qtsP5siFmAU&oq=defer-hydration&gs_lcp=Cgdnd3Mtd2l6EAM6BwgAEEcQsANKBAhBGABQsLwBWLC8AWDrwAFoAXACeACAAVeIAYkBkgEBMpgBAKABAaoBB2d3cy13aXrIAQjAAQE&sclient=gws-wiz&ved=0ahUKEwiqiIqW4cfxAhXkmmoFHWZkAVMQ4dUDCA8&uact=5)
 
 Suppose we show some compassion towards the user, and provide as much initial content as possible via HTML.  But we are, nevertheless, building a dynamic site, and suppose it makes more sense to generate new HTML on the client via a JSON to HTML process, which ib-id is based on.  The server delivers the following initial markup:
 
 ```html
 <ul>
     <li>header</li>
-    <i-bid></i-bid>
+    <i-bid defer-hydration></i-bid>
     <li>hello 1</li>
     <li>hello 2</li>
     <li>footer</li>
 </ul>
 ```
+
+**NB II:** The [defer-hydration](https://github.com/webcomponents/community-protocols/issues/7#issuecomment-825151215) is, I think, now a community standard for web components.  As with the rest of this section, the proper function of this attribute is all quite theoretical and untested at this point.
 
 How do we convey which nodes are okay to trample over, as client-side JSON data changes?
 
@@ -251,8 +253,6 @@ We can specify which initial nodes are "owned" by ib-id via the initCount proper
     <li>footer</li>
 </ul>
 ```
-
-## Explore using [range](https://github.com/WICG/webcomponents/issues/901#issuecomment-742195795) [TODO]
 
 
 ## * Lazy Loading [Big Time TOODOO I]
@@ -307,7 +307,7 @@ A web component that supports binding to light children is provided [here](https
 ## ib-id's pooling strategy [TODO]
 
 1.  Developer specifies id and version getters.  Version can be anything, including a date/time stamp.
-    1.  Elements are reused only if tag name and id match.
+    1.  Elements are reused only if tag name and id match (weaken somewhat if we can pair two unmatched items?).
     2.  Old elements with no corresponding id from new list are reused if the new list has an item with an id not matching the old list.
     3.  A new item object is only passed to the element being repeated if the version doesn't match previous version.
     4.  Order not guaranteed to match order of new list.
