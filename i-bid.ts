@@ -8,7 +8,7 @@ import {GroupedSiblings} from 'xtal-element/lib/GroupedSiblings.js';
 /**
  * @element i-bid
  */
-export class IBid extends HTMLElement implements ReactiveSurface, IBidProps {
+export class IBid extends HTMLElement implements ReactiveSurface {
     static is = 'i-bid';
     constructor(){
         super();
@@ -34,6 +34,8 @@ export class IBid extends HTMLElement implements ReactiveSurface, IBidProps {
             map: identity,
             tag: (this.firstElementChild || this.previousElementSibling || this.parentElement!).localName,
             grp1: stdGrp1,
+            stampId: '%id%',
+            stampIndex: '%index%'
         });
     }
     disconnectedCallback(){
@@ -55,6 +57,9 @@ export class IBid extends HTMLElement implements ReactiveSurface, IBidProps {
 
     updateLightChildren(element: Element, item: any, idx: number){}
 }
+
+export interface IBid extends GroupedSiblings, IBidProps{}
+
 const identity = (x: any) => x;
 const stdGrp1 = (x: any) => {
     if(Array.isArray(x)){
@@ -74,6 +79,20 @@ export const linkInitialized = ({ownedSiblingCount, self}: IBid) => {
 
 export const onNewList = ({initialized, grp1, list, map, self, previousUngroupedSibling, parentToRenderTo}: IBid) => {
     if(list === self._lastList && map === self._lastMap) return;
+    if(self.stamp){
+        if(self.id === ''){
+            self.id = (new Date()).valueOf().toString();
+        }
+        const id = self.id;
+        const stampId = self.stampId!;
+        const stampIdx = self.stampIndex!;
+        let count = 0;
+        for(const item of list){
+            item[stampId] = id;
+            item[stampIdx] = count;
+            count++;
+        }
+    }
     const isRenderedNonContinguously = self.renderAfter !== undefined || self.renderAtStartOf !== undefined;
     if(isRenderedNonContinguously && previousUngroupedSibling === undefined && parentToRenderTo === undefined){
         self.setElementToBeRenderedTo(0);
@@ -219,6 +238,12 @@ export const strProp1: PropDef = {
 
 };
 
+export const boolProp1: PropDef = {
+    type: Boolean,
+    dry: true,
+    async: true,
+}
+
 const propDefMap : PropDefMap<IBid> = {
     list: objProp2,
     map: objProp2,
@@ -241,14 +266,17 @@ const propDefMap : PropDefMap<IBid> = {
         type: Boolean,
         stopReactionsIfFalsy: true,
         dry: true,
-    }
+    },
+    stamp: boolProp1,
+    stampIndex: strProp1,
+    stampId: strProp1,
 }
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 xc.letThereBeProps<IBid>(IBid, slicedPropDefs, 'onPropChange');
 applyMixins(IBid, [GroupedSiblings]);
 xc.define(IBid);
 
-export interface IBid extends GroupedSiblings, IBidProps{}
+
 
 
 
