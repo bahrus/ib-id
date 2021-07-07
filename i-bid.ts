@@ -106,6 +106,7 @@ export const onNewList = ({initialized, grp1, list, map, self, previousUngrouped
         ns = parentToRenderTo;
         relation = 'parent';
     }
+    const weakMap = self.useWeakMap ? new WeakMap<Element, any>() : undefined;
     for(const [idx, item] of list!.entries()){
         const mappedItem = map!(item, idx);
         let wrappedItem = typeof(mappedItem) === 'string' ? {textContent: item} :
@@ -119,19 +120,14 @@ export const onNewList = ({initialized, grp1, list, map, self, previousUngrouped
         }else{
             wrappedItem = {localName: self.tag, ...wrappedItem};
         }
-        ns = applyItem(self, wrappedItem, idx, ns, relation);
+        ns = applyItem(self, wrappedItem, idx, ns, relation, weakMap);
         relation = 'previousSibling';
         self.lastGroupedSibling = ns;
     }
+    if(self.useWeakMap){
+        (<any>self)[slicedPropDefs.propLookup!.weakMap!.alias!] = weakMap;
+    }
     poolExtras(self, ns);
-}
-
-export const onInheritWeakMap = ({inheritWeakMap, self}: IBid) =>{
-    const closest = self.closest('[data-ibid-weak-map-id]') as HTMLElement;
-    if(closest === null) return;
-    let rn = self.getRootNode() as any;
-    if(rn.host) rn = rn.host;
-    self.list = rn.getElementById(closest.dataset.ibidWeakMapId).weakMap(closest);
 }
 
 type relation = 'parent' | 'previousSibling';
@@ -139,7 +135,6 @@ type relation = 'parent' | 'previousSibling';
 const propActions = [
     onNewList,
     linkInitialized,
-    onInheritWeakMap
 ] as PropAction[];
 
 
@@ -182,7 +177,7 @@ function poolExtras(self: IBid, prevSib: Element){
     }
 }
 
-function applyItem(self: IBid, item: any, idx: number, relativeTo: Element , relation: relation): Element{
+function applyItem(self: IBid, item: any, idx: number, relativeTo: Element , relation: relation, weakMap?: WeakMap<Element, any>): Element{
     const {grp1, grp1LU, ownedSiblings} = self;
     const val = grp1!(item);
     let newEl: Element | undefined;
@@ -207,13 +202,8 @@ function applyItem(self: IBid, item: any, idx: number, relativeTo: Element , rel
         self.configureNewChild(newEl!);
         
     }
-    if(self.useWeakMap){
-        if(self.weakMap === undefined) self.weakMap = new WeakMap<Element, any>();
-        if(self.id === ''){
-            self.id = (new Date()).valueOf().toString();
-        }
-        (newEl as HTMLElement).dataset.ibidWeakMapId = self.id;
-        self.weakMap.set(newEl!, item);
+    if(weakMap !== undefined){
+        weakMap.set(newEl!, item);
     }else{
         if(Array.isArray(item)){
             applyPEA(self, newEl! as HTMLElement, item as PEASettings);
@@ -291,15 +281,22 @@ const propDefMap : PropDefMap<IBid> = {
         dry: true,
     },
     useWeakMap: boolProp1,
-    inheritWeakMap: boolProp2,
-    // stamp: boolProp1,
-    // stampIndex: strProp1,
-    // stampId: strProp1,
+    weakMap: {
+        ...objProp3,
+        notify: true,
+        obfuscate: true,
+    },
 }
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 xc.letThereBeProps<IBid>(IBid, slicedPropDefs, 'onPropChange');
 applyMixins(IBid, [GroupedSiblings]);
 xc.define(IBid);
+
+declare global {
+    interface HTMLElementTagNameMap {
+        "ib-id": IBid,
+    }
+}
 
 
 

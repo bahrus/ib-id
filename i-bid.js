@@ -95,6 +95,7 @@ export const onNewList = ({ initialized, grp1, list, map, self, previousUngroupe
         ns = parentToRenderTo;
         relation = 'parent';
     }
+    const weakMap = self.useWeakMap ? new WeakMap() : undefined;
     for (const [idx, item] of list.entries()) {
         const mappedItem = map(item, idx);
         let wrappedItem = typeof (mappedItem) === 'string' ? { textContent: item } :
@@ -110,25 +111,18 @@ export const onNewList = ({ initialized, grp1, list, map, self, previousUngroupe
         else {
             wrappedItem = { localName: self.tag, ...wrappedItem };
         }
-        ns = applyItem(self, wrappedItem, idx, ns, relation);
+        ns = applyItem(self, wrappedItem, idx, ns, relation, weakMap);
         relation = 'previousSibling';
         self.lastGroupedSibling = ns;
     }
+    if (self.useWeakMap) {
+        self[slicedPropDefs.propLookup.weakMap.alias] = weakMap;
+    }
     poolExtras(self, ns);
-};
-export const onInheritWeakMap = ({ inheritWeakMap, self }) => {
-    const closest = self.closest('[data-ibid-weak-map-id]');
-    if (closest === null)
-        return;
-    let rn = self.getRootNode();
-    if (rn.host)
-        rn = rn.host;
-    self.list = rn.getElementById(closest.dataset.ibidWeakMapId).weakMap(closest);
 };
 const propActions = [
     onNewList,
     linkInitialized,
-    onInheritWeakMap
 ];
 export function markOwnership(self, ownedSiblingCount) {
     const { ownedSiblings } = self;
@@ -168,7 +162,7 @@ function poolExtras(self, prevSib) {
         self.append(el);
     }
 }
-function applyItem(self, item, idx, relativeTo, relation) {
+function applyItem(self, item, idx, relativeTo, relation, weakMap) {
     const { grp1, grp1LU, ownedSiblings } = self;
     const val = grp1(item);
     let newEl;
@@ -194,14 +188,8 @@ function applyItem(self, item, idx, relativeTo, relation) {
         newEl = document.createElement(self.grp1(item));
         self.configureNewChild(newEl);
     }
-    if (self.useWeakMap) {
-        if (self.weakMap === undefined)
-            self.weakMap = new WeakMap();
-        if (self.id === '') {
-            self.id = (new Date()).valueOf().toString();
-        }
-        newEl.dataset.ibidWeakMapId = self.id;
-        self.weakMap.set(newEl, item);
+    if (weakMap !== undefined) {
+        weakMap.set(newEl, item);
     }
     else {
         if (Array.isArray(item)) {
@@ -276,10 +264,11 @@ const propDefMap = {
         dry: true,
     },
     useWeakMap: boolProp1,
-    inheritWeakMap: boolProp2,
-    // stamp: boolProp1,
-    // stampIndex: strProp1,
-    // stampId: strProp1,
+    weakMap: {
+        ...objProp3,
+        notify: true,
+        obfuscate: true,
+    },
 };
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 xc.letThereBeProps(IBid, slicedPropDefs, 'onPropChange');
