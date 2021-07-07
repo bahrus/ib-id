@@ -47,7 +47,7 @@ export class IBid extends HTMLElement implements ReactiveSurface {
         this.reactor.addToQueue(propDef, newVal);
     }
 
-
+    weakMap: WeakMap<Element, any> | undefined;
 
     /**
      * Apply any custom actions on newly created element.
@@ -198,11 +198,17 @@ function applyItem(self: IBid, item: any, idx: number, relativeTo: Element , rel
         self.configureNewChild(newEl!);
         
     }
-    if(Array.isArray(item)){
-        applyPEA(self, newEl! as HTMLElement, item as PEASettings);
+    if(self.useWeakMap){
+        if(self.weakMap === undefined) self.weakMap = new WeakMap<Element, any>();
+        self.weakMap.set(newEl!, item);
     }else{
-        applyP(newEl!, [item] as PSettings);
+        if(Array.isArray(item)){
+            applyPEA(self, newEl! as HTMLElement, item as PEASettings);
+        }else{
+            applyP(newEl!, [item] as PSettings);
+        }
     }
+
     if(!ownedSiblings!.has(newEl)) ownedSiblings!.add(newEl!);
     self.updateLightChildren(newEl!, item, idx);
     switch(relation){
@@ -267,6 +273,7 @@ const propDefMap : PropDefMap<IBid> = {
         stopReactionsIfFalsy: true,
         dry: true,
     },
+    useWeakMap: boolProp1,
     stamp: boolProp1,
     stampIndex: strProp1,
     stampId: strProp1,

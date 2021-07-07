@@ -36,6 +36,9 @@ export interface IBidProps{
      * @attr {string} stamp-index - Key to use when stamping index to every element of list.  Only applicable if property stamp is true.
      */
     stampIndex: string | undefined;
+
+    useWeakMap: boolean | undefined;
+
 }
 
 declare global {

@@ -42,6 +42,7 @@ export class IBid extends HTMLElement {
     onPropChange(name, propDef, newVal) {
         this.reactor.addToQueue(propDef, newVal);
     }
+    weakMap;
     /**
      * Apply any custom actions on newly created element.
      * @param newChild
@@ -183,11 +184,18 @@ function applyItem(self, item, idx, relativeTo, relation) {
         newEl = document.createElement(self.grp1(item));
         self.configureNewChild(newEl);
     }
-    if (Array.isArray(item)) {
-        applyPEA(self, newEl, item);
+    if (self.useWeakMap) {
+        if (self.weakMap === undefined)
+            self.weakMap = new WeakMap();
+        self.weakMap.set(newEl, item);
     }
     else {
-        applyP(newEl, [item]);
+        if (Array.isArray(item)) {
+            applyPEA(self, newEl, item);
+        }
+        else {
+            applyP(newEl, [item]);
+        }
     }
     if (!ownedSiblings.has(newEl))
         ownedSiblings.add(newEl);
@@ -249,6 +257,7 @@ const propDefMap = {
         stopReactionsIfFalsy: true,
         dry: true,
     },
+    useWeakMap: boolProp1,
     stamp: boolProp1,
     stampIndex: strProp1,
     stampId: strProp1,
