@@ -126,7 +126,7 @@ export const onNewList = ({initialized, grp1, list, map, self, previousUngrouped
     poolExtras(self, ns);
 }
 
-const onInheritWeakMap = ({inheritWeakMap, self}: IBid) =>{
+export const onInheritWeakMap = ({inheritWeakMap, self}: IBid) =>{
     const closest = self.closest('[data-ibid-weak-map-id]') as HTMLElement;
     if(closest === null) return;
     let rn = self.getRootNode() as any;

@@ -116,7 +116,7 @@ export const onNewList = ({ initialized, grp1, list, map, self, previousUngroupe
     }
     poolExtras(self, ns);
 };
-const onInheritWeakMap = ({ inheritWeakMap, self }) => {
+export const onInheritWeakMap = ({ inheritWeakMap, self }) => {
     const closest = self.closest('[data-ibid-weak-map-id]');
     if (closest === null)
         return;
