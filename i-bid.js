@@ -31,8 +31,8 @@ export class IBid extends HTMLElement {
             map: identity,
             tag: (this.firstElementChild || this.previousElementSibling || this.parentElement).localName,
             grp1: stdGrp1,
-            stampId: '%id%',
-            stampIndex: '%index%'
+            // stampId: '%id%',
+            // stampIndex: '%index%'
         });
     }
     disconnectedCallback() {
@@ -68,20 +68,20 @@ export const linkInitialized = ({ ownedSiblingCount, self }) => {
 export const onNewList = ({ initialized, grp1, list, map, self, previousUngroupedSibling, parentToRenderTo }) => {
     if (list === self._lastList && map === self._lastMap)
         return;
-    if (self.stamp) {
-        if (self.id === '') {
-            self.id = (new Date()).valueOf().toString();
-        }
-        const id = self.id;
-        const stampId = self.stampId;
-        const stampIdx = self.stampIndex;
-        let count = 0;
-        for (const item of list) {
-            item[stampId] = id;
-            item[stampIdx] = count;
-            count++;
-        }
-    }
+    // if(self.stamp){
+    //     if(self.id === ''){
+    //         self.id = (new Date()).valueOf().toString();
+    //     }
+    //     const id = self.id;
+    //     const stampId = self.stampId!;
+    //     const stampIdx = self.stampIndex!;
+    //     let count = 0;
+    //     for(const item of list){
+    //         item[stampId] = id;
+    //         item[stampIdx] = count;
+    //         count++;
+    //     }
+    // }
     const isRenderedNonContinguously = self.renderAfter !== undefined || self.renderAtStartOf !== undefined;
     if (isRenderedNonContinguously && previousUngroupedSibling === undefined && parentToRenderTo === undefined) {
         self.setElementToBeRenderedTo(0);
@@ -187,6 +187,10 @@ function applyItem(self, item, idx, relativeTo, relation) {
     if (self.useWeakMap) {
         if (self.weakMap === undefined)
             self.weakMap = new WeakMap();
+        if (self.id === '') {
+            self.id = (new Date()).valueOf().toString();
+        }
+        newEl.dataset.xtalWeakMapId = self.id;
         self.weakMap.set(newEl, item);
     }
     else {
@@ -258,9 +262,9 @@ const propDefMap = {
         dry: true,
     },
     useWeakMap: boolProp1,
-    stamp: boolProp1,
-    stampIndex: strProp1,
-    stampId: strProp1,
+    // stamp: boolProp1,
+    // stampIndex: strProp1,
+    // stampId: strProp1,
 };
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 xc.letThereBeProps(IBid, slicedPropDefs, 'onPropChange');
