@@ -262,6 +262,10 @@ export const boolProp1: PropDef = {
     dry: true,
     async: true,
 }
+export const boolProp2: PropDef = {
+    ...boolProp1,
+    stopReactionsIfFalsy: true,
+};
 
 const propDefMap : PropDefMap<IBid> = {
     list: objProp2,
@@ -287,7 +291,7 @@ const propDefMap : PropDefMap<IBid> = {
         dry: true,
     },
     useWeakMap: boolProp1,
-    inheritWeakMap: boolProp1,
+    inheritWeakMap: boolProp2,
     // stamp: boolProp1,
     // stampIndex: strProp1,
     // stampId: strProp1,
