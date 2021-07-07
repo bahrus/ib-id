@@ -123,7 +123,7 @@ export const onInheritWeakMap = ({ inheritWeakMap, self }) => {
     let rn = self.getRootNode();
     if (rn.host)
         rn = rn.host;
-    self.list = rn.getElementById(closest.dataset.ibidWeakMapId).weakMap;
+    self.list = rn.getElementById(closest.dataset.ibidWeakMapId).weakMap(closest);
 };
 const propActions = [
     onNewList,

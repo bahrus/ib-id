@@ -131,7 +131,7 @@ export const onInheritWeakMap = ({inheritWeakMap, self}: IBid) =>{
     if(closest === null) return;
     let rn = self.getRootNode() as any;
     if(rn.host) rn = rn.host;
-    self.list = rn.getElementById(closest.dataset.ibidWeakMapId).weakMap;
+    self.list = rn.getElementById(closest.dataset.ibidWeakMapId).weakMap(closest);
 }
 
 type relation = 'parent' | 'previousSibling';
