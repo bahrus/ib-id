@@ -126,11 +126,20 @@ export const onNewList = ({initialized, grp1, list, map, self, previousUngrouped
     poolExtras(self, ns);
 }
 
+const onInheritWeakMap = ({inheritWeakMap, self}: IBid) =>{
+    const closest = self.closest('[data-ibid-weak-map-id]') as HTMLElement;
+    if(closest === null) return;
+    let rn = self.getRootNode() as any;
+    if(rn.host) rn = rn.host;
+    self.list = rn.getElementById(closest.dataset.ibidWeakMapId).weakMap;
+}
+
 type relation = 'parent' | 'previousSibling';
 
 const propActions = [
     onNewList,
     linkInitialized,
+    onInheritWeakMap
 ] as PropAction[];
 
 
@@ -203,7 +212,7 @@ function applyItem(self: IBid, item: any, idx: number, relativeTo: Element , rel
         if(self.id === ''){
             self.id = (new Date()).valueOf().toString();
         }
-        (newEl as HTMLElement).dataset.xtalWeakMapId = self.id;
+        (newEl as HTMLElement).dataset.ibidWeakMapId = self.id;
         self.weakMap.set(newEl!, item);
     }else{
         if(Array.isArray(item)){
@@ -278,6 +287,7 @@ const propDefMap : PropDefMap<IBid> = {
         dry: true,
     },
     useWeakMap: boolProp1,
+    inheritWeakMap: boolProp1,
     // stamp: boolProp1,
     // stampIndex: strProp1,
     // stampId: strProp1,

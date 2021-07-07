@@ -116,9 +116,19 @@ export const onNewList = ({ initialized, grp1, list, map, self, previousUngroupe
     }
     poolExtras(self, ns);
 };
+const onInheritWeakMap = ({ inheritWeakMap, self }) => {
+    const closest = self.closest('[data-ibid-weak-map-id]');
+    if (closest === null)
+        return;
+    let rn = self.getRootNode();
+    if (rn.host)
+        rn = rn.host;
+    self.list = rn.getElementById(closest.dataset.ibidWeakMapId).weakMap;
+};
 const propActions = [
     onNewList,
     linkInitialized,
+    onInheritWeakMap
 ];
 export function markOwnership(self, ownedSiblingCount) {
     const { ownedSiblings } = self;
@@ -190,7 +200,7 @@ function applyItem(self, item, idx, relativeTo, relation) {
         if (self.id === '') {
             self.id = (new Date()).valueOf().toString();
         }
-        newEl.dataset.xtalWeakMapId = self.id;
+        newEl.dataset.ibidWeakMapId = self.id;
         self.weakMap.set(newEl, item);
     }
     else {
@@ -262,6 +272,7 @@ const propDefMap = {
         dry: true,
     },
     useWeakMap: boolProp1,
+    inheritWeakMap: boolProp1,
     // stamp: boolProp1,
     // stampIndex: strProp1,
     // stampId: strProp1,

@@ -39,6 +39,7 @@ export interface IBidProps{
 
     useWeakMap: boolean | undefined;
 
+    inheritWeakMap: boolean | undefined;
 }
 
 declare global {
