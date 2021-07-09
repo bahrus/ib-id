@@ -20,7 +20,10 @@ export interface IBidProps{
     renderAfter: string | undefined;
     renderAtStartOf: string | undefined;
 
-    useWeakMap: boolean | undefined;
+    bindToTagVirtually: boolean | undefined;
+    /**
+     * @private
+     */
     weakMap: WeakMap<Element, any> | undefined;
 
 }

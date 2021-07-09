@@ -106,7 +106,7 @@ export const onNewList = ({initialized, grp1, list, map, self, previousUngrouped
         ns = parentToRenderTo;
         relation = 'parent';
     }
-    const weakMap = self.useWeakMap ? new WeakMap<Element, any>() : undefined;
+    const weakMap = self.bindToTagVirtually ? new WeakMap<Element, any>() : undefined;
     for(const [idx, item] of list!.entries()){
         const mappedItem = map!(item, idx);
         let wrappedItem = typeof(mappedItem) === 'string' ? {textContent: item} :
@@ -124,7 +124,7 @@ export const onNewList = ({initialized, grp1, list, map, self, previousUngrouped
         relation = 'previousSibling';
         self.lastGroupedSibling = ns;
     }
-    if(self.useWeakMap){
+    if(self.bindToTagVirtually){
         (<any>self)[slicedPropDefs.propLookup!.weakMap!.alias!] = weakMap;
     }
     poolExtras(self, ns);
@@ -280,7 +280,7 @@ const propDefMap : PropDefMap<IBid> = {
         stopReactionsIfFalsy: true,
         dry: true,
     },
-    useWeakMap: boolProp1,
+    bindToTagVirtually: boolProp1,
     weakMap: {
         ...objProp3,
         notify: true,
