@@ -7,18 +7,23 @@ import { GroupedSiblings } from 'xtal-element/lib/GroupedSiblings.js';
  * @element i-bid
  */
 export class IBid extends HTMLElement {
+    static is = 'i-bid';
     constructor() {
         super();
-        this.self = this;
-        this.propActions = propActions;
-        this.reactor = new xc.Rx(this);
-        this.ownedSiblings = new WeakSet();
-        this.grp1LU = {};
         const aThis = this;
         if (aThis.attachInternals !== undefined) {
             (aThis)._internals = aThis.attachInternals();
         }
     }
+    self = this;
+    propActions = propActions;
+    reactor = new xc.Rx(this);
+    tag;
+    ownedSiblings = new WeakSet();
+    _lastList;
+    _lastMap;
+    grp1LU = {};
+    grp1;
     connectedCallback() {
         this.style.display = 'none';
         xc.mergeProps(this, slicedPropDefs, {
@@ -37,6 +42,7 @@ export class IBid extends HTMLElement {
     onPropChange(name, propDef, newVal) {
         this.reactor.addToQueue(propDef, newVal);
     }
+    weakMap;
     /**
      * Apply any custom actions on newly created element.
      * @param newChild
@@ -44,7 +50,6 @@ export class IBid extends HTMLElement {
     configureNewChild(newChild) { }
     updateLightChildren(element, item, idx) { }
 }
-IBid.is = 'i-bid';
 const identity = (x) => x;
 const stdGrp1 = (x) => {
     if (Array.isArray(x)) {
@@ -115,7 +120,7 @@ export const onNewList = ({ initialized, grp1, list, map, self, previousUngroupe
     }
     poolExtras(self, ns);
 };
-const propActions = [
+export const propActions = [
     onNewList,
     linkInitialized,
 ];

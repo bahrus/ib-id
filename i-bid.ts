@@ -132,7 +132,7 @@ export const onNewList = ({initialized, grp1, list, map, self, previousUngrouped
 
 type relation = 'parent' | 'previousSibling';
 
-const propActions = [
+export const propActions = [
     onNewList,
     linkInitialized,
 ] as PropAction[];
