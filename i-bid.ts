@@ -93,8 +93,8 @@ export const onNewList = ({initialized, grp1, list, map, self, previousUngrouped
     //         count++;
     //     }
     // }
-    const isRenderedNonContinguously = self.renderAfter !== undefined || self.renderAtStartOf !== undefined;
-    if(isRenderedNonContinguously && previousUngroupedSibling === undefined && parentToRenderTo === undefined){
+    const isRenderedNonContiguously = self.renderAfter !== undefined || self.renderAtStartOf !== undefined;
+    if(isRenderedNonContiguously && previousUngroupedSibling === undefined && parentToRenderTo === undefined){
         self.setElementToBeRenderedTo(0);
         return;
     }

@@ -8,7 +8,7 @@ This package contains a suite of web components, depending on the placement of t
 
 Each of them provide a simple, 1-dimensional list generating web component*.  They generate lists from JSON, but can complement server-side rendering.
 
-They each have a property called "list" where an array of properties can be passed in. ibid merges those properties into each instance.
+They each have a property called "list" where an array of properties can be passed in. ibid, by default, merges those properties into each instance.
 
 ibid is one of many web component libraries that provide repeat functionality.
 
@@ -17,7 +17,7 @@ As of this moment, what makes ibid different from the rest (without having condu
 1.  It has full support for dynamic tag names.
 2.  It can complement server-side (initial) rendering.
 3.  It does **not** provide any support for template binding of the light children within each element.  It only provides support for a linear list of (a potpourri of) tags.  This means to use ibid effectively, you will want a rapid way of encapsulating the markup you want within each tag (and a nice IDE and/or IDE plugin which can easily navigate to the code of a custom element -- [lit-plugin](https://marketplace.visualstudio.com/items?itemName=runem.lit-plugin) does this quite effectively for js-based web components, for example).
-4.  It renders its content (near-) adjacent to itself, so that it can insert content inside built-in list elements (and potentially table elements).
+4.  It renders its content (near-) adjacent to itself, so that it can insert content inside built-in list elements, or table elements, without violating proper HTML decorum.
 
 Note that there **is** a web component, [lib-id](https://github.com/bahrus/lib-id) that extends ibid, with support for template binding of light children.
 
