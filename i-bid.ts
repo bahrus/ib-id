@@ -5,11 +5,82 @@ import { applyPEA } from 'trans-render/lib/applyPEA.js';
 import { PSettings, PEASettings } from 'trans-render/lib/types.js';
 import {applyMixins} from 'xtal-element/lib/applyMixins.js';
 import {GroupedSiblings} from 'xtal-element/lib/GroupedSiblings.js';
+
+//#region props
+export const objProp3: PropDef = {
+    type: Object,
+    dry: true,
+    async: true,
+};
+export const objProp1: PropDef = {
+    type: Object,
+    dry: true,
+    stopReactionsIfFalsy: true,
+    async: true,
+}
+export const objProp2: PropDef = {
+    ...objProp1,
+    parse: true,
+} as PropDef;
+
+export const strProp1: PropDef = {
+    type: String,
+    dry: true,
+
+};
+
+export const boolProp1: PropDef = {
+    type: Boolean,
+    dry: true,
+    async: true,
+}
+export const boolProp2: PropDef = {
+    ...boolProp1,
+    stopReactionsIfFalsy: true,
+};
+
+const propDefMap : PropDefMap<IBid> = {
+    list: objProp2,
+    map: objProp2,
+    grp1: objProp1,
+    previousUngroupedSibling: objProp3,
+    parentToRenderTo: objProp3,
+    matchClosest: strProp1,
+    renderAfter: strProp1,
+    renderAtStartOf: strProp1,
+    tag: {
+        type: String,
+        dry: true,
+        async: true,
+    },
+    ownedSiblingCount: {
+        type: Number,
+        async: true
+    },
+    initialized: {
+        type: Boolean,
+        stopReactionsIfFalsy: true,
+        dry: true,
+    },
+    bindToTagVirtually: boolProp1,
+    weakMap: {
+        ...objProp3,
+        notify: true,
+        obfuscate: true,
+    },
+}
+const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
+//#endregion
+
 /**
  * @element i-bid
  */
-export class IBid extends HTMLElement implements ReactiveSurface {
+export class IBid<TItem = any> extends HTMLElement implements ReactiveSurface {
     static is = 'i-bid';
+    static observedAttributes = [...slicedPropDefs.numNames, ...slicedPropDefs.strNames, ...slicedPropDefs.boolNames];
+    attributeChangedCallback(n: string, ov: string, nv: string){
+        xc.passAttrToProp(this, slicedPropDefs, n, ov, nv);
+    }
     constructor(){
         super();
         const aThis = this as any;
@@ -26,7 +97,7 @@ export class IBid extends HTMLElement implements ReactiveSurface {
     _lastList: any[] | undefined;
     _lastMap: any;
     grp1LU: {[key: string] : Element[]} = {};
-    grp1: undefined | ((x: any) => string);
+    //grp1: undefined | ((x: any) => string);
     connectedCallback(){
         this.style.display = 'none';
         xc.mergeProps<Partial<IBid>>(this, slicedPropDefs, {
@@ -79,20 +150,6 @@ export const linkInitialized = ({ownedSiblingCount, self}: IBid) => {
 
 export const onNewList = ({initialized, grp1, list, map, self, previousUngroupedSibling, parentToRenderTo}: IBid) => {
     if(list === self._lastList && map === self._lastMap) return;
-    // if(self.stamp){
-    //     if(self.id === ''){
-    //         self.id = (new Date()).valueOf().toString();
-    //     }
-    //     const id = self.id;
-    //     const stampId = self.stampId!;
-    //     const stampIdx = self.stampIndex!;
-    //     let count = 0;
-    //     for(const item of list){
-    //         item[stampId] = id;
-    //         item[stampIdx] = count;
-    //         count++;
-    //     }
-    // }
     const isRenderedNonContiguously = self.renderAfter !== undefined || self.renderAtStartOf !== undefined;
     if(isRenderedNonContiguously && previousUngroupedSibling === undefined && parentToRenderTo === undefined){
         self.setElementToBeRenderedTo(0);
@@ -225,69 +282,6 @@ function applyItem(self: IBid, item: any, idx: number, relativeTo: Element , rel
     return newEl!;
 }
 
-export const objProp3: PropDef = {
-    type: Object,
-    dry: true,
-    async: true,
-};
-export const objProp1: PropDef = {
-    type: Object,
-    dry: true,
-    stopReactionsIfFalsy: true,
-    async: true,
-}
-export const objProp2: PropDef = {
-    ...objProp1,
-    parse: true,
-} as PropDef;
-
-export const strProp1: PropDef = {
-    type: String,
-    dry: true,
-
-};
-
-export const boolProp1: PropDef = {
-    type: Boolean,
-    dry: true,
-    async: true,
-}
-export const boolProp2: PropDef = {
-    ...boolProp1,
-    stopReactionsIfFalsy: true,
-};
-
-const propDefMap : PropDefMap<IBid> = {
-    list: objProp2,
-    map: objProp2,
-    grp1: objProp1,
-    previousUngroupedSibling: objProp3,
-    parentToRenderTo: objProp3,
-    matchClosest: strProp1,
-    renderAfter: strProp1,
-    renderAtStartOf: strProp1,
-    tag: {
-        type: String,
-        dry: true,
-        async: true,
-    },
-    ownedSiblingCount: {
-        type: Number,
-        async: true
-    },
-    initialized: {
-        type: Boolean,
-        stopReactionsIfFalsy: true,
-        dry: true,
-    },
-    bindToTagVirtually: boolProp1,
-    weakMap: {
-        ...objProp3,
-        notify: true,
-        obfuscate: true,
-    },
-}
-const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 xc.letThereBeProps<IBid>(IBid, slicedPropDefs, 'onPropChange');
 applyMixins(IBid, [GroupedSiblings]);
 xc.define(IBid);

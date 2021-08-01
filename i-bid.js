@@ -3,11 +3,76 @@ import { applyP } from 'trans-render/lib/applyP.js';
 import { applyPEA } from 'trans-render/lib/applyPEA.js';
 import { applyMixins } from 'xtal-element/lib/applyMixins.js';
 import { GroupedSiblings } from 'xtal-element/lib/GroupedSiblings.js';
+//#region props
+export const objProp3 = {
+    type: Object,
+    dry: true,
+    async: true,
+};
+export const objProp1 = {
+    type: Object,
+    dry: true,
+    stopReactionsIfFalsy: true,
+    async: true,
+};
+export const objProp2 = {
+    ...objProp1,
+    parse: true,
+};
+export const strProp1 = {
+    type: String,
+    dry: true,
+};
+export const boolProp1 = {
+    type: Boolean,
+    dry: true,
+    async: true,
+};
+export const boolProp2 = {
+    ...boolProp1,
+    stopReactionsIfFalsy: true,
+};
+const propDefMap = {
+    list: objProp2,
+    map: objProp2,
+    grp1: objProp1,
+    previousUngroupedSibling: objProp3,
+    parentToRenderTo: objProp3,
+    matchClosest: strProp1,
+    renderAfter: strProp1,
+    renderAtStartOf: strProp1,
+    tag: {
+        type: String,
+        dry: true,
+        async: true,
+    },
+    ownedSiblingCount: {
+        type: Number,
+        async: true
+    },
+    initialized: {
+        type: Boolean,
+        stopReactionsIfFalsy: true,
+        dry: true,
+    },
+    bindToTagVirtually: boolProp1,
+    weakMap: {
+        ...objProp3,
+        notify: true,
+        obfuscate: true,
+    },
+};
+const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
+//#endregion
 /**
  * @element i-bid
  */
 export class IBid extends HTMLElement {
     static is = 'i-bid';
+    static observedAttributes = [...slicedPropDefs.numNames, ...slicedPropDefs.strNames, ...slicedPropDefs.boolNames];
+    attributeChangedCallback(n, ov, nv) {
+        xc.passAttrToProp(this, slicedPropDefs, n, ov, nv);
+    }
     constructor() {
         super();
         const aThis = this;
@@ -23,7 +88,7 @@ export class IBid extends HTMLElement {
     _lastList;
     _lastMap;
     grp1LU = {};
-    grp1;
+    //grp1: undefined | ((x: any) => string);
     connectedCallback() {
         this.style.display = 'none';
         xc.mergeProps(this, slicedPropDefs, {
@@ -68,20 +133,6 @@ export const linkInitialized = ({ ownedSiblingCount, self }) => {
 export const onNewList = ({ initialized, grp1, list, map, self, previousUngroupedSibling, parentToRenderTo }) => {
     if (list === self._lastList && map === self._lastMap)
         return;
-    // if(self.stamp){
-    //     if(self.id === ''){
-    //         self.id = (new Date()).valueOf().toString();
-    //     }
-    //     const id = self.id;
-    //     const stampId = self.stampId!;
-    //     const stampIdx = self.stampIndex!;
-    //     let count = 0;
-    //     for(const item of list){
-    //         item[stampId] = id;
-    //         item[stampIdx] = count;
-    //         count++;
-    //     }
-    // }
     const isRenderedNonContiguously = self.renderAfter !== undefined || self.renderAtStartOf !== undefined;
     if (isRenderedNonContiguously && previousUngroupedSibling === undefined && parentToRenderTo === undefined) {
         self.setElementToBeRenderedTo(0);
@@ -212,65 +263,6 @@ function applyItem(self, item, idx, relativeTo, relation, weakMap) {
     }
     return newEl;
 }
-export const objProp3 = {
-    type: Object,
-    dry: true,
-    async: true,
-};
-export const objProp1 = {
-    type: Object,
-    dry: true,
-    stopReactionsIfFalsy: true,
-    async: true,
-};
-export const objProp2 = {
-    ...objProp1,
-    parse: true,
-};
-export const strProp1 = {
-    type: String,
-    dry: true,
-};
-export const boolProp1 = {
-    type: Boolean,
-    dry: true,
-    async: true,
-};
-export const boolProp2 = {
-    ...boolProp1,
-    stopReactionsIfFalsy: true,
-};
-const propDefMap = {
-    list: objProp2,
-    map: objProp2,
-    grp1: objProp1,
-    previousUngroupedSibling: objProp3,
-    parentToRenderTo: objProp3,
-    matchClosest: strProp1,
-    renderAfter: strProp1,
-    renderAtStartOf: strProp1,
-    tag: {
-        type: String,
-        dry: true,
-        async: true,
-    },
-    ownedSiblingCount: {
-        type: Number,
-        async: true
-    },
-    initialized: {
-        type: Boolean,
-        stopReactionsIfFalsy: true,
-        dry: true,
-    },
-    bindToTagVirtually: boolProp1,
-    weakMap: {
-        ...objProp3,
-        notify: true,
-        obfuscate: true,
-    },
-};
-const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 xc.letThereBeProps(IBid, slicedPropDefs, 'onPropChange');
 applyMixins(IBid, [GroupedSiblings]);
 xc.define(IBid);
