@@ -77,7 +77,7 @@ const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
  */
 export class IBid<TItem = any> extends HTMLElement implements ReactiveSurface {
     static is = 'i-bid';
-    static observedAttributes = [...slicedPropDefs.numNames, ...slicedPropDefs.strNames, ...slicedPropDefs.boolNames];
+    static observedAttributes = [...slicedPropDefs.numNames, ...slicedPropDefs.strNames, ...slicedPropDefs.boolNames, ...slicedPropDefs.parseNames];
     attributeChangedCallback(n: string, ov: string, nv: string){
         xc.passAttrToProp(this, slicedPropDefs, n, ov, nv);
     }

@@ -69,7 +69,7 @@ const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
  */
 export class IBid extends HTMLElement {
     static is = 'i-bid';
-    static observedAttributes = [...slicedPropDefs.numNames, ...slicedPropDefs.strNames, ...slicedPropDefs.boolNames];
+    static observedAttributes = [...slicedPropDefs.numNames, ...slicedPropDefs.strNames, ...slicedPropDefs.boolNames, ...slicedPropDefs.parseNames];
     attributeChangedCallback(n, ov, nv) {
         xc.passAttrToProp(this, slicedPropDefs, n, ov, nv);
     }
