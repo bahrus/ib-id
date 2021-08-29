@@ -26,7 +26,9 @@ export interface IBidProps<TItem = any>{
      */
     weakMap: WeakMap<Element, any> | undefined;
 
-    
+}
 
+export interface IBidActions{
+    markOwnership: (self: this) => {}
 }
 
