@@ -1,12 +1,12 @@
 import {IBid} from './i-bid.js';
 
-export interface IBidProps<TItem = any>{
+export interface IBidProps<TItem = any, TUIElement extends UIElement = Element>{
     self: IBid;
     tag: string | undefined;
     /**
      * map allows mapping a general list to props to be set on the UI component.
     */
-    map : undefined | ((x: TItem, idx: number) => any);
+    map : undefined | ((x: TItem, idx: number) => TUIElement);
     list: TItem[],
     ownedSiblingCount: number | undefined;
     initialized: boolean | undefined;
@@ -31,4 +31,10 @@ export interface IBidProps<TItem = any>{
 export interface IBidActions{
     markOwnership: (self: this) => {}
 }
+
+export interface UIElement extends Partial<Element>{
+    localName: string
+}
+
+export type relation = 'parent' | 'previousSibling';
 

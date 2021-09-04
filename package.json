@@ -29,8 +29,8 @@
     "doc": "custom-elements-manifest analyze"
   },
   "dependencies": {
-    "trans-render": "0.0.350",
-    "xtal-element": "0.0.435"
+    "trans-render": "0.0.372",
+    "xtal-element": "0.0.439"
   },
   "devDependencies": {
     "@skypack/package-check": "0.2.2",
