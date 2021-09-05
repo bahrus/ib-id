@@ -7,10 +7,17 @@
 </head>
 <body>
     <ul>
-        <li>header</li>
-        <i-bid list='["hello 1", "hello 2"]'></i-bid>
-        <li>footer</li>
+        <li>Head Item</li>
+        <li data-from=li-gen>...</li>
+        <li>Footer Item</li>
     </ul>
+    <i-bid 
+        id=li-gen 
+        list='["hello", "world"]',
+        transform='
+        {"li": ["."]}
+        '
+    ></i-bid>
     <script type=importmap>
         {
             "imports": {
@@ -20,7 +27,7 @@
         }
     </script>
     <script type=module>
-        import '../i-bid.js';
+        import '../i-bid2.js';
     </script>
 </body>
 </html>

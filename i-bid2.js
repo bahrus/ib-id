@@ -1,28 +1,28 @@
-import {XE, PropInfo} from 'xtal-element/src/XE.js';
-import {insertAdjacentTemplate} from 'trans-render/lib/insertAdjacentTemplate.js';
-import {IBidProps, IBidActions} from './types';
-
+import { XE } from 'xtal-element/src/XE.js';
 /**
  * @element i-bid
  * @tagName i-bid
  */
-export class IBidCore extends HTMLElement implements IBidActions{
-    connectedCallback(){
-        if(!this.id) throw 'id required';
+export class IBidCore extends HTMLElement {
+    connectedCallback() {
+        if (!this.id)
+            throw 'id required';
     }
-    searchForTarget({id}: this){
-        const target = (this.getRootNode() as DocumentFragment).querySelector(`[data-from="${id}"`);
-        if(!target) throw 'no repeating template found';
-        return {target};
+    searchForTarget({ id }) {
+        const target = this.getRootNode().querySelector(`[data-from="${id}"`);
+        if (!target)
+            throw 'no repeating template found';
+        return { target };
     }
-    createTemplates({target, updatable}: this){
-        let template: HTMLTemplateElement;
-        if(target instanceof HTMLTemplateElement){
-            throw 'NI'
-        }else{
+    createTemplates({ target, updatable }) {
+        let template;
+        if (target instanceof HTMLTemplateElement) {
+            throw 'NI';
+        }
+        else {
             template = document.createElement('template');
             template.dataset.from = this.id;
-            if(updatable){
+            if (updatable) {
                 const refTemplate = document.createElement('template');
                 refTemplate.dataset.ref = this.id;
                 template.content.appendChild(refTemplate);
@@ -30,51 +30,48 @@ export class IBidCore extends HTMLElement implements IBidActions{
             target.insertAdjacentElement('afterend', template);
             template.content.appendChild(target);
         }
-        
         return {
             mainTemplate: template,
-            templateGroups:{
+            templateGroups: {
                 'default': template
             }
         };
     }
-    initReadonlyList({list, templateGroups, mainTemplate}: this){
-        let elementToAppendTo = mainTemplate as Element;
+    initReadonlyList({ list, templateGroups, mainTemplate }) {
+        let elementToAppendTo = mainTemplate;
         const defaultTemplate = templateGroups.default;
-        for(const item of list){
+        for (const item of list) {
             const clonedTemplate = document.importNode(defaultTemplate.content, true);
-            for(const child of clonedTemplate.children){
+            for (const child of clonedTemplate.children) {
                 elementToAppendTo.insertAdjacentElement('afterend', child);
                 elementToAppendTo = child;
             }
         }
     }
-    initUpdatableList({}: this){
+    initUpdatableList({}) {
         throw 'NI';
     }
-    updateList({}: this){
+    updateList({}) {
         throw 'NI';
     }
 }
-
-export interface IBidCore extends IBidProps{}
-const noParse: PropInfo = {
+const noParse = {
     parse: false,
-}
-const ce = new XE<IBidProps, IBidActions>({
-    config:{
+};
+const ce = new XE({
+    config: {
         tagName: 'i-bid',
-        propDefaults:{
+        propDefaults: {
             isC: true,
             listInitialized: false,
             updatable: false,
         },
-        propInfo:{
+        propInfo: {
             target: noParse,
             templateGroups: noParse
         },
-        actions:{
-            searchForTarget:{
+        actions: {
+            searchForTarget: {
                 ifAllOf: ['isC']
             },
             createTemplates: {
@@ -92,10 +89,9 @@ const ce = new XE<IBidProps, IBidActions>({
                 ifAllOf: ['listInitialized', 'list', 'updatable']
             }
         },
-        style:{
+        style: {
             display: 'none'
         },
-
     },
     superclass: IBidCore,
 });

@@ -33,10 +33,16 @@ What this means is that the mapping that other libraries focus on, within the li
 ```html
 <ul>
     <li>Head Item</li>
-    <li data-from=li-gen -text-content=.>...</li>
+    <li data-from=li-gen>...</li>
     <li>Footer Item</li>
 </ul>
-<i-bid id=li-gen list='["hello", "world"]'></i-bid>
+<i-bid 
+    id=li-gen 
+    list='["hello", "world"]',
+    transform='
+    {"li": ["."]}
+    '
+></i-bid>
 ```
 
 Generates:
@@ -56,10 +62,10 @@ Generates:
 ```html
 <ul>
     <li>Head Item</li>
-    <li data-from=li-gen -text-content=.>...</li>
+    <li data-from=li-gen>...</li>
     <li>Footer Item</li>
 </ul>
-<i-bid id=li-gen list='["hello", "world"]' updateable></i-bid>
+<i-bid id=li-gen list='["hello", "world"]' updatable></i-bid>
 ```
 
 Generates:
@@ -73,7 +79,7 @@ Generates:
     <li>world</li>
     <li>Footer</li>
 </ul>
-<i-bid id=li-gen list='["hello", "world"]' updateable></i-bid>
+<i-bid id=li-gen list='["hello", "world"]' updatable></i-bid>
 ```
 
 ## Syntax Example III 
@@ -83,11 +89,21 @@ Generates:
     <dt>Definition</dt>
     <dd>Meaning of the word</dd>
     <template data-from=dl-gen>
-        <dt -text-content=term></dt>
-        <dd -text-content=def></dd>
+        <dt></dt>
+        <dd></dd>
     </template>
 </dl>
-<i-bid id=dl-gen list='[{"term": "nah", "def": "not so"}, {"term":"goo", "def": "a viscid or sticky substance"}]' updateable></i-bid>
+<i-bid id=dl-gen 
+    list='[{"term": "nah", "def": "not so"}, {"term":"goo", "def": "a viscid or sticky substance"}]' 
+    updatable
+    update-transform='
+    {
+        "dtElements": ["term"],
+        "ddElements": ["def"]
+    }
+    '
+>
+</i-bid>
 ```
 
 generates
@@ -96,29 +112,45 @@ generates
 <dl>
     <dt>Definition</dt>
     <dd>Meaning of the word</dd>
-    <template data-ref=li-gen data-idx=0></template>
+    <template data-ref=dl-gen data-idx=0></template>
     <dt>nah</dt><dd>not so</dd>
-    <template data-ref=li-gen data-idx=1></template>
+    <template data-ref=dl-gen data-idx=1></template>
     <dt>goo</dt><dd>a viscid or sticky substance</dd>
 </dl>
-<i-bid id=dl-gen list='[{"term": "nah", "def": "not so"}, {"term":"goo", "def": "a viscid or sticky substance"}]' updateable></i-bid>
+<i-bid id=dl-gen list='[{"term": "nah", "def": "not so"}, {"term":"goo", "def": "a viscid or sticky substance"}]' updatable></i-bid>
 ```
+
 
 ## Syntax Example IV
 
 ```html
 <my-notebook>
     <template data-from=notebook-gen>
-        <input --if-eq='["type": "searchbox]' -placeholder=hint>
-        <my-grid --if-eq='["type": "grid"]' -data=data></my-grid>
+        <template itemprop=searchbox>
+            <label></label>
+            <input type=search>
+        </template>
+        <template itemprop=grid>
+            <my-grid></my-grid>
+        </template>
     </template>
 </my-notebook>
 <i-bid id=notebook-gen list='
     [
-        {"type": "searchbox", "hint": "Enter Name"},
+        {"type": "searchbox", "hint": "Enter SSN", "label": },
         {"type": "grid" "data": {}}
     ]
-' updateable>
+'
+templ-match-on=type
+update-transforms='
+"searchbox":{
+
+},
+"grid":{
+
+}
+'
+updatable>
 </i-bid >
 ```
 
@@ -126,9 +158,13 @@ generates
 
 ```html
 <my-notebook>
-    <template data-ref=notebook-gen data-idx=0></template>
+    <template data-ref=notebook-gen data-idx=0 data-templ-idx=0></template>
     <input placeholder="Enter Name">
-    <template data-ref=notebook-gen data-idx=1></template>
+    <template data-ref=notebook-gen data-idx=1 data-templ-idx=1></template>
     <my-grid></my-grid>
 </my-notebook>
+<i-bid>
+<!--In memory -->
+<template if-all-of=[]>
+</i-bid>
 ```

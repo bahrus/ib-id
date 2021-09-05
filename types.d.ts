@@ -1,40 +1,33 @@
 import {IBid} from './i-bid.js';
 
-export interface IBidProps<TItem = any, TUIElement extends UIElement = Element>{
-    self: IBid;
-    tag: string | undefined;
-    /**
-     * map allows mapping a general list to props to be set on the UI component.
-    */
-    map : undefined | ((x: TItem, idx: number) => TUIElement);
-    list: TItem[],
-    ownedSiblingCount: number | undefined;
-    initialized: boolean | undefined;
-    ownedSiblings?: WeakSet<Element>;
-    grp1?: (x: any) => string;
-    grp1LU: {[key: string] : Element[]};
-    lastGroupedSibling: Element | undefined;
-    previousUngroupedSibling: Element | undefined;
-    parentToRenderTo: Element | undefined;
-    matchClosest: string | undefined;
-    renderAfter: string | undefined;
-    renderAtStartOf: string | undefined;
-
-    bindToTagVirtually: boolean | undefined;
-    /**
-     * @private
-     */
-    weakMap: WeakMap<Element, any> | undefined;
-
+export interface IBidProps{
+    target: Element;
+    isC: boolean;
+    templateGroups: {[key: string]: HTMLTemplateElement};
+    mainTemplate: HTMLTemplateElement;
+    list: any[];
+    transform: any;
+    listFragment: DocumentFragment;
+    listInitialized: boolean;
+    updatable: boolean;
 }
 
 export interface IBidActions{
-    markOwnership: (self: this) => {}
+    searchForTarget(self: this): {target: Element}
+    createTemplates(self: this):{
+        mainTemplate: HTMLTemplateElement,
+        templateGroups: {[key: string]: HTMLTemplateElement}
+    }
+    initReadonlyList(self: this):void;
+    initUpdatableList(self: this):{
+        listFragment: DocumentFragment,
+        listInitialized: true,
+    }
+    updateList(self: this):{
+
+    }
+    
 }
 
-export interface UIElement extends Partial<Element>{
-    localName: string
-}
 
-export type relation = 'parent' | 'previousSibling';
 
