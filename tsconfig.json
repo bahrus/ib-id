@@ -9,7 +9,7 @@
 		"watch": true
 	},
 	"files":[
-		"i-bid2.ts"
+		"i-bid.ts"
 	],
 	"exclude":[
 		"./node_modules/*"
