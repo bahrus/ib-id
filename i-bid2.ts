@@ -1,7 +1,9 @@
 import {XE, PropInfo} from 'xtal-element/src/XE.js';
-import {insertAdjacentTemplate} from 'trans-render/lib/insertAdjacentTemplate.js';
+import {transform} from 'trans-render/lib/transform.js';
 import {IBidProps, IBidActions} from './types';
-
+import { PE } from 'trans-render/lib/PE.js';
+import { SplitText } from 'trans-render/lib/SplitText.js';
+import { RenderContext } from './node_modules/trans-render/lib/types';
 /**
  * @element i-bid
  * @tagName i-bid
@@ -9,6 +11,25 @@ import {IBidProps, IBidActions} from './types';
 export class IBidCore extends HTMLElement implements IBidActions{
     connectedCallback(){
         if(!this.id) throw 'id required';
+    }
+    initContext({transform}: this){
+        return {
+            ctx:{
+                match: transform,
+                postMatch: [
+                    {
+                        rhsType: Array,
+                        rhsHeadType: Object,
+                        ctor: PE
+                    },
+                    {
+                        rhsType: Array,
+                        rhsHeadType: String,
+                        ctor: SplitText
+                    }
+                ],
+            } as RenderContext,
+        }
     }
     searchForTarget({id}: this){
         const target = (this.getRootNode() as DocumentFragment).querySelector(`[data-from="${id}"`);
@@ -38,11 +59,13 @@ export class IBidCore extends HTMLElement implements IBidActions{
             }
         };
     }
-    initReadonlyList({list, templateGroups, mainTemplate}: this){
+    initReadonlyList({list, templateGroups, mainTemplate, ctx}: this){
         let elementToAppendTo = mainTemplate as Element;
         const defaultTemplate = templateGroups.default;
         for(const item of list){
             const clonedTemplate = document.importNode(defaultTemplate.content, true);
+            ctx.host = item;
+            transform(clonedTemplate, ctx);
             for(const child of clonedTemplate.children){
                 elementToAppendTo.insertAdjacentElement('afterend', child);
                 elementToAppendTo = child;
@@ -74,6 +97,9 @@ const ce = new XE<IBidProps, IBidActions>({
             templateGroups: noParse
         },
         actions:{
+            initContext:{
+                ifAllOf: ['isC', 'transform']
+            },
             searchForTarget:{
                 ifAllOf: ['isC']
             },
@@ -82,7 +108,7 @@ const ce = new XE<IBidProps, IBidActions>({
                 setFree: ['target']
             },
             initReadonlyList: {
-                ifAllOf: ['templateGroups', 'list'],
+                ifAllOf: ['templateGroups', 'list', 'ctx'],
                 ifNoneOf: ['updatable']
             },
             initUpdatableList: {

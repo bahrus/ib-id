@@ -1,4 +1,7 @@
 import { XE } from 'xtal-element/src/XE.js';
+import { transform } from 'trans-render/lib/transform.js';
+import { PE } from 'trans-render/lib/PE.js';
+import { SplitText } from 'trans-render/lib/SplitText.js';
 /**
  * @element i-bid
  * @tagName i-bid
@@ -7,6 +10,25 @@ export class IBidCore extends HTMLElement {
     connectedCallback() {
         if (!this.id)
             throw 'id required';
+    }
+    initContext({ transform }) {
+        return {
+            ctx: {
+                match: transform,
+                postMatch: [
+                    {
+                        rhsType: Array,
+                        rhsHeadType: Object,
+                        ctor: PE
+                    },
+                    {
+                        rhsType: Array,
+                        rhsHeadType: String,
+                        ctor: SplitText
+                    }
+                ],
+            },
+        };
     }
     searchForTarget({ id }) {
         const target = this.getRootNode().querySelector(`[data-from="${id}"`);
@@ -37,11 +59,13 @@ export class IBidCore extends HTMLElement {
             }
         };
     }
-    initReadonlyList({ list, templateGroups, mainTemplate }) {
+    initReadonlyList({ list, templateGroups, mainTemplate, ctx }) {
         let elementToAppendTo = mainTemplate;
         const defaultTemplate = templateGroups.default;
         for (const item of list) {
             const clonedTemplate = document.importNode(defaultTemplate.content, true);
+            ctx.host = item;
+            transform(clonedTemplate, ctx);
             for (const child of clonedTemplate.children) {
                 elementToAppendTo.insertAdjacentElement('afterend', child);
                 elementToAppendTo = child;
@@ -71,6 +95,9 @@ const ce = new XE({
             templateGroups: noParse
         },
         actions: {
+            initContext: {
+                ifAllOf: ['isC', 'transform']
+            },
             searchForTarget: {
                 ifAllOf: ['isC']
             },
@@ -79,7 +106,7 @@ const ce = new XE({
                 setFree: ['target']
             },
             initReadonlyList: {
-                ifAllOf: ['templateGroups', 'list'],
+                ifAllOf: ['templateGroups', 'list', 'ctx'],
                 ifNoneOf: ['updatable']
             },
             initUpdatableList: {

@@ -29,7 +29,7 @@
     "doc": "custom-elements-manifest analyze"
   },
   "dependencies": {
-    "trans-render": "0.0.372",
+    "trans-render": "0.0.374",
     "xtal-element": "0.0.439"
   },
   "devDependencies": {
