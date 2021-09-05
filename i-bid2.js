@@ -1,5 +1,5 @@
 import { XE } from 'xtal-element/src/XE.js';
-import { transform } from 'trans-render/lib/transform.js';
+import { transform, processTargets } from 'trans-render/lib/transform.js';
 import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
 /**
@@ -79,6 +79,7 @@ export class IBidCore extends HTMLElement {
             listInitialized: true,
         };
     }
+    #clonedTemplates = new WeakMap();
     updateList({ list, templateGroups, mainTemplate, ctx }) {
         let elementToAppendTo = mainTemplate;
         const defaultTemplate = templateGroups.default;
@@ -87,14 +88,23 @@ export class IBidCore extends HTMLElement {
         for (const item of list) {
             const idxTempl = root.querySelector(`template[data-ref="${this.id}"][data-idx="${count}"]`);
             if (idxTempl !== null) {
-                console.log('iah');
+                const targets = [];
+                const cnt = parseInt(idxTempl.dataset.cnt) - 1;
+                let ithSib = 0;
+                let sib = idxTempl.nextElementSibling;
+                while (ithSib < cnt && sib !== null) {
+                    targets.push(sib);
+                    sib = sib.nextElementSibling;
+                    ithSib++;
+                }
+                ctx.host = item;
+                processTargets(ctx, targets);
             }
             else {
                 const clonedTemplate = document.importNode(defaultTemplate.content, true);
                 ctx.host = item;
                 const idxTemplate = clonedTemplate.firstElementChild;
                 idxTemplate.dataset.idx = count.toString();
-                count++;
                 transform(clonedTemplate, ctx);
                 const children = Array.from(clonedTemplate.children);
                 idxTemplate.dataset.cnt = children.length.toString();
@@ -103,6 +113,7 @@ export class IBidCore extends HTMLElement {
                     elementToAppendTo = child;
                 }
             }
+            count++;
         }
         ;
         return {};

@@ -1,5 +1,5 @@
 import {XE, PropInfo} from 'xtal-element/src/XE.js';
-import {transform} from 'trans-render/lib/transform.js';
+import {transform, processTargets} from 'trans-render/lib/transform.js';
 import {IBidProps, IBidActions} from './types';
 import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
@@ -79,21 +79,32 @@ export class IBidCore extends HTMLElement implements IBidActions{
             listInitialized: true,
         } 
     }
+    #clonedTemplates = new WeakMap<HTMLTemplateElement, DocumentFragment>();
     updateList({list, templateGroups, mainTemplate, ctx}: this){
         let elementToAppendTo = mainTemplate as Element;
         const defaultTemplate = templateGroups.default;
         let count = 0;
         const root = this.getRootNode() as DocumentFragment;
         for(const item of list){
-            const idxTempl = root.querySelector(`template[data-ref="${this.id}"][data-idx="${count}"]`);
+            const idxTempl = root.querySelector(`template[data-ref="${this.id}"][data-idx="${count}"]`) as HTMLTemplateElement | null;
             if(idxTempl !== null){
-                console.log('iah');
+                const targets: Element[] = [];
+                const cnt = parseInt(idxTempl.dataset.cnt!) - 1;
+                let ithSib = 0;
+                let sib = idxTempl.nextElementSibling as Element | null;
+                while(ithSib < cnt && sib !== null){
+                    targets.push(sib);
+                    sib = sib.nextElementSibling;
+                    ithSib++;
+                }
+                ctx.host = item;
+                processTargets(ctx, targets);
             }else{
                 const clonedTemplate = document.importNode(defaultTemplate.content, true);
                 ctx.host = item;
                 const idxTemplate = clonedTemplate.firstElementChild as HTMLTemplateElement;
                 idxTemplate.dataset.idx = count.toString();
-                count++;
+                
                 transform(clonedTemplate, ctx);
                 const children = Array.from(clonedTemplate.children);
                 idxTemplate.dataset.cnt = children.length.toString();
@@ -102,7 +113,7 @@ export class IBidCore extends HTMLElement implements IBidActions{
                     elementToAppendTo = child;
                 }
             }
-
+            count++;
         };
         return {};
     }
