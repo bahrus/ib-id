@@ -50,6 +50,7 @@ export class IBidCore extends HTMLElement {
                 template.content.appendChild(refTemplate);
             }
             target.insertAdjacentElement('afterend', template);
+            target.removeAttribute('data-from');
             template.content.appendChild(target);
         }
         return {

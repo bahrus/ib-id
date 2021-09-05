@@ -49,6 +49,7 @@ export class IBidCore extends HTMLElement implements IBidActions{
                 template.content.appendChild(refTemplate);
             }
             target.insertAdjacentElement('afterend', template);
+            target.removeAttribute('data-from');
             template.content.appendChild(target);
         }
         
