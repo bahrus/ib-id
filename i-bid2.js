@@ -67,17 +67,37 @@ export class IBidCore extends HTMLElement {
             const clonedTemplate = document.importNode(defaultTemplate.content, true);
             ctx.host = item;
             transform(clonedTemplate, ctx);
-            for (const child of clonedTemplate.children) {
+            const children = Array.from(clonedTemplate.children);
+            for (const child of children) {
                 elementToAppendTo.insertAdjacentElement('afterend', child);
                 elementToAppendTo = child;
             }
         }
     }
     initUpdatableList({}) {
-        throw 'NI';
+        return {
+            listInitialized: true,
+        };
     }
-    updateList({}) {
-        throw 'NI';
+    updateList({ list, templateGroups, mainTemplate, ctx }) {
+        let elementToAppendTo = mainTemplate;
+        const defaultTemplate = templateGroups.default;
+        let count = 0;
+        for (const item of list) {
+            const clonedTemplate = document.importNode(defaultTemplate.content, true);
+            ctx.host = item;
+            const idxTemplate = clonedTemplate.firstElementChild;
+            idxTemplate.dataset.idx = count.toString();
+            count++;
+            transform(clonedTemplate, ctx);
+            const children = Array.from(clonedTemplate.children);
+            for (const child of children) {
+                elementToAppendTo.insertAdjacentElement('afterend', child);
+                elementToAppendTo = child;
+            }
+        }
+        ;
+        return {};
     }
 }
 const noParse = {
@@ -111,7 +131,7 @@ const ce = new XE({
                 ifNoneOf: ['updatable']
             },
             initUpdatableList: {
-                ifAllOf: ['templateGroups', 'list', 'updatable']
+                ifAllOf: ['templateGroups', 'list', 'updatable', 'ctx']
             },
             updateList: {
                 ifAllOf: ['listInitialized', 'list', 'updatable']

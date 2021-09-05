@@ -39,9 +39,7 @@ What this means is that the mapping that other libraries focus on, within the li
 <i-bid 
     id=li-gen 
     list='["hello", "world"]',
-    transform='
-    {"li": ["."]}
-    '
+    transform='{"li": ["."]}'
 ></i-bid>
 ```
 
@@ -54,7 +52,11 @@ Generates:
     <li>world</li>
     <li>Footer</li>
 </ul>
-<i-bid id=li-gen list='["hello", "world"]'></i-bid>
+<i-bid 
+    id=li-gen 
+    list='["hello", "world"]',
+    transform='{"li": ["."]}'
+></i-bid>
 ```
 
 ## Syntax Example II
@@ -65,7 +67,12 @@ Generates:
     <li data-from=li-gen>...</li>
     <li>Footer Item</li>
 </ul>
-<i-bid id=li-gen list='["hello", "world"]' updatable></i-bid>
+<i-bid 
+    id=li-gen 
+    list='["hello", "world"]'
+    transform='{"li": ["."]}'
+    updatable>
+</i-bid>
 ```
 
 Generates:

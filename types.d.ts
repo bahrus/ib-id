@@ -25,8 +25,8 @@ export interface IBidActions{
     }
     initReadonlyList(self: this):void;
     initUpdatableList(self: this):{
-        listFragment: DocumentFragment,
-        listInitialized: true,
+        //listFragment: DocumentFragment,
+        listInitialized: boolean,
     }
     updateList(self: this):{
 
