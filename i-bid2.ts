@@ -39,7 +39,12 @@ export class IBidCore extends HTMLElement implements IBidActions{
     createTemplates({target, updatable}: this){
         let template: HTMLTemplateElement;
         if(target instanceof HTMLTemplateElement){
-            throw 'NI'
+            template = target as HTMLTemplateElement;
+            if(updatable){
+                const refTemplate = document.createElement('template');
+                refTemplate.dataset.ref = this.id;
+                template.content.appendChild(refTemplate);
+            }
         }else{
             template = document.createElement('template');
             template.dataset.from = this.id;

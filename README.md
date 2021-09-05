@@ -103,7 +103,7 @@ Generates:
 <i-bid id=dl-gen 
     list='[{"term": "nah", "def": "not so"}, {"term":"goo", "def": "a viscid or sticky substance"}]' 
     updatable
-    update-transform='
+    transform='
     {
         "dtElements": ["term"],
         "ddElements": ["def"]

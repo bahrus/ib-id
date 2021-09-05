@@ -7,11 +7,25 @@
     <title>Document</title>
 </head>
 <body>
-    <ul>
-        <i-bid list='["hello 1", "hello 2"]' id=ibid>
-            <li>put</li>
-        </i-bid>
-    </ul>
+    <dl>
+        <dt>Definition</dt>
+        <dd>Meaning of the word</dd>
+        <template data-from=dl-gen>
+            <dt></dt>
+            <dd></dd>
+        </template>
+    </dl>
+    <i-bid id=dl-gen 
+        list='[{"term": "nah", "def": "not so"}, {"term":"goo", "def": "a viscid or sticky substance"}]' 
+        updatable
+        transform='
+        {
+            "dtElements": ["term"],
+            "ddElements": ["def"]
+        }
+        '
+    >
+    </i-bid>
     <script type=importmap>
         {
             "imports": {
@@ -21,7 +35,7 @@
         }
     </script>
     <script type=module>
-        import '../i-bid.js';
+        import '../i-bid2.js';
     </script>
 </body>
 </html>
