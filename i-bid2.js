@@ -91,6 +91,7 @@ export class IBidCore extends HTMLElement {
             count++;
             transform(clonedTemplate, ctx);
             const children = Array.from(clonedTemplate.children);
+            idxTemplate.dataset.cnt = children.length.toString();
             for (const child of children) {
                 elementToAppendTo.insertAdjacentElement('afterend', child);
                 elementToAppendTo = child;

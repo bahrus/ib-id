@@ -17,6 +17,7 @@
         transform='{"li": ["."]}'
         updatable>
     </i-bid>
+    <button onclick="changeList()">Change List</button>
     <script type=importmap>
         {
             "imports": {
@@ -29,6 +30,9 @@
         import '../i-bid2.js';
     </script>
         <script>
+            function changeList(){
+                self['li-gen'].list = ['good', 'evening'];
+            }
             // ibid.list = [
             //     {textContent: 'hello 1'},
             //     {textContent: 'hello 2'}
