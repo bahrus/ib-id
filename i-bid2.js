@@ -83,18 +83,25 @@ export class IBidCore extends HTMLElement {
         let elementToAppendTo = mainTemplate;
         const defaultTemplate = templateGroups.default;
         let count = 0;
+        const root = this.getRootNode();
         for (const item of list) {
-            const clonedTemplate = document.importNode(defaultTemplate.content, true);
-            ctx.host = item;
-            const idxTemplate = clonedTemplate.firstElementChild;
-            idxTemplate.dataset.idx = count.toString();
-            count++;
-            transform(clonedTemplate, ctx);
-            const children = Array.from(clonedTemplate.children);
-            idxTemplate.dataset.cnt = children.length.toString();
-            for (const child of children) {
-                elementToAppendTo.insertAdjacentElement('afterend', child);
-                elementToAppendTo = child;
+            const idxTempl = root.querySelector(`template[data-ref="${this.id}"][data-idx="${count}"]`);
+            if (idxTempl !== null) {
+                console.log('iah');
+            }
+            else {
+                const clonedTemplate = document.importNode(defaultTemplate.content, true);
+                ctx.host = item;
+                const idxTemplate = clonedTemplate.firstElementChild;
+                idxTemplate.dataset.idx = count.toString();
+                count++;
+                transform(clonedTemplate, ctx);
+                const children = Array.from(clonedTemplate.children);
+                idxTemplate.dataset.cnt = children.length.toString();
+                for (const child of children) {
+                    elementToAppendTo.insertAdjacentElement('afterend', child);
+                    elementToAppendTo = child;
+                }
             }
         }
         ;
