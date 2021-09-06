@@ -149,7 +149,7 @@ generates
     ]
 '
 templ-match-on=type
-update-transforms='
+transform='
 "searchbox":{
 
 },

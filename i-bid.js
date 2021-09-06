@@ -43,7 +43,7 @@ export class IBidCore extends HTMLElement {
             if (updatable) {
                 const refTemplate = document.createElement('template');
                 refTemplate.dataset.ref = this.id;
-                template.content.appendChild(refTemplate);
+                template.content.prepend(refTemplate);
             }
         }
         else {
@@ -52,7 +52,8 @@ export class IBidCore extends HTMLElement {
             if (updatable) {
                 const refTemplate = document.createElement('template');
                 refTemplate.dataset.ref = this.id;
-                template.content.appendChild(refTemplate);
+                template.content.prepend(refTemplate);
+                //template.content.appendChild(refTemplate);
             }
             target.insertAdjacentElement('afterend', template);
             target.removeAttribute('data-from');
