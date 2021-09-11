@@ -7,10 +7,6 @@ import { SplitText } from 'trans-render/lib/SplitText.js';
  * @tagName i-bid
  */
 export class IBidCore extends HTMLElement {
-    connectedCallback() {
-        if (!this.id)
-            throw 'id required';
-    }
     initContext({ transform }) {
         return {
             ctx: {
@@ -30,10 +26,26 @@ export class IBidCore extends HTMLElement {
             },
         };
     }
-    searchForTarget({ id }) {
+    searchById({ id }) {
         const target = this.getRootNode().querySelector(`[data-from="${id}"`);
         if (!target)
             throw 'no repeating template found';
+        return { target };
+    }
+    doRelativeSearch({ fromPrevious, searchFor }) {
+        let target = this;
+        if (fromPrevious) {
+            while (target && !target.matches(fromPrevious)) {
+                target = target.previousElementSibling;
+            }
+        }
+        if (!target)
+            return;
+        if (searchFor) {
+            target = target.querySelector(searchFor);
+        }
+        if (!target)
+            return;
         return { target };
     }
     createTemplates({ target, updatable }) {
@@ -135,6 +147,8 @@ const ce = new XE({
             isC: true,
             listInitialized: false,
             updatable: false,
+            fromPrevious: '',
+            searchFor: '',
         },
         propInfo: {
             target: noParse,
@@ -144,8 +158,12 @@ const ce = new XE({
             initContext: {
                 ifAllOf: ['isC', 'transform']
             },
-            searchForTarget: {
-                ifAllOf: ['isC']
+            searchById: {
+                ifAllOf: ['isC', 'id'],
+                ifNoneOf: ['fromPrevious', 'searchFor']
+            },
+            doRelativeSearch: {
+                ifAtLeastOneOf: ['fromPrevious', 'searchFor']
             },
             createTemplates: {
                 ifAllOf: ['target'],

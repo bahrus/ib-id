@@ -9,9 +9,7 @@ import { RenderContext } from 'trans-render/lib/types';
  * @tagName i-bid
  */
 export class IBidCore extends HTMLElement implements IBidActions{
-    connectedCallback(){
-        if(!this.id) throw 'id required';
-    }
+
     initContext({transform}: this){
         return {
             ctx:{
@@ -31,9 +29,23 @@ export class IBidCore extends HTMLElement implements IBidActions{
             } as RenderContext,
         }
     }
-    searchForTarget({id}: this){
+    searchById({id}: this){
         const target = (this.getRootNode() as DocumentFragment).querySelector(`[data-from="${id}"`);
         if(!target) throw 'no repeating template found';
+        return {target};
+    }
+    doRelativeSearch({fromPrevious, searchFor}: this){
+        let target = this as Element | null;
+        if(fromPrevious){
+            while(target && !target.matches(fromPrevious)){
+                target = target.previousElementSibling;
+            }
+        }
+        if(!target) return;
+        if(searchFor){
+            target = target.querySelector(searchFor);
+        }
+        if(!target) return;
         return {target};
     }
     createTemplates({target, updatable}: this){
@@ -136,6 +148,8 @@ const ce = new XE<IBidProps, IBidActions>({
             isC: true,
             listInitialized: false,
             updatable: false,
+            fromPrevious: '',
+            searchFor: '',
         },
         propInfo:{
             target: noParse,
@@ -145,8 +159,12 @@ const ce = new XE<IBidProps, IBidActions>({
             initContext:{
                 ifAllOf: ['isC', 'transform']
             },
-            searchForTarget:{
-                ifAllOf: ['isC']
+            searchById:{
+                ifAllOf: ['isC', 'id'],
+                ifNoneOf: ['fromPrevious', 'searchFor']
+            },
+            doRelativeSearch:{
+                ifAtLeastOneOf: ['fromPrevious', 'searchFor']
             },
             createTemplates: {
                 ifAllOf: ['target'],

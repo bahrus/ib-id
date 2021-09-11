@@ -8,10 +8,16 @@
 </head>
 <body>
     <ul>
-        <i-bid list='[[{"textContent":"hello 1"},{},{"attr-test":"test 1"}], [{"textContent": "hello 2"},{},{"attr-test":"test 2"}]]' id=ibid>
-            <li>put</li>
-        </i-bid>
+        <template><li>put</li></template>
+
     </ul>
+    <i-bid  
+        list='["hello", "world"]'
+        transform='{"li": ["."]}' 
+        from-previous=ul
+        search-for=template
+    >
+    </i-bid>
     <script type=importmap>
         {
             "imports": {

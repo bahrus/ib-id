@@ -1,4 +1,3 @@
-import {IBid} from './i-bid.js';
 import { RenderContext } from './node_modules/trans-render/lib/types.js';
 
 export interface IBidProps{
@@ -12,13 +11,17 @@ export interface IBidProps{
     listInitialized: boolean;
     updatable: boolean;
     ctx: RenderContext;
+    fromPrevious: string;
+    searchFor: string;
+    id: string;
 }
 
 export interface IBidActions{
     initContext(self: this): {
         ctx: RenderContext
     }
-    searchForTarget(self: this): {target: Element}
+    searchById(self: this): {target: Element}
+    doRelativeSearch(self: this): {target:Element} | undefined;
     createTemplates(self: this):{
         mainTemplate: HTMLTemplateElement,
         templateGroups: {[key: string]: HTMLTemplateElement}
