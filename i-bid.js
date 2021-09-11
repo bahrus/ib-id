@@ -54,6 +54,11 @@ export class IBidCore extends HTMLElement {
     }
     createTemplates({ target, updatable }) {
         let template;
+        if (!this.id) {
+            {
+                this.id = 'a_' + (new Date()).valueOf();
+            }
+        }
         if (target instanceof HTMLTemplateElement) {
             template = target;
             if (updatable) {
