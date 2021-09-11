@@ -24,6 +24,10 @@ export class IBidCore extends HTMLElement implements IBidActions{
                         rhsType: Array,
                         rhsHeadType: String,
                         ctor: SplitText
+                    },
+                    {
+                        rhsType: String,
+                        ctor: SplitText,
                     }
                 ],
             } as RenderContext,

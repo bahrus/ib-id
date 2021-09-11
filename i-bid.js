@@ -21,6 +21,10 @@ export class IBidCore extends HTMLElement {
                         rhsType: Array,
                         rhsHeadType: String,
                         ctor: SplitText
+                    },
+                    {
+                        rhsType: String,
+                        ctor: SplitText,
                     }
                 ],
             },
