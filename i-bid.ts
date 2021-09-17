@@ -145,8 +145,8 @@ export class IBidCore extends HTMLElement implements IBidActions{
         return {};
     }
 
-    getNestedList({}: this){
-        const templ = upSearch( this, 'template[data-ref]') as HTMLElement;
+    getNestedList({mainTemplate}: this){
+        const templ = upSearch( mainTemplate, 'template[data-ref]') as HTMLElement;
         const ref = templ.dataset.ref;
         const idx = Number(templ.dataset.idx);
         const containerIbid = (this.getRootNode()! as DocumentFragment).querySelector('#' + ref);
@@ -200,7 +200,7 @@ const ce = new XE<IBidProps, IBidActions>({
                 ifAllOf: ['listInitialized', 'list', 'updatable']
             },
             getNestedList:{
-                ifAllOf: ['isC', 'isNested']
+                ifAllOf: ['isC', 'isNested', 'mainTemplate']
             }
         },
         style:{
