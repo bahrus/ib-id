@@ -35,7 +35,8 @@
   "devDependencies": {
     "@skypack/package-check": "0.2.2",
     "xtal-test": "0.0.51",
-    "@custom-elements-manifest/analyzer": "0.5.3"
+    "@custom-elements-manifest/analyzer": "0.5.3",
+    "pass-down": "0.0.110"
   },
   "repository": {
     "type": "git",

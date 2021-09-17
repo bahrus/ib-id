@@ -14,7 +14,8 @@ export interface IBidProps{
     fromPrevious: string;
     searchFor: string;
     id: string;
-    isNested: boolean;
+    listSrc: DOMStringMap;
+    listProp: string;
 }
 
 export interface IBidActions{
@@ -23,10 +24,7 @@ export interface IBidActions{
     }
     searchById(self: this): {target: Element}
     doRelativeSearch(self: this): {target:Element} | undefined;
-    createTemplates(self: this):{
-        mainTemplate: HTMLTemplateElement,
-        templateGroups: {[key: string]: HTMLTemplateElement}
-    }
+    createTemplates(self: this):void;
     initReadonlyList(self: this):void;
     initUpdatableList(self: this):{
         //listFragment: DocumentFragment,

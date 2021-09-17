@@ -4,14 +4,12 @@ import {IBidProps, IBidActions} from './types';
 import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
 import { RenderContext } from 'trans-render/lib/types';
-import {upSearch} from 'trans-render/lib/upSearch.js';
 
 /**
  * @element i-bid
  * @tagName i-bid
  */
 export class IBidCore extends HTMLElement implements IBidActions{
-
     initContext({transform}: this){
         return {
             ctx:{
@@ -145,16 +143,11 @@ export class IBidCore extends HTMLElement implements IBidActions{
         return {};
     }
 
-    getNestedList({target}: this){
-        const templ = upSearch( target, 'template[data-ref][data-idx') as HTMLElement;
-        if(templ === null){
-            setTimeout(() => this.getNestedList(this), 50);
-            return;
-        }
-        const ref = templ.dataset.ref;
-        const idx = Number(templ.dataset.idx);
+    getNestedList({listSrc, listProp}: this){
+        const ref = listSrc.ref;
+        const idx = Number(listSrc.idx);
         const containerIbid = (this.getRootNode()! as DocumentFragment).querySelector('#' + ref);
-        const list = (<any>containerIbid).list[idx] as any[];
+        const list = (<any>containerIbid).list[idx][listProp] as any[];
         return {list};
     }
 }
@@ -172,7 +165,7 @@ const ce = new XE<IBidProps, IBidActions>({
             updatable: false,
             fromPrevious: '',
             searchFor: '',
-            isNested: false,
+            listProp: ''
         },
         propInfo:{
             target: noParse,
@@ -204,9 +197,8 @@ const ce = new XE<IBidProps, IBidActions>({
             updateList: {
                 ifAllOf: ['listInitialized', 'list', 'updatable']
             },
-            getNestedList:{
-                ifAllOf: ['isC', 'isNested', 'target'],
-                
+            getNestedList: {
+                ifAllOf: ['listSrc', 'listProp']
             }
         },
         style:{

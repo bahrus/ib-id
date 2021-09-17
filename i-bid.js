@@ -2,7 +2,6 @@ import { XE } from 'xtal-element/src/XE.js';
 import { transform, processTargets } from 'trans-render/lib/transform.js';
 import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
-import { upSearch } from 'trans-render/lib/upSearch.js';
 /**
  * @element i-bid
  * @tagName i-bid
@@ -146,16 +145,11 @@ export class IBidCore extends HTMLElement {
         ;
         return {};
     }
-    getNestedList({ target }) {
-        const templ = upSearch(target, 'template[data-ref][data-idx');
-        if (templ === null) {
-            setTimeout(() => this.getNestedList(this), 50);
-            return;
-        }
-        const ref = templ.dataset.ref;
-        const idx = Number(templ.dataset.idx);
+    getNestedList({ listSrc, listProp }) {
+        const ref = listSrc.ref;
+        const idx = Number(listSrc.idx);
         const containerIbid = this.getRootNode().querySelector('#' + ref);
-        const list = containerIbid.list[idx];
+        const list = containerIbid.list[idx][listProp];
         return { list };
     }
 }
@@ -171,7 +165,7 @@ const ce = new XE({
             updatable: false,
             fromPrevious: '',
             searchFor: '',
-            isNested: false,
+            listProp: ''
         },
         propInfo: {
             target: noParse,
@@ -204,7 +198,7 @@ const ce = new XE({
                 ifAllOf: ['listInitialized', 'list', 'updatable']
             },
             getNestedList: {
-                ifAllOf: ['isC', 'isNested', 'target'],
+                ifAllOf: ['listSrc', 'listProp']
             }
         },
         style: {
