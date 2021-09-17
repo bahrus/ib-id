@@ -38,7 +38,7 @@ export interface IBidActions{
 
     getNestedList(self: this):{
         list: any[];
-    }
+    } | undefined;
     
 }
 

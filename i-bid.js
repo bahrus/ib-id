@@ -148,6 +148,10 @@ export class IBidCore extends HTMLElement {
     }
     getNestedList({ mainTemplate }) {
         const templ = upSearch(mainTemplate, 'template[data-ref]');
+        if (templ === null) {
+            setTimeout(() => this.getNestedList(this), 50);
+            return;
+        }
         const ref = templ.dataset.ref;
         const idx = Number(templ.dataset.idx);
         const containerIbid = this.getRootNode().querySelector('#' + ref);
@@ -199,7 +203,7 @@ const ce = new XE({
                 ifAllOf: ['listInitialized', 'list', 'updatable']
             },
             getNestedList: {
-                ifAllOf: ['isC', 'isNested', 'mainTemplate']
+                ifAllOf: ['isC', 'isNested', 'mainTemplate'],
             }
         },
         style: {
