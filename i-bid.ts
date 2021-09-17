@@ -57,7 +57,7 @@ export class IBidCore extends HTMLElement implements IBidActions{
     createTemplates({target, updatable}: this){
         let template: HTMLTemplateElement;
         if(!this.id){{
-            this.id = 'a_' + Math.random();  //use crypto.randomUUID() when supported;
+            this.id = 'a_' + Math.random().toString().replace('.', '_');  //use crypto.randomUUID() when supported;
         }}
         if(target instanceof HTMLTemplateElement){
             template = target as HTMLTemplateElement;
@@ -146,7 +146,7 @@ export class IBidCore extends HTMLElement implements IBidActions{
     }
 
     getNestedList({mainTemplate}: this){
-        const templ = upSearch( mainTemplate, 'template[data-ref]') as HTMLElement;
+        const templ = upSearch( mainTemplate, 'template[data-ref][data-idx') as HTMLElement;
         if(templ === null){
             setTimeout(() => this.getNestedList(this), 50);
             return;

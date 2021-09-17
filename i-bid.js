@@ -57,7 +57,7 @@ export class IBidCore extends HTMLElement {
         let template;
         if (!this.id) {
             {
-                this.id = 'a_' + Math.random(); //use crypto.randomUUID() when supported;
+                this.id = 'a_' + Math.random().toString().replace('.', '_'); //use crypto.randomUUID() when supported;
             }
         }
         if (target instanceof HTMLTemplateElement) {
@@ -147,7 +147,7 @@ export class IBidCore extends HTMLElement {
         return {};
     }
     getNestedList({ mainTemplate }) {
-        const templ = upSearch(mainTemplate, 'template[data-ref]');
+        const templ = upSearch(mainTemplate, 'template[data-ref][data-idx');
         if (templ === null) {
             setTimeout(() => this.getNestedList(this), 50);
             return;
