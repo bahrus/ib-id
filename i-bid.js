@@ -199,7 +199,7 @@ const ce = new XE({
                 ifAllOf: ['listInitialized', 'list', 'updatable']
             },
             getNestedList: {
-                ifAllOf: ['isNested']
+                ifAllOf: ['isC', 'isNested']
             }
         },
         style: {

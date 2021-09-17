@@ -200,7 +200,7 @@ const ce = new XE<IBidProps, IBidActions>({
                 ifAllOf: ['listInitialized', 'list', 'updatable']
             },
             getNestedList:{
-                ifAllOf: ['isNested']
+                ifAllOf: ['isC', 'isNested']
             }
         },
         style:{
