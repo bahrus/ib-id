@@ -16,7 +16,7 @@ Most repeater web components (there aren't that many, thanks to ES Modules great
 
 However, ibid's focus is on a different use case than other repeating web components:
 
-1.  It has full, first-class support for enumerated tag names.
+1.  It has full, first-class support for enumerated tag names[WIP].
 2.  It can complement server-side (initial) rendering.
 3.  It does **not** provide any support for template binding of the light children within each element.  It only provides support for a linear list of (a potpourri of) tags.  This means to use ibid effectively, you will want a rapid way of encapsulating the markup you want within each tag (and a nice IDE and/or IDE plugin which can easily navigate to the code of a custom element -- [lit-plugin](https://marketplace.visualstudio.com/items?itemName=runem.lit-plugin) does this quite effectively for js-based web components, for example).
 4.  It renders its content (near-) adjacent to itself, so that it can insert content inside built-in list elements, or table elements, without violating proper HTML decorum.

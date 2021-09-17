@@ -55,7 +55,7 @@ export class IBidCore extends HTMLElement implements IBidActions{
     createTemplates({target, updatable}: this){
         let template: HTMLTemplateElement;
         if(!this.id){{
-            this.id = 'a_' +  (new Date()).valueOf();
+            this.id = 'a_' + Math.random();  //use crypto.randomUUID() when supported;
         }}
         if(target instanceof HTMLTemplateElement){
             template = target as HTMLTemplateElement;

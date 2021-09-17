@@ -56,7 +56,7 @@ export class IBidCore extends HTMLElement {
         let template;
         if (!this.id) {
             {
-                this.id = 'a_' + (new Date()).valueOf();
+                this.id = 'a_' + Math.random(); //use crypto.randomUUID() when supported;
             }
         }
         if (target instanceof HTMLTemplateElement) {
