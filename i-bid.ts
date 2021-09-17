@@ -4,6 +4,8 @@ import {IBidProps, IBidActions} from './types';
 import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
 import { RenderContext } from 'trans-render/lib/types';
+import {upSearch} from 'trans-render/lib/upSearch.js';
+
 /**
  * @element i-bid
  * @tagName i-bid
@@ -142,6 +144,15 @@ export class IBidCore extends HTMLElement implements IBidActions{
         };
         return {};
     }
+
+    getNestedList({}: this){
+        const templ = upSearch( this, 'template[data-ref]') as HTMLElement;
+        const ref = templ.dataset.ref;
+        const idx = Number(templ.dataset.idx);
+        const containerIbid = (this.getRootNode()! as DocumentFragment).querySelector('#' + ref);
+        const list = (<any>containerIbid).list[idx] as any[];
+        return {list};
+    }
 }
 
 export interface IBidCore extends IBidProps{}
@@ -157,6 +168,7 @@ const ce = new XE<IBidProps, IBidActions>({
             updatable: false,
             fromPrevious: '',
             searchFor: '',
+            isNested: false,
         },
         propInfo:{
             target: noParse,
@@ -186,6 +198,9 @@ const ce = new XE<IBidProps, IBidActions>({
             },
             updateList: {
                 ifAllOf: ['listInitialized', 'list', 'updatable']
+            },
+            getNestedList:{
+                ifAllOf: ['isNested']
             }
         },
         style:{

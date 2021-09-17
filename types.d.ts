@@ -14,6 +14,7 @@ export interface IBidProps{
     fromPrevious: string;
     searchFor: string;
     id: string;
+    isNested: boolean;
 }
 
 export interface IBidActions{
@@ -33,6 +34,10 @@ export interface IBidActions{
     }
     updateList(self: this):{
 
+    }
+
+    getNestedList(self: this):{
+        list: any[];
     }
     
 }

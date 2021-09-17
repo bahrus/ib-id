@@ -59,7 +59,7 @@ Generates:
 ></i-bid>
 ```
 
-## Syntax Example II
+## Syntax Example II -- Updatable
 
 ```html
 <ul>
@@ -89,7 +89,9 @@ Generates:
 <i-bid id=li-gen list='["hello", "world"]' updatable></i-bid>
 ```
 
-## Syntax Example III 
+So the only difference is the presence of the updatable attribute.  The presence of that attribute helps to provide master / detail binding, and also is required for nested ibid's.
+
+## Syntax Example III -- multiple elements per iteration.
 
 ```html
 <dl>
@@ -127,8 +129,16 @@ generates
 <i-bid id=dl-gen list='[{"term": "nah", "def": "not so"}, {"term":"goo", "def": "a viscid or sticky substance"}]' updatable></i-bid>
 ```
 
+## Syntax Example IV -- Nested ibid's.
 
-## Syntax Example IV [TODO]
+```html
+<i-bid is-nested>
+</i-bid>
+```
+
+This causes i-bid to get the list of items by performing an "upsearch" for a containing ib-id element's item it is bound to.
+
+## Syntax Example V [TODO]
 
 ```html
 <my-notebook>

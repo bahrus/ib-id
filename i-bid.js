@@ -2,6 +2,7 @@ import { XE } from 'xtal-element/src/XE.js';
 import { transform, processTargets } from 'trans-render/lib/transform.js';
 import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
+import { upSearch } from 'trans-render/lib/upSearch.js';
 /**
  * @element i-bid
  * @tagName i-bid
@@ -145,6 +146,14 @@ export class IBidCore extends HTMLElement {
         ;
         return {};
     }
+    getNestedList({}) {
+        const templ = upSearch(this, 'template[data-ref]');
+        const ref = templ.dataset.ref;
+        const idx = Number(templ.dataset.idx);
+        const containerIbid = this.getRootNode().querySelector('#' + ref);
+        const list = containerIbid.list[idx];
+        return { list };
+    }
 }
 const noParse = {
     parse: false,
@@ -158,6 +167,7 @@ const ce = new XE({
             updatable: false,
             fromPrevious: '',
             searchFor: '',
+            isNested: false,
         },
         propInfo: {
             target: noParse,
@@ -187,6 +197,9 @@ const ce = new XE({
             },
             updateList: {
                 ifAllOf: ['listInitialized', 'list', 'updatable']
+            },
+            getNestedList: {
+                ifAllOf: ['isNested']
             }
         },
         style: {
