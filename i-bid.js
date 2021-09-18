@@ -170,6 +170,9 @@ export class IBidCore extends HTMLElement {
                 }
                 ctx.host = item;
                 processTargets(ctx, targets);
+                for (const t of targets) {
+                    t.classList.remove('ibid-hidden');
+                }
             }
             else {
                 const clonedTemplate = document.importNode(defaultTemplate.content, true);

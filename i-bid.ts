@@ -166,6 +166,9 @@ export class IBidCore extends HTMLElement implements IBidActions{
                 }
                 ctx.host = item;
                 processTargets(ctx, targets);
+                for(const t of targets){
+                    t.classList.remove('ibid-hidden');
+                }
             }else{
                 const clonedTemplate = document.importNode(defaultTemplate.content, true);
                 ctx.host = item;
@@ -188,7 +191,7 @@ export class IBidCore extends HTMLElement implements IBidActions{
         };
         if(!foundPreviousLastTempl && prevLastTempl !== undefined && this.#lastIdx !== undefined){
             this.hideExcessElements(prevLastTempl, this.#lastIdx);
-        } 
+        }
         return {};
     }
 
