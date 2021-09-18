@@ -10,6 +10,8 @@ import { RenderContext } from 'trans-render/lib/types';
  * @tagName i-bid
  */
 export class IBidCore extends HTMLElement implements IBidActions{
+    #firstIdx: HTMLTemplateElement | undefined;
+    #lastIdx: HTMLTemplateElement | undefined;
     initContext({transform}: this){
         return {
             ctx:{
@@ -105,14 +107,52 @@ export class IBidCore extends HTMLElement implements IBidActions{
         } 
     }
     #clonedTemplates = new WeakMap<HTMLTemplateElement, DocumentFragment>();
+    findNextTempl(lastTempl: HTMLTemplateElement | undefined, count: number, root: DocumentFragment){
+        if(lastTempl === undefined){
+            return root.querySelector(`template[data-ref="${this.id}"][data-idx="${count}"]`) as HTMLTemplateElement | null;
+        }
+        const itemCountToSkip = Number(lastTempl.dataset.cnt);
+        let nextSib: Element | null = lastTempl;
+        for(let i = 0; i < itemCountToSkip; i++){
+            if(nextSib === null) throw 'NI';
+            nextSib = nextSib.nextElementSibling;
+        }
+        return nextSib as HTMLTemplateElement | null;
+    }
+    hideExcessElements(prevLastTempl: HTMLTemplateElement, lastIdx: HTMLTemplateElement){
+        let idxTempl = prevLastTempl as HTMLTemplateElement | null;
+        while(idxTempl !== null && idxTempl !== lastIdx){
+            const itemCountToHide = Number(idxTempl.dataset.cnt);
+            let ns = idxTempl.nextElementSibling;
+            for(let i = 1; i < itemCountToHide; i++){
+                if(ns === null) throw 'NIW';  //no idea why
+                ns.classList.add('ibid-hidden');
+                //ns.style.display = 'none';
+                ns = ns.nextElementSibling;
+            }
+            if(ns === null) throw 'NIW';  //no idea why
+            idxTempl = ns.nextElementSibling as HTMLTemplateElement | null;
+        }
+    }
     updateList({list, templateGroups, mainTemplate, ctx}: this){
         let elementToAppendTo = mainTemplate as Element;
         const defaultTemplate = templateGroups.default;
         let count = 0;
         const root = this.getRootNode() as DocumentFragment;
+        let prevTempl: HTMLTemplateElement | undefined;
+        let foundPreviousLastTempl = false;
+        const prevLastTempl = this.#lastIdx;
         for(const item of list){
-            const idxTempl = root.querySelector(`template[data-ref="${this.id}"][data-idx="${count}"]`) as HTMLTemplateElement | null;
+            let idxTempl: HTMLTemplateElement | null = null;
+            if(this.#firstIdx !== undefined){
+                idxTempl = this.findNextTempl(prevTempl, count, root);
+                if(idxTempl === this.#lastIdx){
+                    foundPreviousLastTempl = true;
+                }
+            } 
             if(idxTempl !== null){
+                this.#lastIdx = idxTempl;
+                prevTempl = idxTempl
                 const targets: Element[] = [];
                 const cnt = parseInt(idxTempl.dataset.cnt!) - 1;
                 let ithSib = 0;
@@ -137,9 +177,14 @@ export class IBidCore extends HTMLElement implements IBidActions{
                     elementToAppendTo.insertAdjacentElement('afterend', child)!;
                     elementToAppendTo = child;
                 }
+                if(count === 0){
+                    this.#firstIdx = idxTemplate;
+                }
+                this.#lastIdx = idxTemplate;
             }
             count++;
         };
+        if(prevLastTempl !== undefined && this.#lastIdx !== undefined) this.hideExcessElements(prevLastTempl, this.#lastIdx);
         return {};
     }
 

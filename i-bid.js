@@ -7,6 +7,8 @@ import { SplitText } from 'trans-render/lib/SplitText.js';
  * @tagName i-bid
  */
 export class IBidCore extends HTMLElement {
+    #firstIdx;
+    #lastIdx;
     initContext({ transform }) {
         return {
             ctx: {
@@ -107,14 +109,55 @@ export class IBidCore extends HTMLElement {
         };
     }
     #clonedTemplates = new WeakMap();
+    findNextTempl(lastTempl, count, root) {
+        if (lastTempl === undefined) {
+            return root.querySelector(`template[data-ref="${this.id}"][data-idx="${count}"]`);
+        }
+        const itemCountToSkip = Number(lastTempl.dataset.cnt);
+        let nextSib = lastTempl;
+        for (let i = 0; i < itemCountToSkip; i++) {
+            if (nextSib === null)
+                throw 'NI';
+            nextSib = nextSib.nextElementSibling;
+        }
+        return nextSib;
+    }
+    hideExcessElements(prevLastTempl, lastIdx) {
+        let idxTempl = prevLastTempl;
+        while (idxTempl !== null && idxTempl !== lastIdx) {
+            const itemCountToHide = Number(idxTempl.dataset.cnt);
+            let ns = idxTempl.nextElementSibling;
+            for (let i = 1; i < itemCountToHide; i++) {
+                if (ns === null)
+                    throw 'NIW'; //no idea why
+                ns.classList.add('ibid-hidden');
+                //ns.style.display = 'none';
+                ns = ns.nextElementSibling;
+            }
+            if (ns === null)
+                throw 'NIW'; //no idea why
+            idxTempl = ns.nextElementSibling;
+        }
+    }
     updateList({ list, templateGroups, mainTemplate, ctx }) {
         let elementToAppendTo = mainTemplate;
         const defaultTemplate = templateGroups.default;
         let count = 0;
         const root = this.getRootNode();
+        let prevTempl;
+        let foundPreviousLastTempl = false;
+        const prevLastTempl = this.#lastIdx;
         for (const item of list) {
-            const idxTempl = root.querySelector(`template[data-ref="${this.id}"][data-idx="${count}"]`);
+            let idxTempl = null;
+            if (this.#firstIdx !== undefined) {
+                idxTempl = this.findNextTempl(prevTempl, count, root);
+                if (idxTempl === this.#lastIdx) {
+                    foundPreviousLastTempl = true;
+                }
+            }
             if (idxTempl !== null) {
+                this.#lastIdx = idxTempl;
+                prevTempl = idxTempl;
                 const targets = [];
                 const cnt = parseInt(idxTempl.dataset.cnt) - 1;
                 let ithSib = 0;
@@ -139,10 +182,16 @@ export class IBidCore extends HTMLElement {
                     elementToAppendTo.insertAdjacentElement('afterend', child);
                     elementToAppendTo = child;
                 }
+                if (count === 0) {
+                    this.#firstIdx = idxTemplate;
+                }
+                this.#lastIdx = idxTemplate;
             }
             count++;
         }
         ;
+        if (prevLastTempl !== undefined && this.#lastIdx !== undefined)
+            this.hideExcessElements(prevLastTempl, this.#lastIdx);
         return {};
     }
     getNestedList({ listSrc, listProp }) {
