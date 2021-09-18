@@ -1,4 +1,5 @@
 import { XE } from 'xtal-element/src/XE.js';
+import { html } from 'trans-render/lib/html.js';
 import { transform, processTargets } from 'trans-render/lib/transform.js';
 import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
@@ -213,15 +214,16 @@ export class IBidCore extends HTMLElement {
         };
     }
     createHiddenClass({}) {
-        const style = document.createElement('style');
-        style.innerHTML = `
-        .ibid-hidden{
-            display: none;
-        }
-        `;
-        this.appendChild(style);
+        this.appendChild(hiddenStyle.content.cloneNode(true));
     }
 }
+const hiddenStyle = html `
+<style>
+    .ibid-hidden{
+        display: none;
+    }
+</style>
+`;
 const noParse = {
     parse: false,
 };

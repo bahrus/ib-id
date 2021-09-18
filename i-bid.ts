@@ -1,4 +1,5 @@
 import {XE, PropInfo} from 'xtal-element/src/XE.js';
+import {html} from 'trans-render/lib/html.js';
 import {transform, processTargets} from 'trans-render/lib/transform.js';
 import {IBidProps, IBidActions} from './types';
 import { PE } from 'trans-render/lib/PE.js';
@@ -210,15 +211,17 @@ export class IBidCore extends HTMLElement implements IBidActions{
     }
 
     createHiddenClass({}: this){
-        const style = document.createElement('style');
-        style.innerHTML = `
-        .ibid-hidden{
-            display: none;
-        }
-        `;
-        this.appendChild(style);
+        this.appendChild(hiddenStyle.content.cloneNode(true));
     }
 }
+
+const hiddenStyle = html`
+<style>
+    .ibid-hidden{
+        display: none;
+    }
+</style>
+`;
 
 export interface IBidCore extends IBidProps{}
 const noParse: PropInfo = {
