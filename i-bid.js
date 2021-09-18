@@ -212,6 +212,15 @@ export class IBidCore extends HTMLElement {
             listSrc: templ.dataset
         };
     }
+    createHiddenClass({}) {
+        const style = document.createElement('style');
+        style.innerHTML = `
+        .ibid-hidden{
+            display: none;
+        }
+        `;
+        this.appendChild(style);
+    }
 }
 const noParse = {
     parse: false,
@@ -264,6 +273,9 @@ const ce = new XE({
             findTemplIdx: {
                 ifAllOf: ['isC', 'autoNest'],
                 async: true,
+            },
+            createHiddenClass: {
+                ifAllOf: ['isC'],
             }
         },
         style: {

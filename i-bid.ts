@@ -80,6 +80,7 @@ export class IBidCore extends HTMLElement implements IBidActions{
             template.content.appendChild(target);
         }
         
+        
         return {
             mainTemplate: template,
             templateGroups:{
@@ -207,6 +208,16 @@ export class IBidCore extends HTMLElement implements IBidActions{
             listSrc: templ.dataset
         };
     }
+
+    createHiddenClass({}: this){
+        const style = document.createElement('style');
+        style.innerHTML = `
+        .ibid-hidden{
+            display: none;
+        }
+        `;
+        this.appendChild(style);
+    }
 }
 
 export interface IBidCore extends IBidProps{}
@@ -261,6 +272,9 @@ const ce = new XE<IBidProps, IBidActions>({
             findTemplIdx: {
                 ifAllOf: ['isC', 'autoNest'],
                 async: true,
+            },
+            createHiddenClass: {
+                ifAllOf: ['isC'],
             }
         },
         style:{

@@ -40,6 +40,8 @@ export interface IBidActions{
     } | undefined;
     
     findTemplIdx(self: this): Promise<Partial<IBidProps>>;
+
+    createHiddenClass(self: this): void;
 }
 
 
