@@ -146,7 +146,7 @@ export class IBidCore extends HTMLElement implements IBidActions{
             let idxTempl: HTMLTemplateElement | null = null;
             if(this.#firstIdx !== undefined){
                 idxTempl = this.findNextTempl(prevTempl, count, root);
-                if(idxTempl === this.#lastIdx){
+                if(idxTempl === prevTempl){
                     foundPreviousLastTempl = true;
                 }
             } 
@@ -184,7 +184,7 @@ export class IBidCore extends HTMLElement implements IBidActions{
             }
             count++;
         };
-        if(prevLastTempl !== undefined && this.#lastIdx !== undefined) this.hideExcessElements(prevLastTempl, this.#lastIdx);
+        if(!foundPreviousLastTempl && prevLastTempl !== undefined && this.#lastIdx !== undefined) this.hideExcessElements(this.#lastIdx, prevLastTempl);
         return {};
     }
 

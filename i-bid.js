@@ -151,7 +151,7 @@ export class IBidCore extends HTMLElement {
             let idxTempl = null;
             if (this.#firstIdx !== undefined) {
                 idxTempl = this.findNextTempl(prevTempl, count, root);
-                if (idxTempl === this.#lastIdx) {
+                if (idxTempl === prevTempl) {
                     foundPreviousLastTempl = true;
                 }
             }
@@ -190,8 +190,8 @@ export class IBidCore extends HTMLElement {
             count++;
         }
         ;
-        if (prevLastTempl !== undefined && this.#lastIdx !== undefined)
-            this.hideExcessElements(prevLastTempl, this.#lastIdx);
+        if (!foundPreviousLastTempl && prevLastTempl !== undefined && this.#lastIdx !== undefined)
+            this.hideExcessElements(this.#lastIdx, prevLastTempl);
         return {};
     }
     getNestedList({ listSrc, listProp }) {

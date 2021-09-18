@@ -12,13 +12,13 @@ Each of them provide a simple, 1-dimensional list generating web component*.  Th
 
 Often, an API will provide a JSON list (array of items) that is purely devoted to describing the business entities it represents (tailored somewhat, perhaps, for the particular view to be presented).  (Let's park the important question of SSR for the time being).
 
-Most repeater web components (there aren't that many, thanks to ES Modules greatly preceding HTML Modules), including grid web components, provide helpful mapping between what the API provides, vs what the UI requires, via some form of moustache-style syntax, for the light children.
+Most repeater web components (there aren't that many, thanks to ES Modules greatly preceding HTML Modules), including grid web components, provide a helpful mapping mechanism between what the API provides, vs what the UI requires, via some form of moustache-style syntax, for the light children.
 
 However, ibid's focus is on a different use case than other repeating web components:
 
 1.  It has full, first-class support for enumerated tag names[WIP].
 2.  It can complement server-side (initial) rendering.
-3.  It does **not** provide any support for moustache-style template binding of the light children within each element.  It is rooting for the platform to support this feature natively.  It does, however, provide "binding from a distance" via transform syntax similar to non-inline css styling.
+3.  It does **not** provide any support for moustache-style template binding of the light children within each element.  It is rooting for the platform to support this feature natively.  It does, however, provide "binding from a distance" via transform syntax similar to non-inline css styling.  If and when the platform adds support for binding the light children vs mousatach-style template binding, this component support said binding, but continue to add support for transform-like binding as a complementary mechanism, giving developers a choice depending on what works best.
 4.  It renders its content (near-) adjacent to itself, so that it can insert content inside built-in list elements, or table elements, without violating proper HTML decorum.
 
 Why provide support for different tags?  Consider a few scenarios:
@@ -167,7 +167,7 @@ Note also our use of from-previous, search-for attributes.  These allow for an a
 
 [TODO]:  Support for changing number of records / pooling.
 
-## Syntax Example V [TODO]
+## Syntax Example V -- Enumerated template options [TODO]
 
 ```html
 <my-notebook>
