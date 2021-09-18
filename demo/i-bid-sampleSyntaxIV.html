@@ -17,8 +17,7 @@
                     <span class=name></span>
                 </li>
             </ul>
-            <pass-down  observe=template[data-ref][data-idx] vft=dataset to=[-list-src] m=1></pass-down>
-            <i-bid updatable -list-src list-prop=innerList from-previous=ul search-for=li transform='{".name": "name"}'></i-bid>
+            <i-bid updatable auto-nest -list-src list-prop=innerList from-previous=ul search-for=li transform='{".name": "name"}'></i-bid>
         </li>
         </template>
     </ul>
@@ -39,15 +38,12 @@
         {
             "imports": {
                 "xtal-element/": "../node_modules/xtal-element/",
-                "trans-render/": "../node_modules/trans-render/",
-                "pass-down/": "../node_modules/pass-down/",
-                "on-to-me/": "../node_modules/on-to-me/"
+                "trans-render/": "../node_modules/trans-render/"
             }
         }
     </script>
     <script type=module>
         import '../i-bid.js';
-        import 'pass-down/pass-down.js';
     </script>
 </body>
 </html>

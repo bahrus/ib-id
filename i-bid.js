@@ -152,6 +152,16 @@ export class IBidCore extends HTMLElement {
         const list = containerIbid.list[idx][listProp];
         return { list };
     }
+    async findTemplIdx({}) {
+        const { upSearch } = await import('trans-render/lib/upSearch.js');
+        const cssSel = 'template[data-ref][data-idx]';
+        const templ = upSearch(this, cssSel);
+        if (templ === null)
+            throw `Could not locate ${cssSel}.  Make sure updatable is set`;
+        return {
+            listSrc: templ.dataset
+        };
+    }
 }
 const noParse = {
     parse: false,
@@ -165,7 +175,8 @@ const ce = new XE({
             updatable: false,
             fromPrevious: '',
             searchFor: '',
-            listProp: ''
+            listProp: '',
+            autoNest: false,
         },
         propInfo: {
             target: noParse,
@@ -199,6 +210,10 @@ const ce = new XE({
             },
             getNestedList: {
                 ifAllOf: ['listSrc', 'listProp']
+            },
+            findTemplIdx: {
+                ifAllOf: ['isC', 'autoNest'],
+                async: true,
             }
         },
         style: {

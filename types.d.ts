@@ -15,6 +15,7 @@ export interface IBidProps{
     searchFor: string;
     id: string;
     listSrc: DOMStringMap;
+    autoNest: boolean;
     listProp: string;
 }
 
@@ -38,6 +39,7 @@ export interface IBidActions{
         list: any[];
     } | undefined;
     
+    findTemplIdx(self: this): Promise<Partial<IBidProps>>;
 }
 
 

@@ -28,7 +28,7 @@ Why provide support for different tags?  Consider a few scenarios:
 
 What this means is that the mapping that other libraries focus on, within the light children, is moot for this component.  The focus ibid has is on mapping the JSON data to properties of the (custom) DOM element(s).  However, some care is taken so that ibid can be extended with support for dynamic light children as well.
 
-## Syntax Example I
+## Syntax Example I Basic, template free.
 
 ```html
 <ul>
@@ -59,7 +59,7 @@ Generates:
 ></i-bid>
 ```
 
-## Syntax Example II -- Updatable
+## Syntax Example II -- Updatable, template free
 
 ```html
 <ul>
@@ -91,7 +91,7 @@ Generates:
 
 So the only difference is the presence of the updatable attribute.  The presence of that attribute helps to provide master / detail binding, and also is required for nested ibid's.
 
-## Syntax Example III -- multiple elements per iteration.
+## Syntax Example III -- multiple elements per iteration.  Use of template
 
 ```html
 <dl>
@@ -129,14 +129,44 @@ generates
 <i-bid id=dl-gen list='[{"term": "nah", "def": "not so"}, {"term":"goo", "def": "a viscid or sticky substance"}]' updatable></i-bid>
 ```
 
-## Syntax Example IV -- Nested ibid's.
+## Syntax Example IV -- Nested ibid's.  Use of relative locator
 
 ```html
-<i-bid is-nested>
+<ul>
+    <template>
+        <li>
+            <span class=description></span>
+            <ul>
+                <li>
+                    <span class=name></span>
+                </li>
+            </ul>
+            <i-bid updatable auto-nest -list-src list-prop=innerList from-previous=ul search-for=li transform='{".name": "name"}'></i-bid>
+        </li>
+    </template>
+</ul>
+<i-bid
+    updatable 
+    list='[
+        {"description": "first item", "innerList": [{"name": "a"}, {"name": "b"}]},
+        {"description": "second item", "innerList": [{"name": "c"}, {"name": "b"}]}
+    ]
+    '
+    transform='{".description": "description"}' 
+    from-previous=ul
+    search-for=template
+    
+>
 </i-bid>
 ```
 
-This causes i-bid to get the list of items by performing an "upsearch" for a containing ib-id element's item it is bound to.
+In examples I and II, we demonstrated that wrapping the content that needs to repeat in a template is optional.  Example III showed use of the template wrapper.
+
+However, if nested ibid's are required, then wrapping outer ibid's in templates becomes required.  The outer ibid's also have to have updatable set.
+
+Note also our use of from-previous, search-for attributes.  These allow for an alternative to specifying the id's.
+
+[TODO]:  Support for changing number of records / pooling.
 
 ## Syntax Example V [TODO]
 
