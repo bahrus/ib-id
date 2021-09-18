@@ -8,9 +8,12 @@
 <body>
     <ul>
         <li>header</li>
-        <i-bid id=ibid></i-bid>
+        <li class=body></li>
         <li>footer</li>
     </ul>
+    <i-bid id=ibid updatable from-previous=ul search-for=.body transform='{
+        "li": "textContent"
+    }'></i-bid>
     <script type=importmap>
         {
             "imports": {
@@ -34,14 +37,14 @@
                     {textContent: 'hello 3'},
                     {textContent: 'hello 4'}
                 ];
-                setTimeout(() => {
-                    ibid.list = [
-                        {textContent: 'hello 1'},
-                        {textContent: 'hello 2'},
-                        {textContent: 'hello 3'},
-                        {textContent: 'hello 4'}
-                    ];
-                }, 10000)
+                // setTimeout(() => {
+                //     ibid.list = [
+                //         {textContent: 'hello 1'},
+                //         {textContent: 'hello 2'},
+                //         {textContent: 'hello 3'},
+                //         {textContent: 'hello 4'}
+                //     ];
+                // }, 10000);
             }, 10000);
         </script>
 </body>

@@ -18,7 +18,7 @@ However, ibid's focus is on a different use case than other repeating web compon
 
 1.  It has full, first-class support for enumerated tag names[WIP].
 2.  It can complement server-side (initial) rendering.
-3.  It does **not** provide any support for template binding of the light children within each element.  It only provides support for a linear list of (a potpourri of) tags.  This means to use ibid effectively, you will want a rapid way of encapsulating the markup you want within each tag (and a nice IDE and/or IDE plugin which can easily navigate to the code of a custom element -- [lit-plugin](https://marketplace.visualstudio.com/items?itemName=runem.lit-plugin) does this quite effectively for js-based web components, for example).
+3.  It does **not** provide any support for moustache-style template binding of the light children within each element.  It is rooting for the platform to support this feature natively.  It does, however, provide "binding from a distance" via transform syntax similar to non-inline css styling.
 4.  It renders its content (near-) adjacent to itself, so that it can insert content inside built-in list elements, or table elements, without violating proper HTML decorum.
 
 Why provide support for different tags?  Consider a few scenarios:
@@ -26,7 +26,6 @@ Why provide support for different tags?  Consider a few scenarios:
 1.  Lists of repeating elements that alternate between a few tags - like the [Description List Element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dl)
 2.  "Higher order" lists of entities, where the entities take a variety of forms --  [Cells of a Jupyter Notebook](https://code.visualstudio.com/docs/datascience/jupyter-notebooks#_variable-explorer-and-data-viewer), for example
 
-What this means is that the mapping that other libraries focus on, within the light children, is moot for this component.  The focus ibid has is on mapping the JSON data to properties of the (custom) DOM element(s).  However, some care is taken so that ibid can be extended with support for dynamic light children as well.
 
 ## Syntax Example I Basic, template free.
 
