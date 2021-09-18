@@ -123,8 +123,8 @@ export class IBidCore extends HTMLElement {
         return nextSib;
     }
     hideExcessElements(prevLastTempl, lastIdx) {
-        let idxTempl = prevLastTempl;
-        while (idxTempl !== null && idxTempl !== lastIdx) {
+        let idxTempl = this.findNextTempl(lastIdx, 0, null);
+        while (idxTempl !== null && idxTempl.dataset.ref === this.id) {
             const itemCountToHide = Number(idxTempl.dataset.cnt);
             let ns = idxTempl.nextElementSibling;
             for (let i = 1; i < itemCountToHide; i++) {
@@ -136,7 +136,7 @@ export class IBidCore extends HTMLElement {
             }
             if (ns === null)
                 throw 'NIW'; //no idea why
-            idxTempl = ns.nextElementSibling;
+            idxTempl = this.findNextTempl(idxTempl, 0, null);
         }
     }
     updateList({ list, templateGroups, mainTemplate, ctx }) {
@@ -190,8 +190,9 @@ export class IBidCore extends HTMLElement {
             count++;
         }
         ;
-        if (!foundPreviousLastTempl && prevLastTempl !== undefined && this.#lastIdx !== undefined)
-            this.hideExcessElements(this.#lastIdx, prevLastTempl);
+        if (!foundPreviousLastTempl && prevLastTempl !== undefined && this.#lastIdx !== undefined) {
+            this.hideExcessElements(prevLastTempl, this.#lastIdx);
+        }
         return {};
     }
     getNestedList({ listSrc, listProp }) {

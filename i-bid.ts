@@ -120,8 +120,8 @@ export class IBidCore extends HTMLElement implements IBidActions{
         return nextSib as HTMLTemplateElement | null;
     }
     hideExcessElements(prevLastTempl: HTMLTemplateElement, lastIdx: HTMLTemplateElement){
-        let idxTempl = prevLastTempl as HTMLTemplateElement | null;
-        while(idxTempl !== null && idxTempl !== lastIdx){
+        let idxTempl = this.findNextTempl(lastIdx, 0, null as any as DocumentFragment);
+        while(idxTempl!==null && idxTempl.dataset.ref === this.id){
             const itemCountToHide = Number(idxTempl.dataset.cnt);
             let ns = idxTempl.nextElementSibling;
             for(let i = 1; i < itemCountToHide; i++){
@@ -131,7 +131,7 @@ export class IBidCore extends HTMLElement implements IBidActions{
                 ns = ns.nextElementSibling;
             }
             if(ns === null) throw 'NIW';  //no idea why
-            idxTempl = ns.nextElementSibling as HTMLTemplateElement | null;
+            idxTempl = this.findNextTempl(idxTempl, 0, null as any as DocumentFragment);
         }
     }
     updateList({list, templateGroups, mainTemplate, ctx}: this){
@@ -184,7 +184,9 @@ export class IBidCore extends HTMLElement implements IBidActions{
             }
             count++;
         };
-        if(!foundPreviousLastTempl && prevLastTempl !== undefined && this.#lastIdx !== undefined) this.hideExcessElements(this.#lastIdx, prevLastTempl);
+        if(!foundPreviousLastTempl && prevLastTempl !== undefined && this.#lastIdx !== undefined){
+            this.hideExcessElements(prevLastTempl, this.#lastIdx);
+        } 
         return {};
     }
 
