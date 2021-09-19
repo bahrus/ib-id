@@ -127,6 +127,7 @@ export class IBidCore extends HTMLElement {
         let idxTempl = this.findNextTempl(lastIdx, 0, null);
         while (idxTempl !== null && idxTempl.dataset.ref === this.id) {
             const itemCountToHide = Number(idxTempl.dataset.cnt);
+            idxTempl.dataset.isArchived = 'true';
             let ns = idxTempl.nextElementSibling;
             for (let i = 1; i < itemCountToHide; i++) {
                 if (ns === null)
@@ -160,6 +161,7 @@ export class IBidCore extends HTMLElement {
                 const targets = [];
                 const cnt = parseInt(idxTempl.dataset.cnt) - 1;
                 let ithSib = 0;
+                idxTempl.dataset.isArchived = 'false';
                 let sib = idxTempl.nextElementSibling;
                 while (ithSib < cnt && sib !== null) {
                     targets.push(sib);
@@ -210,6 +212,8 @@ export class IBidCore extends HTMLElement {
         const templ = upSearch(this, cssSel);
         if (templ === null)
             throw `Could not locate ${cssSel}.  Make sure updatable is set`;
+        if (templ.dataset.isArchived === 'true')
+            return {};
         return {
             listSrc: templ.dataset
         };
