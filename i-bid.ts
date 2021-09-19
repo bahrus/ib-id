@@ -132,7 +132,6 @@ export class IBidCore extends HTMLElement implements IBidActions{
                 //ns.style.display = 'none';
                 ns = ns.nextElementSibling;
             }
-            if(ns === null) throw 'NIW';  //no idea why
             idxTempl = this.findNextTempl(idxTempl, 0, null as any as DocumentFragment);
         }
     }

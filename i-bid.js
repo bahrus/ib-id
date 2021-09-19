@@ -135,8 +135,6 @@ export class IBidCore extends HTMLElement {
                 //ns.style.display = 'none';
                 ns = ns.nextElementSibling;
             }
-            if (ns === null)
-                throw 'NIW'; //no idea why
             idxTempl = this.findNextTempl(idxTempl, 0, null);
         }
     }
