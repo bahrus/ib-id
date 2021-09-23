@@ -165,8 +165,16 @@ However, if nested ibid's are required, then wrapping outer ibid's in templates 
 
 Note also our use of from-previous, search-for attributes.  These allow for an alternative to specifying the id's.
 
+## Syntax Example V -- tag-list
 
-## Syntax Example V -- Enumerated template options [TODO]
+```html
+<i-bid tag-list='[
+    {"localName": "tag-1", "prop1": "val1"},
+    {"localName": "tag-2", "prop1": "val2"}
+]'>
+```
+
+## Syntax Example VI -- Enumerated template options [TODO]
 
 ```html
 <my-notebook>
@@ -183,7 +191,7 @@ Note also our use of from-previous, search-for attributes.  These allow for an a
 <i-bid id=notebook-gen list='
     [
         {"type": "searchbox", "hint": "Enter SSN", "label": },
-        {"type": "grid" "data": {}}
+        {"type": "grid", "data": {}}
     ]
 '
 templ-match-on=type
