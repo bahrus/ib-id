@@ -174,6 +174,13 @@ Note also our use of from-previous, search-for attributes.  These allow for an a
 ]'>
 ```
 
+Generates
+
+```html
+<tag-1>hello 1</tag-1>
+<tag-2>hello 2</tag-2>
+```
+
 ## Syntax Example VI -- Enumerated template options [TODO]
 
 ```html

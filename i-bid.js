@@ -3,6 +3,7 @@ import { html } from 'trans-render/lib/html.js';
 import { transform, processTargets } from 'trans-render/lib/transform.js';
 import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
+import { applyP } from 'trans-render/lib/ApplyP.js';
 /**
  * @element i-bid
  * @tagName i-bid
@@ -102,6 +103,15 @@ export class IBidCore extends HTMLElement {
                 elementToAppendTo.insertAdjacentElement('afterend', child);
                 elementToAppendTo = child;
             }
+        }
+    }
+    initReadonlyTagList({ tagList }) {
+        let elementToAppendTo = this;
+        for (const item of tagList) {
+            const el = document.createElement(item.localName);
+            applyP(el, [item]);
+            elementToAppendTo.insertAdjacentElement('afterend', el);
+            elementToAppendTo = el;
         }
     }
     initUpdatableList({}) {
@@ -266,6 +276,10 @@ const ce = new XE({
                 ifAllOf: ['templateGroups', 'list', 'ctx'],
                 ifNoneOf: ['updatable'],
                 setFree: ['target'],
+            },
+            initReadonlyTagList: {
+                ifAllOf: ['tagList'],
+                ifNoneOf: ['updatable']
             },
             initUpdatableList: {
                 ifAllOf: ['templateGroups', 'list', 'updatable', 'ctx'],

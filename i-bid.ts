@@ -5,7 +5,7 @@ import {IBidProps, IBidActions} from './types';
 import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
 import { RenderContext } from 'trans-render/lib/types';
-
+import { applyP } from 'trans-render/lib/ApplyP.js';
 /**
  * @element i-bid
  * @tagName i-bid
@@ -101,6 +101,15 @@ export class IBidCore extends HTMLElement implements IBidActions{
                 elementToAppendTo.insertAdjacentElement('afterend', child);
                 elementToAppendTo = child;
             }
+        }
+    }
+    initReadonlyTagList({tagList}: this){
+        let elementToAppendTo = this as HTMLElement;
+        for(const item of tagList){
+            const el = document.createElement(item.localName!);
+            applyP(el, [item]);
+            elementToAppendTo.insertAdjacentElement('afterend', el);
+            elementToAppendTo = el;
         }
     }
     initUpdatableList({}: this){
@@ -266,6 +275,10 @@ const ce = new XE<IBidProps, IBidActions>({
                 ifAllOf: ['templateGroups', 'list', 'ctx'],
                 ifNoneOf: ['updatable'],
                 setFree: ['target'],
+            },
+            initReadonlyTagList: {
+                ifAllOf: ['tagList'],
+                ifNoneOf: ['updatable']
             },
             initUpdatableList: {
                 ifAllOf: ['templateGroups', 'list', 'updatable', 'ctx'],

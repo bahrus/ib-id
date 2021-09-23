@@ -6,13 +6,10 @@
     <title>Document</title>
 </head>
 <body>
-    <ul>
-        <i-bid list='["hello 1", "hello 2"]'>
-            <li>
-                <span>hi</span>
-            </li>
-        </i-bid>
-    </ul>
+    <i-bid tag-list='[
+        {"localName":"tag-1", "textContent": "hello 1"}, 
+        {"localName": "tag-2", "textContent": "hello 2"}
+    ]'></i-bid>
     <script type=importmap>
         {
             "imports": {

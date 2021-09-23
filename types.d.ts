@@ -16,6 +16,7 @@ export interface IBidProps{
     id: string;
     listSrc: DOMStringMap;
     autoNest: boolean;
+    tagList: Partial<HTMLElement>[]
     listProp: string;
 }
 
@@ -42,6 +43,8 @@ export interface IBidActions{
     findTemplIdx(self: this): Promise<Partial<IBidProps>>;
 
     createHiddenClass(self: this): void;
+
+    initReadonlyTagList(self: this): void;
 }
 
 
