@@ -256,7 +256,10 @@ const ce = new XE({
         },
         propInfo: {
             target: noParse,
-            templateGroups: noParse
+            templateGroups: noParse,
+            id: {
+                type: 'String'
+            }
         },
         actions: {
             initContext: {

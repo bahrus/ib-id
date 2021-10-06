@@ -255,7 +255,10 @@ const ce = new XE<IBidProps, IBidActions>({
         },
         propInfo:{
             target: noParse,
-            templateGroups: noParse
+            templateGroups: noParse,
+            id:{
+                type: 'String'
+            }
         },
         actions:{
             initContext:{
