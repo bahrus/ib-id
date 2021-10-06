@@ -5,7 +5,7 @@ import {IBidProps, IBidActions} from './types';
 import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
 import { RenderContext } from 'trans-render/lib/types';
-import { applyP } from 'trans-render/lib/ApplyP.js';
+import { applyP } from 'trans-render/lib/applyP.js';
 /**
  * @element i-bid
  * @tagName i-bid

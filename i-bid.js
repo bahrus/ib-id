@@ -3,7 +3,7 @@ import { html } from 'trans-render/lib/html.js';
 import { transform, processTargets } from 'trans-render/lib/transform.js';
 import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
-import { applyP } from 'trans-render/lib/ApplyP.js';
+import { applyP } from 'trans-render/lib/applyP.js';
 /**
  * @element i-bid
  * @tagName i-bid
