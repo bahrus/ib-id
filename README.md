@@ -18,7 +18,7 @@ However, ibid's focus is on a different use case than other repeating web compon
 
 1.  It has full, first-class support for enumerated tag names[WIP].
 2.  It can complement server-side (initial) rendering[WIP].
-3.  It does **not** provide any support for moustache-style template binding of the light children within each element.  It is rooting for the platform to support this feature natively.  It does, however, provide "binding from a distance" via transform syntax similar to non-inline css styling.  If and when the platform adds support for binding the light children vs moustache-style template binding, this component will support said binding, but will continue to provide support for the currently supported transform-like binding as a complementary mechanism, giving developers a choice depending on what works best.
+3.  It does **not** provide any support for moustache-style template binding of the light children within each element.  It is rooting for the platform to support this feature natively.  It does, however, provide "binding from a distance" via transform syntax similar to non-inline css styling.  If and when the platform adds support for binding the light children via moustache-style template binding, this component will support said binding, but will continue to provide support for the currently supported transform-like binding as a complementary mechanism, giving developers a choice depending on what works best.
 4.  It renders its content (near-) adjacent to itself, so that it can insert content inside built-in list elements, or table elements, without violating proper HTML decorum.
 
 Why provide support for different tags?  Consider a few scenarios:
