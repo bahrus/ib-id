@@ -2,9 +2,9 @@
 
 <img src="https://badgen.net/bundlephobia/minzip/ib-id">
 
-# ibid 
+# ibid (〃) [TODO]
 
-This package contains a suite of web components, depending on the placement of the dash -- i-bid, ib-id[TODO], ibi-d[TODO].
+This package contains an element enhancement that turns turns the element into a cookie cutter used for repeated generation.
 
 Each of them provide a simple, 1-dimensional list generating web component*.  They generate lists of (Custom) DOM elements from JSON, but can complement server-side rendering.
 
