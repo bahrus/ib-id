@@ -32,13 +32,13 @@ Why provide support for different tags?  Consider a few scenarios:
 ```html
 <ul>
     <li>Head Item</li>
-    <li data-from=li-gen>...</li>
+    <li ib-id=li-gen>...</li>
     <li>Footer Item</li>
 </ul>
-<i-bid 
+<script
     id=li-gen 
     list='["hello", "world"]',
-    transform='{"li": "."}'
+    assign='{"li": "."}'
 ></i-bid>
 ```
 
@@ -54,6 +54,9 @@ Generates:
 <i-bid 
     id=li-gen 
     list='["hello", "world"]',
+    fromEachItem='{
+        "assignToFragment": {"}
+    }'
     transform='{"li": "."}'
 ></i-bid>
 ```
